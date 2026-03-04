@@ -44,17 +44,17 @@ Derived cohort (canonical LGD3plus labeling)
 
 ```mermaid
 flowchart LR
-  A[Canonical dataset\nLGD3plus labels] --> B1[Image encoders\nvirchow2/uni2/gigapath]
-  A --> B2[CNV lane\ncnv_anchor]
-  B1 --> C1[Image models]
-  B2 --> C2[CNV models]
-  C1 --> D[Multimodal trainable models]
-  C1 --> E[Derived late-fusion]
+  A["Canonical dataset<br/>LGD3plus labels"] --> B1["Image encoders<br/>virchow2 / uni2 / gigapath"]
+  A --> B2["CNV lane<br/>cnv_anchor"]
+  B1 --> C1["Image models"]
+  B2 --> C2["CNV models"]
+  C1 --> D["Multimodal trainable models"]
+  C1 --> E["Derived late-fusion"]
   C2 --> E
-  D --> F[Routing / MoE]
+  D --> F["Routing / MoE"]
   E --> F
-  F --> G[5-fold evaluation\n(rep=1, folds=1..5)]
-  G --> H[Aggregate summaries\n+ coverage audit]
+  F --> G["5-fold evaluation<br/>rep=1; folds=1-5"]
+  G --> H["Aggregate summaries<br/>coverage audit"]
 ```
 
 ## Key findings (snapshot)
