@@ -1,0 +1,16 @@
+category,method_name,what_it_does,task_types,leakage_safe
+labeling,LGD3plus_canonical_progression,Canonical progression: NextBiopsyLabel>=3 OR (==2 and LGDStreakSoFar>=2),binary-derived labels,no
+training,image_mil_pooling,Image MIL with pooling/attention/set-transformer families,"binary,multiclass,regression",not_applicable
+training,cnv_tabular_models,CNV models upgraded for binary + multiclass + regression,"binary,multiclass,regression",not_applicable
+training,multimodal_early_intermediate_coattn,"Early fusion, intermediate fusion, and co-attention multimodal lanes","binary,multiclass,regression",not_applicable
+derived_fusion,latefusion_img_only,Image-only derived predictions for selected image backbones,"binary,multiclass,regression",yes
+derived_fusion,latefusion_cnv_only,CNV-only derived predictions,"binary,multiclass,regression",yes
+derived_fusion,latefusion_mean,Arithmetic mean fusion over expert predictions,"binary,multiclass,regression",yes
+derived_fusion,latefusion_stack_logit,Fold-safe stacker (trained on non-heldout folds only),"binary,multiclass,regression",yes
+ensemble,routing_expert_only,Single-expert baselines from best available expert(s),"binary,multiclass,regression",yes
+ensemble,routing_available_mean,Mean ensemble across available experts (2 or 3),"binary,multiclass,regression",yes
+ensemble,routing_available_stack_logit,Stacked ensemble across available experts with fold-safe training,"binary,multiclass,regression",yes
+ensemble,routing_k_hard_soft,Cluster-and-route MoE for k in configured range; hard/soft routing,"binary,multiclass,regression",yes
+ensemble,foundation_combo_fusion,Encoder-combo fusion over multiple image encoders (+ optional CNV),"binary,multiclass,regression",yes
+orchestration,skip_if_exists_5fold_policy,rep=1 and folds=1..5; skip existing outputs to avoid reruns,all,not_applicable
+audit,global_summary_coverage,Global summaries include trainable + derived rows for coverage accounting,all,not_applicable

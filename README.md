@@ -70,14 +70,20 @@ Note: `NextBiopsyProgression` appears in historical audit exports but is treated
 - `data_snapshots/models_discovered.txt`: discovered model IDs in the experiment universe
 - `data_snapshots/encoders_discovered.txt`: discovered encoders/foundation lanes
 - `data_snapshots/tasks_discovered_from_audit.txt`: task list from the audit export
+- `data_snapshots/model_architecture_inventory.csv`: machine-readable architecture catalog for all discovered models
+- `data_snapshots/methods_inventory.csv`: machine-readable inventory of training/fusion/routing/audit methods
 
-## Method Families Included
+## Architectures and Methods
 
-- Image MIL baselines and variants
-- CNV-only models (binary, multiclass, regression)
-- Multimodal early/intermediate/co-attention models
-- Derived late-fusion models (`latefusion_*`) generated from fold predictions with leakage-safe stacking
-- Routing / MoE ensembles over available experts with task-type-aware metrics
+- Full architecture catalog: `MODEL_ARCHITECTURES.md`
+- Full methods catalog: `METHODS_IMPLEMENTED.md`
+- Total discovered models documented: `23`
+- Includes trainable + derived model families:
+  - Image MIL (`pool_mean`, `abmil`, `abmil_nogate`, `set_transformer_lite`)
+  - CNV tabular (`cnv_pca_logreg`, `cnv_temporal_delta_logreg`, `cnv_elasticnet_logreg`, `cnv_linear_svm_calibrated`, `cnv_random_forest`, `cnv_xgboost`, `cnv_mlp`)
+  - Multimodal trainable (`early_*`, `intermediate_abmil_cnv`, `coattn_abmil_cnv`)
+  - Derived late-fusion (`latefusion_*`)
+  - Routing/MoE and foundation combo fusion ensembles
 
 ## Privacy Boundary
 
