@@ -1,0 +1,20 @@
+{
+  "snapshot_time_utc": "2026-03-04T20:14:40Z",
+  "stable_campaign": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_completion_20260304_155636",
+  "fullcoverage_campaign": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_fullcoverage_20260304_195943",
+  "source_files": {
+    "stable_summary_csv": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_completion_20260304_155636/global_results_summary.csv",
+    "stable_best_csv": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_completion_20260304_155636/best_model_per_condition.csv",
+    "fullcoverage_plan_json": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_fullcoverage_20260304_195943/admin/plan.json",
+    "fullcoverage_job_ids_json": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_fullcoverage_20260304_195943/admin/job_ids.json",
+    "runlist_csv": "analysis/lgd3plus_training_plan/runlist.csv"
+  },
+  "counts": {
+    "stable_total_rows": 315,
+    "stable_complete_rows": 304,
+    "fullcoverage_runlist_rows": 864,
+    "fullcoverage_trainable_rows": 402,
+    "fullcoverage_derived_latefusion_rows": 462,
+    "fullcoverage_blocked_rows": 0
+  }
+}
