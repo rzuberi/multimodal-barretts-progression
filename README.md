@@ -4,20 +4,11 @@ Aggregate-only public snapshot of a Barrett's oesophagus modelling programme spa
 
 ## Abstract
 
-This repository is a privacy-preserving research snapshot for one question: when Barrett's surveillance biopsies are represented with histopathology foundation features and copy-number features, where does multimodality help, where does it fail, and how sensitive are the conclusions to cohort definition, aggregation strategy, and time-to-progression framing? The public material is limited to aggregate summaries, campaign metadata, figures, and de-identified report tables. No patient identifiers, no row-level predictions, no slide embeddings, and no derived master tables are included. The March 11, 2026 refresh preserves the original March 4 baseline snapshot and adds ten aggregate-safe experiment families completed between March 4 and March 10, 2026.
-
-## Snapshot Status
-
-- Last public GitHub commit before this refresh: `5f98666` on `main`, dated `2026-03-04 20:51:28 UTC`
-- Last pushed public state before this refresh: `origin/main` matched `HEAD` at that same commit
-- Baseline public snapshot time: `2026-03-04T20:14:40Z`
-- Post-snapshot update window covered here: `2026-03-04 20:51:28 UTC` through `2026-03-10 13:35:00 UTC`
-- Update metadata: [data_snapshots/update_metadata.json](data_snapshots/update_metadata.json)
-- Snapshot delta: [data_snapshots/snapshot_delta_vs_previous.csv](data_snapshots/snapshot_delta_vs_previous.csv)
+This repository is a privacy-preserving research summary for one question: when Barrett's surveillance biopsies are represented with histopathology foundation features and copy-number features, where does multimodality help, where does it fail, and how sensitive are the conclusions to cohort definition, aggregation strategy, and time-to-progression framing? The public material is limited to aggregate summaries, figures, and de-identified report tables. No patient identifiers, no row-level predictions, no slide embeddings, and no derived master tables are included.
 
 ## Problem Statement
 
-The core programme asks whether multimodal models improve prediction of progression-related Barrett's endpoints over unimodal baselines under a fixed, patient-disjoint cross-validation protocol. The baseline public snapshot is centred on canonical LGD3plus progression tasks and a March 4, 2026 aggregate leaderboard. The update in this repo extends that baseline with follow-on experiments that test:
+The core programme asks whether multimodal models improve prediction of progression-related Barrett's endpoints over unimodal baselines under a fixed, patient-disjoint cross-validation protocol. The repo focuses on the parts of the experimental programme that best explain the main scientific story:
 
 - no-leak AtRisk benchmarks
 - critical next-biopsy progression framing
@@ -54,21 +45,18 @@ This means the repo is reproducible at the aggregate-report layer, not at the pr
 - Modalities: image, CNV, multimodal
 - Public baseline snapshot files live in [data_snapshots](data_snapshots)
 
-### Post-March 4 additions
+### Main experiment families
 
-The March 11 refresh adds aggregate-only summaries for ten experiment families logged in [data_snapshots/post_snapshot_experiment_log.csv](data_snapshots/post_snapshot_experiment_log.csv). The most important additions were:
-
-1. Canonical LGD3plus full-coverage campaign summaries
-2. CNV-masked follow-up summaries
-3. AtRisk no-leak EPYC relaunch across image, CNV, multimodal, and foundation-combo MoE variants
-4. Critical next-biopsy evaluation at biopsy-sample and patient level
-5. Biopsy-to-patient aggregation analyses for `Progressor_label` and `NextBiopsyProgression_LGD3plus`
-6. Distance-to-progression and never-caught analyses
-7. Modality-weight versus time-to-progression analysis
+- canonical LGD3plus progression benchmarking
+- AtRisk no-leak analysis across unimodal, multimodal, and MoE methods
+- critical next-biopsy evaluation at biopsy-sample and patient level
+- biopsy-to-patient aggregation analysis for `Progressor_label` and `NextBiopsyProgression_LGD3plus`
+- distance-to-progression and never-caught analysis
+- modality-weight versus time-to-progression analysis
 
 ### Method updates carried into the narrative
 
-- Next-biopsy task derivation and canonical LGD3plus handling were tightened after March 3-5
+- Next-biopsy task derivation and canonical LGD3plus handling were tightened during method refinement
 - Multimodal time-covariate variants were added for next-biopsy prediction
 - Routing and combo-fusion wiring fixes were applied before the downstream analyses were generated
 - Patient-aware reporting replaced ambiguous sample-level language where needed
@@ -81,7 +69,7 @@ Implementation inventories remain in:
 
 ## Results
 
-### 1) March 4 baseline snapshot
+### 1) Core progression snapshot
 
 The original public snapshot still anchors the repo:
 
@@ -98,15 +86,15 @@ Key baseline files:
 - [data_snapshots/task_leaders.csv](data_snapshots/task_leaders.csv)
 - [data_snapshots/model_leaderboard_binary_auc.csv](data_snapshots/model_leaderboard_binary_auc.csv)
 
-### 2) AtRisk no-leak benchmark after the last public push
+### 2) AtRisk no-leak benchmark
 
-The strongest post-snapshot benchmark addition was the AtRisk no-leak EPYC relaunch:
+The strongest no-leak benchmark result in the public repo comes from the AtRisk relaunch analysis:
 
 - `AtRisk_1y`: best MoE AUC `0.8468`, above top multimodal `0.8290`, image `0.8121`, and CNV `0.7712`
 - `AtRisk_3y`: best MoE AUC `0.8168`
 - `AtRisk_5y`: best MoE AUC `0.8391`
 
-This update matters because it shows the strongest post-March 4 gains came from derived expert combinations rather than a uniform win from a single trainable multimodal architecture.
+This matters because the strongest gains came from derived expert combinations rather than a uniform win from a single trainable multimodal architecture.
 
 ![AtRisk no-leak results](figures/figure3_atrisk_noleak_auc.png)
 
@@ -119,7 +107,7 @@ The aggregation study showed that the preferred modality depends on both endpoin
 - `NextBiopsyProgression_LGD3plus`: multimodal was strongest at both biopsy level (`AUC 0.848`) and patient level (`AUC 0.886`)
 - `Progressor_label`: image slightly beat multimodal at both biopsy level (`0.795` vs `0.792`) and patient level (`0.915` vs `0.902`)
 
-So the update does not support a simple claim that multimodal wins everywhere. It supports a narrower claim: multimodal is strongest for some clinically central next-biopsy formulations, while other endpoints remain image-led after aggregation.
+So the repo does not support a simple claim that multimodal wins everywhere. A narrower reading fits the evidence better: multimodal is strongest for some clinically central next-biopsy formulations, while other endpoints remain image-led after aggregation.
 
 ![Aggregation analysis](figures/figure4_biopsy_patient_aggregation_auc.png)
 
@@ -148,7 +136,7 @@ The distance-to-progression study found a split pattern on `Progressor_label`:
 - multimodal reduced that never-caught fraction to `20.7%`
 - image had the smallest never-caught fraction (`6.9%`)
 
-The public conclusion is not “multimodal dominates”, but rather that the different modalities appear to encode different surveillance-useful signals.
+The conclusion is not “multimodal dominates”, but rather that the different modalities appear to encode different surveillance-useful signals.
 
 ![Distance-to-progression summary](figures/figure6_distance_to_progression.png)
 
@@ -172,18 +160,18 @@ Source tables:
 
 ## Discussion
 
-Three high-level conclusions survive the update:
+Three high-level conclusions fit the current public evidence:
 
 1. Multimodality is genuinely competitive and often best on canonical next-biopsy progression tasks.
-2. The post-March 4 analyses weaken any claim that multimodality is uniformly superior across every endpoint or analysis unit.
+2. The broader analysis set weakens any claim that multimodality is uniformly superior across every endpoint or analysis unit.
 3. Derived mixture-of-experts and aggregation policy matter enough that they belong in the main scientific story, not as appendix-only details.
 
-The repo therefore now reads less like a single leaderboard dump and more like a compact aggregate-only paper record: baseline study, follow-on analyses, contradictory findings, and a documented privacy boundary.
+The repo is therefore meant to read less like a leaderboard dump and more like a compact aggregate-only paper record: baseline study, follow-on analyses, contradictory findings, and a documented privacy boundary.
 
 ## Limitations
 
 - The public repo is still aggregate-only and cannot reproduce training from private source data.
-- Some post-March 4 experiments remain represented only by derived aggregate tables, not full public pipelines.
+- Some analyses remain represented only by derived aggregate tables, not full public pipelines.
 - External validation, calibration work, subgroup robustness, and prospective evaluation remain open gaps.
 - Several potentially interesting internal reports were intentionally excluded because they contained patient-level or trajectory-level material.
 
