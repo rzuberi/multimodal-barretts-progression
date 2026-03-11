@@ -1,0 +1,13 @@
+Task,Category,Model_or_Method,Encoder_or_Source,Condition,AUC,Accuracy,Sens_at_Spec90,Sens_at_Spec95
+AtRisk_1y,Top multimodal,early_mean_mlp,gigapath,exclude_lgd_hgd_imc,0.8290000000000001,0.7239,0.4844,0.3308
+AtRisk_1y,Top image-only,set_transformer_lite,uni2,all_samples,0.8121,0.727,0.46799999999999997,0.3111
+AtRisk_1y,Top CNV-only,cnv_mlp,cnv_anchor,all_samples,0.7712,0.7321,0.3476,0.1952
+AtRisk_1y,Top mixture-of-experts,cnv_plus_image_combo_gigapath_uni2_virchow2_mean,foundation_combo_fusion,exclude_lgd_hgd_imc,0.8468,0.737,0.4704,0.3807
+AtRisk_3y,Top multimodal,early_mean_mlp,uni2,all_samples,0.7944,0.7184,0.4271,0.2499
+AtRisk_3y,Top image-only,abmil_nogate,gigapath,exclude_hgd_imc,0.8007,0.6507,0.5341,0.3339
+AtRisk_3y,Top CNV-only,cnv_xgboost,cnv_anchor,all_samples,0.6917,0.6289,0.2868,0.1657
+AtRisk_3y,Top mixture-of-experts,cnv_plus_image_combo_gigapath_uni2_mean,foundation_combo_fusion,exclude_lgd_hgd_imc,0.8168,0.7301,0.4885,0.2758
+AtRisk_5y,Top multimodal,coattn_abmil_cnv,gigapath,all_samples,0.8211,0.7189,0.5159,0.2848
+AtRisk_5y,Top image-only,set_transformer_lite,gigapath,exclude_lgd_hgd_imc,0.804,0.7367,0.45299999999999996,0.2574
+AtRisk_5y,Top CNV-only,cnv_random_forest,cnv_anchor,all_samples,0.7190000000000001,0.6516,0.2868,0.1885
+AtRisk_5y,Top mixture-of-experts,cnv_plus_image_combo_gigapath_uni2_virchow2_mean,foundation_combo_fusion,all_samples,0.8391,0.7612,0.5553,0.3369

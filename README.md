@@ -1,123 +1,205 @@
 # Multimodal Barrett's Progression
 
-Aggregate-only research snapshot for Barrett's multimodal histopathology + CNV modeling.
+Aggregate-only public snapshot of a Barrett's oesophagus modelling programme spanning histopathology image models, CNV models, trainable multimodal models, and derived mixture-of-experts analyses.
 
-## Research question
-Can multimodal models (image + CNV) improve prediction performance over image-only and CNV-only baselines for progression-related Barrett's endpoints under a fixed protocol (`rep=1`, `folds=1..5`, canonical LGD3plus labels, and condition-stratified evaluation)? This is falsifiable: if multimodal AUC does not exceed unimodal AUC on the same task/condition snapshot, the hypothesis is not supported for that setting.
+## Abstract
 
-## What’s in this repo / what’s not
+This repository is a privacy-preserving research snapshot for one question: when Barrett's surveillance biopsies are represented with histopathology foundation features and copy-number features, where does multimodality help, where does it fail, and how sensitive are the conclusions to cohort definition, aggregation strategy, and time-to-progression framing? The public material is limited to aggregate summaries, campaign metadata, figures, and de-identified report tables. No patient identifiers, no row-level predictions, no slide embeddings, and no derived master tables are included. The March 11, 2026 refresh preserves the original March 4 baseline snapshot and adds ten aggregate-safe experiment families completed between March 4 and March 10, 2026.
 
-### Included
-- Aggregate experiment snapshots and leaderboards
-- Model architecture and method inventories
-- Campaign-level coverage/queue metadata
-- Documentation of evaluation policy, assumptions, and failure modes
+## Snapshot Status
 
-### Excluded
-- Patient/sample identifiers
-- Slide-level embeddings, tiles, or raw feature matrices
-- Row-level predictions tied to individual records
-- PHI or re-identification surfaces
+- Last public GitHub commit before this refresh: `5f98666` on `main`, dated `2026-03-04 20:51:28 UTC`
+- Last pushed public state before this refresh: `origin/main` matched `HEAD` at that same commit
+- Baseline public snapshot time: `2026-03-04T20:14:40Z`
+- Post-snapshot update window covered here: `2026-03-04 20:51:28 UTC` through `2026-03-10 13:35:00 UTC`
+- Update metadata: [data_snapshots/update_metadata.json](data_snapshots/update_metadata.json)
+- Snapshot delta: [data_snapshots/snapshot_delta_vs_previous.csv](data_snapshots/snapshot_delta_vs_previous.csv)
 
-## Experimental design at a glance
+## Problem Statement
 
-```text
-Derived cohort (canonical LGD3plus labeling)
-    -> Encoder lanes
-       - image: virchow2 | uni2 | gigapath
-       - cnv:   cnv_anchor
-    -> Model families
-       - image MIL
-       - cnv tabular
-       - multimodal trainable
-       - derived late-fusion / routing / combo-fusion
-    -> Tasks (binary + multiclass + regression)
-    -> CV policy: rep=1, folds=1..5, patient-disjoint folds
-    -> Metrics
-       - binary: AUC, sensitivity, specificity (+ operating-point metrics when available)
-       - multiclass: macro AUC OVR, macro F1, accuracy
-       - regression: MAE, MSE, R2
-    -> Aggregate summaries + coverage audit
-```
+The core programme asks whether multimodal models improve prediction of progression-related Barrett's endpoints over unimodal baselines under a fixed, patient-disjoint cross-validation protocol. The baseline public snapshot is centred on canonical LGD3plus progression tasks and a March 4, 2026 aggregate leaderboard. The update in this repo extends that baseline with follow-on experiments that test:
 
-### One-slide view (modalities, fusion, evaluation loop)
+- no-leak AtRisk benchmarks
+- critical next-biopsy progression framing
+- biopsy-to-patient aggregation choices
+- distance-to-progression behaviour
+- multimodal rescue or hurt patterns
+- time-varying modality reliance
 
-```mermaid
-flowchart LR
-  A["Canonical dataset<br/>LGD3plus labels"] --> B1["Image encoders<br/>virchow2 / uni2 / gigapath"]
-  A --> B2["CNV lane<br/>cnv_anchor"]
-  B1 --> C1["Image models"]
-  B2 --> C2["CNV models"]
-  C1 --> D["Multimodal trainable models"]
-  C1 --> E["Derived late-fusion"]
-  C2 --> E
-  D --> F["Routing / MoE"]
-  E --> F
-  F --> G["5-fold evaluation<br/>rep=1; folds=1-5"]
-  G --> H["Aggregate summaries<br/>coverage audit"]
-```
+## Privacy Boundary
 
-## Key findings (snapshot)
+Included:
 
-- In this snapshot, stable aggregate coverage includes `315` rows, with `304` complete and `11` incomplete (`data_snapshots/coverage_status.csv`).
-- The full-coverage campaign plan reports `864` runlist rows with `402` trainable rows, `462` derived late-fusion rows, and `0` blocked rows (same snapshot file).
-- For `NextBiopsyProgression_LGD3plus` (canonical progression), best observed multimodal AUC is `0.854` vs best image-only `0.834` (both from `exclude_lgd_hgd_imc`, top-50 binary leaderboard snapshot).
-- For `Progressor_label` (`all_samples`), best observed multimodal AUC is `0.843` vs best image-only `0.823` in this snapshot.
-- In the top-50 binary leaderboard snapshot, modality composition is highly multimodal-heavy (`47/50` multimodal, `3/50` image, `0/50` CNV), so CNV-only headline AUCs are often `NA` in that specific table.
-- Task leaders are mostly multimodal in this snapshot (`20/21` tasks), with one image-led task (`NextBiopsyTier3`) in `task_leaders.csv`.
-- Many highest AUC rows for risk/progression-oriented binary tasks appear under exclusion conditions (especially `exclude_lgd_hgd_imc`), suggesting condition sensitivity that warrants careful interpretation.
+- aggregate leaderboard tables
+- campaign-level summary CSVs
+- de-identified report summaries
+- static figures and narrative interpretation
 
-All findings above are preliminary and specific to this stored aggregate snapshot; they are not claims of external clinical performance.
+Excluded:
 
-## Limitations & failure modes
+- patient or sample identifiers
+- row-level predictions
+- master cohort tables and derived labels at row level
+- trajectory files, detail tables, or any file that could re-identify cases
 
-- Spurious correlation risk from acquisition/site artifacts may inflate fold-level performance.
-- Cohort shift risk: deployment distributions may differ from snapshot training/evaluation conditions.
-- Leakage controls are fold-based and patient-disjoint, but external leakage channels are not fully stress-tested here.
-- Calibration is not yet a deployment-grade focus in this public snapshot (decision thresholds can drift).
-- Class imbalance can produce unstable sensitivity/specificity tradeoffs across conditions.
-- Missing labels/censoring can bias endpoint prevalence and observed metrics.
-- Shortcut learning risk remains (non-causal cues in images or CNV proxies).
-- Multimodal collapse risk: one modality can dominate while the other contributes little.
-- Overfitting-to-folds risk remains without external prospective validation.
-- Snapshot leaderboard is truncated (top-50 binary rows), so absence of a modality in that table is not proof of total absence in all runs.
+This means the repo is reproducible at the aggregate-report layer, not at the private data reconstruction layer.
+
+## Methods
+
+### Baseline study design
+
+- Canonical progression endpoint: `NextBiopsyProgression_LGD3plus`
+- Locked policy: `rep=1`, `folds=1..5`, patient-disjoint folds
+- Conditions: `all_samples`, `exclude_hgd_imc`, `exclude_lgd_hgd_imc`
+- Modalities: image, CNV, multimodal
+- Public baseline snapshot files live in [data_snapshots](data_snapshots)
+
+### Post-March 4 additions
+
+The March 11 refresh adds aggregate-only summaries for ten experiment families logged in [data_snapshots/post_snapshot_experiment_log.csv](data_snapshots/post_snapshot_experiment_log.csv). The most important additions were:
+
+1. Canonical LGD3plus full-coverage campaign summaries
+2. CNV-masked follow-up summaries
+3. AtRisk no-leak EPYC relaunch across image, CNV, multimodal, and foundation-combo MoE variants
+4. Critical next-biopsy evaluation at biopsy-sample and patient level
+5. Biopsy-to-patient aggregation analyses for `Progressor_label` and `NextBiopsyProgression_LGD3plus`
+6. Distance-to-progression and never-caught analyses
+7. Modality-weight versus time-to-progression analysis
+
+### Method updates carried into the narrative
+
+- Next-biopsy task derivation and canonical LGD3plus handling were tightened after March 3-5
+- Multimodal time-covariate variants were added for next-biopsy prediction
+- Routing and combo-fusion wiring fixes were applied before the downstream analyses were generated
+- Patient-aware reporting replaced ambiguous sample-level language where needed
+
+Implementation inventories remain in:
+
+- [METHODS_IMPLEMENTED.md](METHODS_IMPLEMENTED.md)
+- [MODEL_ARCHITECTURES.md](MODEL_ARCHITECTURES.md)
+- [THREAT_MODEL_AND_FAILURE_MODES.md](THREAT_MODEL_AND_FAILURE_MODES.md)
+
+## Results
+
+### 1) March 4 baseline snapshot
+
+The original public snapshot still anchors the repo:
+
+- stable aggregate coverage: `315` rows, `304` complete
+- task leaders: `20/21` tasks led by multimodal models, `1/21` by image
+- canonical progression headline: multimodal AUC `0.854` vs image `0.834` in the stored headline snapshot
+
+![Baseline headline AUC](figures/figure1_baseline_headline_auc.png)
+![Task leader counts](figures/figure2_task_leader_counts.png)
+
+Key baseline files:
+
+- [data_snapshots/headline_task_auc_comparison.csv](data_snapshots/headline_task_auc_comparison.csv)
+- [data_snapshots/task_leaders.csv](data_snapshots/task_leaders.csv)
+- [data_snapshots/model_leaderboard_binary_auc.csv](data_snapshots/model_leaderboard_binary_auc.csv)
+
+### 2) AtRisk no-leak benchmark after the last public push
+
+The strongest post-snapshot benchmark addition was the AtRisk no-leak EPYC relaunch:
+
+- `AtRisk_1y`: best MoE AUC `0.8468`, above top multimodal `0.8290`, image `0.8121`, and CNV `0.7712`
+- `AtRisk_3y`: best MoE AUC `0.8168`
+- `AtRisk_5y`: best MoE AUC `0.8391`
+
+This update matters because it shows the strongest post-March 4 gains came from derived expert combinations rather than a uniform win from a single trainable multimodal architecture.
+
+![AtRisk no-leak results](figures/figure3_atrisk_noleak_auc.png)
+
+Source table: [data_snapshots/atrisk_noleak_headline_models.csv](data_snapshots/atrisk_noleak_headline_models.csv)
+
+### 3) Aggregation changes the apparent winner
+
+The aggregation study showed that the preferred modality depends on both endpoint and unit of analysis:
+
+- `NextBiopsyProgression_LGD3plus`: multimodal was strongest at both biopsy level (`AUC 0.848`) and patient level (`AUC 0.886`)
+- `Progressor_label`: image slightly beat multimodal at both biopsy level (`0.795` vs `0.792`) and patient level (`0.915` vs `0.902`)
+
+So the update does not support a simple claim that multimodal wins everywhere. It supports a narrower claim: multimodal is strongest for some clinically central next-biopsy formulations, while other endpoints remain image-led after aggregation.
+
+![Aggregation analysis](figures/figure4_biopsy_patient_aggregation_auc.png)
+
+Source table: [data_snapshots/biopsy_patient_aggregation_best.csv](data_snapshots/biopsy_patient_aggregation_best.csv)
+
+### 4) Critical next-biopsy evaluation is less flattering than leaderboard AUC alone
+
+For the critical next-biopsy framing, sample-level AUCs were modest and patient-level AUCs were lower still:
+
+- biopsy-sample level: image `0.686`, CNV `0.591`, multimodal `0.646`, MoE `0.681`
+- patient level: image `0.560`, CNV `0.557`, multimodal `0.582`, MoE `0.601`
+
+This is important because it shows that a model family can look strong in broad leaderboard tables and still provide only moderate discrimination in a clinically narrower progression framing.
+
+![Critical biopsy false negatives](figures/figure5_critical_biopsy_false_negatives.png)
+
+Source table: [data_snapshots/critical_biopsy_headline.csv](data_snapshots/critical_biopsy_headline.csv)
+
+### 5) Earlier detection and lower miss rates are not the same thing
+
+The distance-to-progression study found a split pattern on `Progressor_label`:
+
+- image reached the farthest detection horizon (`-5+`)
+- multimodal had the strongest overall progression AUC in the originating campaign family
+- CNV had the worst never-caught fraction (`48.3%`)
+- multimodal reduced that never-caught fraction to `20.7%`
+- image had the smallest never-caught fraction (`6.9%`)
+
+The public conclusion is not “multimodal dominates”, but rather that the different modalities appear to encode different surveillance-useful signals.
+
+![Distance-to-progression summary](figures/figure6_distance_to_progression.png)
+
+Source table: [data_snapshots/distance_to_progression_summary.csv](data_snapshots/distance_to_progression_summary.csv)
+
+### 6) Modality reliance appears to shift nearer progression
+
+Using branch-ablation dependence as a modality-weight proxy:
+
+- `Progressor_label` showed a negative correlation between days-to-progression and image weight (`rho=-0.2069`, `p=0.0491`)
+- `NextBiopsyProgression_LGD3plus` showed a smaller, non-significant trend (`rho=-0.0442`)
+
+Interpretation: for the progressor framing, image dependence appears to increase nearer progression while far-from-progression biopsies remain more CNV-balanced.
+
+![Modality-weight shift](figures/figure7_modality_weight_shift.png)
+
+Source tables:
+
+- [data_snapshots/modality_weight_shift_summary.csv](data_snapshots/modality_weight_shift_summary.csv)
+- [data_snapshots/modality_weight_time_bins.csv](data_snapshots/modality_weight_time_bins.csv)
+
+## Discussion
+
+Three high-level conclusions survive the update:
+
+1. Multimodality is genuinely competitive and often best on canonical next-biopsy progression tasks.
+2. The post-March 4 analyses weaken any claim that multimodality is uniformly superior across every endpoint or analysis unit.
+3. Derived mixture-of-experts and aggregation policy matter enough that they belong in the main scientific story, not as appendix-only details.
+
+The repo therefore now reads less like a single leaderboard dump and more like a compact aggregate-only paper record: baseline study, follow-on analyses, contradictory findings, and a documented privacy boundary.
+
+## Limitations
+
+- The public repo is still aggregate-only and cannot reproduce training from private source data.
+- Some post-March 4 experiments remain represented only by derived aggregate tables, not full public pipelines.
+- External validation, calibration work, subgroup robustness, and prospective evaluation remain open gaps.
+- Several potentially interesting internal reports were intentionally excluded because they contained patient-level or trajectory-level material.
 
 ## Reproducibility
 
-### Reproducible from this repo
-- Aggregate results inspection
-- Model/method inventory auditing
-- Snapshot-level comparisons and narrative claims linked to `data_snapshots/*`
+Install the minimal dependencies and rebuild the public snapshot:
 
-### Requires internal PHI environment
-- Regenerating derived labels from source clinical data
-- End-to-end training/inference execution from raw data
-- Any per-patient or per-sample analysis
+```bash
+pip install -r requirements.txt
+python3 scripts/build_public_snapshot.py
+```
 
-## How to navigate
+This regenerates the derived public tables in [data_snapshots](data_snapshots) and the static figures in [figures](figures) from the checked-in aggregate sources in [source_aggregates](source_aggregates).
 
-- Architectures: [MODEL_ARCHITECTURES.md](MODEL_ARCHITECTURES.md)
-- Methods: [METHODS_IMPLEMENTED.md](METHODS_IMPLEMENTED.md)
-- Results summary (paper-style): [RESULTS_SUMMARY.md](RESULTS_SUMMARY.md)
-- Threat model / failure modes: [THREAT_MODEL_AND_FAILURE_MODES.md](THREAT_MODEL_AND_FAILURE_MODES.md)
-- Snapshot files:
-  - [data_snapshots/coverage_status.csv](data_snapshots/coverage_status.csv)
-  - [data_snapshots/model_leaderboard_binary_auc.csv](data_snapshots/model_leaderboard_binary_auc.csv)
-  - [data_snapshots/task_leaders.csv](data_snapshots/task_leaders.csv)
-  - [data_snapshots/model_architecture_inventory.csv](data_snapshots/model_architecture_inventory.csv)
-  - [data_snapshots/methods_inventory.csv](data_snapshots/methods_inventory.csv)
-  - [data_snapshots/headline_task_auc_comparison.csv](data_snapshots/headline_task_auc_comparison.csv)
+## Provenance And Navigation
 
-## Author / context
-
-Maintained by `rzuberi` as a public, privacy-preserving research showcase of the Barrett's multimodal progression modeling program.
-
-## Why this matters
-
-Clinical ML systems can look strong in narrow evaluations yet fail under shift, confounding, or threshold instability. A transparent aggregate-only record of tasks, methods, and failure-mode-aware evaluation is a practical step toward safer, testable claims before any high-stakes deployment discussion.
-
-## Canonical policy reminders
-
-- Canonical progression endpoint is `NextBiopsyProgression_LGD3plus`.
-- `NextBiopsyProgression` is deprecated/stale in this project context.
-- CV policy is fixed to `rep=1`, `folds=1..5` for this campaign family.
+- Snapshot provenance and exclusion rules: [SNAPSHOT_PROVENANCE.md](SNAPSHOT_PROVENANCE.md)
+- Baseline results summary: [RESULTS_SUMMARY.md](RESULTS_SUMMARY.md)
+- Aggregate source inputs used by the rebuild script: [source_aggregates](source_aggregates)

@@ -1,0 +1,4 @@
+task_name,model_id,modality,encoder,model_name,biopsy_aggregation_strategy,earliest_detection_horizon_distance,horizon_definition
+Progressor_label,image|uni2|abmil_nogate,image,uni2,abmil_nogate,biopsy_max,-5+,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6
+Progressor_label,cnv|cnv_anchor|cnv_random_forest,cnv,cnv_anchor,cnv_random_forest,biopsy_mean,none,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6
+Progressor_label,multimodal|uni2|early_mean_mlp,multimodal,uni2,early_mean_mlp,biopsy_mean,-1,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6

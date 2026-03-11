@@ -1,0 +1,9 @@
+analysis_level,model_group,n_eval,n_progressors,auc_progression,fn_count_at_0.5,fnr_at_0.5,sensitivity_at_spec90,sensitivity_at_spec95,clinical_line
+biopsy_sample,Top image-only,520,122,0.6861973803443446,34,0.2786885245901639,0.30327868852459017,0.20491803278688525,the model missed 34 in 122 progression biopsy samples
+biopsy_sample,Top CNV-only,520,122,0.5905346404151908,49,0.4016393442622951,0.2704918032786885,0.16393442622950818,the model missed 49 in 122 progression biopsy samples
+biopsy_sample,Best multimodal,520,122,0.6456462641074223,40,0.3278688524590164,0.2459016393442623,0.14754098360655735,the model missed 40 in 122 progression biopsy samples
+biopsy_sample,Best MoE,520,122,0.6807809539500782,39,0.319672131147541,0.3114754098360656,0.22131147540983606,the model missed 39 in 122 progression biopsy samples
+patient_max_score,Top image-only,91,50,0.5595121951219513,6,0.12,0.28,0.1,the model missed 6 in 50 patients with progression biopsy samples
+patient_max_score,Top CNV-only,91,50,0.5565853658536585,5,0.1,0.2,0.18,the model missed 5 in 50 patients with progression biopsy samples
+patient_max_score,Best multimodal,91,50,0.5824390243902441,5,0.1,0.18,0.14,the model missed 5 in 50 patients with progression biopsy samples
+patient_max_score,Best MoE,91,50,0.6014634146341464,6,0.12,0.28,0.22,the model missed 6 in 50 patients with progression biopsy samples
