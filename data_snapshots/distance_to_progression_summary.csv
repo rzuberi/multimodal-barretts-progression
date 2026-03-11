@@ -1,0 +1,4 @@
+task_name,modality,encoder,model_name,biopsy_aggregation_strategy,earliest_detection_horizon_distance,pct_never_caught,n_never_caught_patients_maxscore_lt_0p5,n_progressor_patients_with_preprogression_biopsies,horizon_definition
+Progressor_label,image,uni2,abmil_nogate,biopsy_max,-5+,6.896551724137932,2,29,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6
+Progressor_label,multimodal,uni2,early_mean_mlp,biopsy_mean,-1,20.689655172413797,6,29,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6
+Progressor_label,cnv,cnv_anchor,cnv_random_forest,biopsy_mean,none,48.27586206896552,14,29,farthest distance where mean_score>0.6 AND >50% patients have score>=0.6

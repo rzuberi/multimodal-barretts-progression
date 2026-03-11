@@ -1,0 +1,6 @@
+metric,previous_value,updated_value,note
+baseline_stable_rows,315,315,Core March 4 aggregate leaderboard retained as historical baseline
+baseline_complete_rows,304,304,No March 4 baseline rows removed from the public snapshot
+post_snapshot_experiment_families,0,10,"Aggregate-safe additions from March 4 to March 10, 2026"
+derived_public_tables,6,11,Expanded beyond the original baseline leaderboard and inventory set
+static_figures,0,7,GitHub-renderable figures added for paper-style presentation
