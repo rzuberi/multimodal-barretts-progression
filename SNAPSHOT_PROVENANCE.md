@@ -1,13 +1,8 @@
-# Snapshot Provenance
+# Data Boundary And Provenance
 
-## Public version boundary
+## Scope
 
-- Last public commit before this refresh: `5f986668aa7919fb2b38c4738e22bd5beb9093fe`
-- Commit date: `2026-03-04 20:51:28 UTC`
-- Branch status before this refresh: `HEAD` matched `origin/main`
-- Baseline snapshot stored in this repo: `2026-03-04T20:14:40Z`
-
-The March 11, 2026 update preserves that baseline and adds aggregate-safe results produced between March 4 and March 10, 2026.
+This repo is a public, aggregate-only summary of the Barrett's multimodal modelling programme. It is intended to preserve the key result tables, figures, and high-level experimental comparisons without exposing any patient-level material.
 
 ## Checked-in aggregate sources used for the refresh
 
@@ -29,9 +24,6 @@ Report-level aggregates:
 - [source_aggregates/reports/fusion_rescue_hurt_counts.csv](source_aggregates/reports/fusion_rescue_hurt_counts.csv)
 - [source_aggregates/reports/modality_weight_binned_stats.csv](source_aggregates/reports/modality_weight_binned_stats.csv)
 - [source_aggregates/reports/modality_weight_spearman.csv](source_aggregates/reports/modality_weight_spearman.csv)
-- [source_aggregates/reports/progressor_union_label_summary.csv](source_aggregates/reports/progressor_union_label_summary.csv)
-- [source_aggregates/reports/post_local_grade_shift_summary.csv](source_aggregates/reports/post_local_grade_shift_summary.csv)
-- [source_aggregates/reports/post_snapshot_experiment_log.csv](source_aggregates/reports/post_snapshot_experiment_log.csv)
 
 ## Explicit exclusions
 
@@ -56,7 +48,6 @@ Examples of excluded internal artifact types:
 Some internal reports were scientifically useful but unsafe to publish verbatim. For those analyses, only a de-identified aggregate reduction was carried over. Two examples:
 
 - fusion rescue or hurt analysis: only group counts were retained
-- post-local grade comparison: only cohort-level counts were retained
 
 ## Rebuild path
 
@@ -71,4 +62,3 @@ This regenerates:
 
 - derived CSV summaries in [data_snapshots](data_snapshots)
 - static figures in [figures](figures)
-- update metadata in [data_snapshots/update_metadata.json](data_snapshots/update_metadata.json)

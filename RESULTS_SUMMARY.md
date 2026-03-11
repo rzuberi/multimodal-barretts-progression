@@ -1,6 +1,6 @@
 # Results Summary
 
-## Baseline snapshot retained from March 4, 2026
+## Core baseline findings
 
 - Stable public leaderboard rows: `315`
 - Complete rows: `304`
@@ -13,7 +13,7 @@ The baseline evidence still lives in:
 - [data_snapshots/task_leaders.csv](data_snapshots/task_leaders.csv)
 - [data_snapshots/model_leaderboard_binary_auc.csv](data_snapshots/model_leaderboard_binary_auc.csv)
 
-## Post-March 4 update highlights
+## Additional experiment highlights
 
 - AtRisk no-leak EPYC relaunch: best MoE AUCs were `0.8468` (`AtRisk_1y`), `0.8168` (`AtRisk_3y`), and `0.8391` (`AtRisk_5y`)
 - Aggregation study: multimodal led `NextBiopsyProgression_LGD3plus` at biopsy (`0.848`) and patient (`0.886`) level, while image led `Progressor_label` at biopsy (`0.795`) and patient (`0.915`) level
@@ -28,7 +28,6 @@ New derived public tables:
 - [data_snapshots/biopsy_patient_aggregation_best.csv](data_snapshots/biopsy_patient_aggregation_best.csv)
 - [data_snapshots/distance_to_progression_summary.csv](data_snapshots/distance_to_progression_summary.csv)
 - [data_snapshots/modality_weight_shift_summary.csv](data_snapshots/modality_weight_shift_summary.csv)
-- [data_snapshots/post_snapshot_experiment_log.csv](data_snapshots/post_snapshot_experiment_log.csv)
 
 ## Main interpretation
 

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import json
-from datetime import datetime, timezone
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -136,50 +134,6 @@ def build_modality_weight_shift_summary():
         summary["early_mean_image_weight"] - summary["late_mean_image_weight"]
     )
     return bins, summary.sort_values("task_name")
-
-
-def build_snapshot_delta(
-    previous_snapshot_metadata: dict,
-    experiment_log: pd.DataFrame,
-    derived_tables_count: int,
-    figure_count: int,
-) -> pd.DataFrame:
-    previous_rows = int(previous_snapshot_metadata["counts"]["stable_total_rows"])
-    previous_complete = int(previous_snapshot_metadata["counts"]["stable_complete_rows"])
-    return pd.DataFrame(
-        [
-            {
-                "metric": "baseline_stable_rows",
-                "previous_value": previous_rows,
-                "updated_value": previous_rows,
-                "note": "Core March 4 aggregate leaderboard retained as historical baseline",
-            },
-            {
-                "metric": "baseline_complete_rows",
-                "previous_value": previous_complete,
-                "updated_value": previous_complete,
-                "note": "No March 4 baseline rows removed from the public snapshot",
-            },
-            {
-                "metric": "post_snapshot_experiment_families",
-                "previous_value": 0,
-                "updated_value": int(len(experiment_log)),
-                "note": "Aggregate-safe additions from March 4 to March 10, 2026",
-            },
-            {
-                "metric": "derived_public_tables",
-                "previous_value": 6,
-                "updated_value": derived_tables_count,
-                "note": "Expanded beyond the original baseline leaderboard and inventory set",
-            },
-            {
-                "metric": "static_figures",
-                "previous_value": 0,
-                "updated_value": figure_count,
-                "note": "GitHub-renderable figures added for paper-style presentation",
-            },
-        ]
-    )
 
 
 def save_figure(fig: plt.Figure, name: str) -> None:
@@ -350,9 +304,6 @@ def main() -> None:
     DATA_SNAPSHOTS.mkdir(exist_ok=True)
     FIGURES.mkdir(exist_ok=True)
 
-    with open(DATA_SNAPSHOTS / "snapshot_metadata.json") as handle:
-        baseline_snapshot_metadata = json.load(handle)
-
     headline = load_csv(DATA_SNAPSHOTS / "headline_task_auc_comparison.csv")
     task_leaders = load_csv(DATA_SNAPSHOTS / "task_leaders.csv")
     task_leader_counts = build_task_leader_modality_counts(task_leaders)
@@ -362,9 +313,6 @@ def main() -> None:
     distance = build_distance_to_progression_summary()
     modality_bins, modality_summary = build_modality_weight_shift_summary()
     fusion_counts = load_csv(SOURCE_REPORTS / "fusion_rescue_hurt_counts.csv")
-    experiment_log = load_csv(SOURCE_REPORTS / "post_snapshot_experiment_log.csv")
-    post_local_grade = load_csv(SOURCE_REPORTS / "post_local_grade_shift_summary.csv")
-    progressor_union = load_csv(SOURCE_REPORTS / "progressor_union_label_summary.csv")
 
     outputs = {
         "task_leader_modality_counts.csv": task_leader_counts,
@@ -375,9 +323,6 @@ def main() -> None:
         "fusion_rescue_hurt_group_counts.csv": fusion_counts,
         "modality_weight_time_bins.csv": modality_bins,
         "modality_weight_shift_summary.csv": modality_summary,
-        "post_snapshot_experiment_log.csv": experiment_log,
-        "post_local_grade_shift_summary.csv": post_local_grade,
-        "progressor_union_label_summary.csv": progressor_union,
     }
     for name, df in outputs.items():
         write_csv(df, DATA_SNAPSHOTS / name)
@@ -389,46 +334,6 @@ def main() -> None:
     plot_critical_biopsy(critical)
     plot_distance_summary(distance)
     plot_modality_weight_shift(modality_bins)
-
-    figure_count = len(list(FIGURES.glob("figure*.png")))
-    delta = build_snapshot_delta(
-        previous_snapshot_metadata=baseline_snapshot_metadata,
-        experiment_log=experiment_log,
-        derived_tables_count=len(outputs),
-        figure_count=figure_count,
-    )
-    write_csv(delta, DATA_SNAPSHOTS / "snapshot_delta_vs_previous.csv")
-
-    update_metadata = {
-        "updated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "last_public_commit_sha": "5f986668aa7919fb2b38c4738e22bd5beb9093fe",
-        "last_public_commit_date_utc": "2026-03-04T20:51:28Z",
-        "last_public_commit_status": "HEAD matched origin/main before this update",
-        "baseline_snapshot_time_utc": baseline_snapshot_metadata["snapshot_time_utc"],
-        "post_snapshot_window_start_utc": "2026-03-04T20:51:28Z",
-        "post_snapshot_window_end_utc": "2026-03-10T13:35:00Z",
-        "post_snapshot_experiment_family_count": int(len(experiment_log)),
-        "derived_public_tables_count": len(outputs),
-        "static_figure_count": figure_count,
-        "source_files": {
-            "baseline_snapshot_metadata": "data_snapshots/snapshot_metadata.json",
-            "lgd3plus_fullcoverage_global_results_summary": "source_aggregates/campaigns/lgd3plus_fullcoverage_global_results_summary.csv",
-            "cnv_masked_alltasks_global_results_summary": "source_aggregates/campaigns/cnv_masked_alltasks_global_results_summary.csv",
-            "atrisk_noleak_top_models": "source_aggregates/reports/atrisk_noleak_top_models.csv",
-            "biopsy_patient_aggregation": "source_aggregates/reports/biopsy_patient_aggregation_combined.csv",
-            "critical_biopsy_sample_level": "source_aggregates/reports/critical_biopsy_sample_level.csv",
-            "critical_biopsy_patient_level": "source_aggregates/reports/critical_biopsy_patient_level.csv",
-            "progressor_detection_horizon": "source_aggregates/reports/progressor_detection_horizon_summary.csv",
-            "progressor_never_caught": "source_aggregates/reports/progressor_never_caught_summary.csv",
-            "modality_weight_binned_stats": "source_aggregates/reports/modality_weight_binned_stats.csv",
-            "modality_weight_spearman": "source_aggregates/reports/modality_weight_spearman.csv",
-            "fusion_rescue_hurt_counts": "source_aggregates/reports/fusion_rescue_hurt_counts.csv",
-            "progressor_union_label_summary": "source_aggregates/reports/progressor_union_label_summary.csv",
-            "post_local_grade_shift_summary": "source_aggregates/reports/post_local_grade_shift_summary.csv",
-        },
-    }
-    with open(DATA_SNAPSHOTS / "update_metadata.json", "w") as handle:
-        json.dump(update_metadata, handle, indent=2)
 
 
 if __name__ == "__main__":
