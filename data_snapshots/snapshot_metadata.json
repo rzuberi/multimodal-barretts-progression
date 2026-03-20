@@ -1,5 +1,5 @@
 {
-  "snapshot_time_utc": "2026-03-04T20:14:40Z",
+  "snapshot_time_utc": "2026-03-20T00:00:00Z",
   "stable_campaign": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_completion_20260304_155636",
   "fullcoverage_campaign": "data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_fullcoverage_20260304_195943",
   "source_files": {
@@ -16,5 +16,15 @@
     "fullcoverage_trainable_rows": 402,
     "fullcoverage_derived_latefusion_rows": 462,
     "fullcoverage_blocked_rows": 0
+  },
+  "post_march_2026_update": {
+    "strict_lgd2_refresh_campaign": "data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251",
+    "patientday_program_campaign": "data/foundation_grid_runs/campaign_lgd2_patientday_moe_20260318_182454",
+    "h200_signal_ablation_campaign": "data/foundation_grid_runs/campaign_lgd2_h200_patient_signal_lgd2_20260319",
+    "new_public_tables": [
+      "data_snapshots/strict_lgd2_patient_level_headline.csv",
+      "data_snapshots/progressor_patient_level_data_efficiency.csv",
+      "data_snapshots/strict_lgd2_patient_level_modality_ablation.csv"
+    ]
   }
 }

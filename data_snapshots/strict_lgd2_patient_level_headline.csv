@@ -1,0 +1,6 @@
+endpoint,summary_group,modality_family,backbone_or_system,model_label,cnv_representation,patient_auc,n_patients_eval,n_positive_patients,event_strategy,patient_strategy,note
+NextBiopsyProgression_LGD2plus,Best multimodal,multimodal,UNI2,Early fusion MLP,windows_armdiff_plus_arms_plus_cx,0.9264,155,55,event_mean,patient_max,Strict progression definition: two consecutive LGD biopsy dates.
+NextBiopsyProgression_LGD2plus,Best image-only,image,UNI2,Set Transformer Lite,,0.8653,155,55,event_max,patient_max,Strict progression definition: two consecutive LGD biopsy dates.
+NextBiopsyProgression_LGD2plus,Best CNV-only,cnv,CNV only,Random forest,external_arms_500kb,0.8538,155,55,event_mean,patient_max,Strict progression definition: two consecutive LGD biopsy dates.
+NextBiopsyProgression_LGD2plus,Best routing / MoE,moe,Routing ensemble,Mean ensemble of multimodal and CNV experts,,0.8871,155,55,event_median,patient_max,Strict progression definition: two consecutive LGD biopsy dates.
+NextBiopsyProgression_LGD2plus,Best late fusion,fusion,Late-fusion ensemble,Late fusion mean of UNI2 image and CNV,,0.8791,155,55,event_mean,patient_max,Strict progression definition: two consecutive LGD biopsy dates.

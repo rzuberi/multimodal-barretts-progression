@@ -24,6 +24,9 @@ Report-level aggregates:
 - [source_aggregates/reports/fusion_rescue_hurt_counts.csv](source_aggregates/reports/fusion_rescue_hurt_counts.csv)
 - [source_aggregates/reports/modality_weight_binned_stats.csv](source_aggregates/reports/modality_weight_binned_stats.csv)
 - [source_aggregates/reports/modality_weight_spearman.csv](source_aggregates/reports/modality_weight_spearman.csv)
+- [source_aggregates/reports/strict_lgd2_patient_level_headline.csv](source_aggregates/reports/strict_lgd2_patient_level_headline.csv)
+- [source_aggregates/reports/progressor_patient_level_data_efficiency.csv](source_aggregates/reports/progressor_patient_level_data_efficiency.csv)
+- [source_aggregates/reports/strict_lgd2_patient_level_modality_ablation.csv](source_aggregates/reports/strict_lgd2_patient_level_modality_ablation.csv)
 
 ## Explicit exclusions
 
@@ -62,3 +65,13 @@ This regenerates:
 
 - derived CSV summaries in [data_snapshots](data_snapshots)
 - static figures in [figures](figures)
+
+## March 2026 public update
+
+The newer checked-in public tables focus on a stricter patient-level framing:
+
+- `NextBiopsyProgression_LGD2plus` with a stricter progression definition
+- patient-level data-efficiency summaries for `Progressor_label`
+- patient-level modality-ablation summaries from H200 follow-up analyses
+
+These additions remain aggregate-only. They do not include patient-level rows, predictions, or any private cohort reconstruction artifacts.
