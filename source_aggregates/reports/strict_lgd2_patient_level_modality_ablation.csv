@@ -1,0 +1,9 @@
+endpoint,ablation,model_label,patient_auc,n_patients_eval,n_positive_patients,event_strategy,patient_strategy
+NextBiopsyProgression_LGD2plus,Baseline,Early fusion MLP,0.9264,155,55,event_mean,patient_max
+NextBiopsyProgression_LGD2plus,Shuffle CNV only,Co-attention MIL + CNV,0.8884,155,55,event_mean,patient_max
+NextBiopsyProgression_LGD2plus,Shuffle both image and CNV,Early fusion MLP with time covariates,0.7265,155,55,event_median,patient_max
+NextBiopsyProgression_LGD2plus,Shuffle image only,Early fusion MLP,0.8607,155,55,event_max,patient_max
+Progressor_label,Baseline,Early fusion MLP with time covariates,0.9176,160,41,event_median,patient_mean
+Progressor_label,Shuffle CNV only,Co-attention MIL + CNV,0.8793,160,41,event_median,patient_max
+Progressor_label,Shuffle both image and CNV,Early fusion MLP with time covariates,0.7044,160,41,event_max,patient_max
+Progressor_label,Shuffle image only,Early fusion MLP,0.8785,160,41,event_median,patient_max
