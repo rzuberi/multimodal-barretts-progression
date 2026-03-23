@@ -33,6 +33,11 @@ def parse_args():
     parser.add_argument("--no-color", action="store_true", help="Disable ANSI colors.")
     parser.add_argument("--no-clear", action="store_true", help="Do not clear the screen at startup.")
     parser.add_argument("--auto", action="store_true", help="Autoplay the full sequence without waiting for input.")
+    parser.add_argument(
+        "--compact-prompt",
+        action="store_true",
+        help="Use shorter prompts to avoid line wrapping during demos.",
+    )
     return parser.parse_args()
 
 
@@ -47,10 +52,11 @@ def normalize_command(text):
 
 
 class Demo:
-    def __init__(self, speed, use_color):
+    def __init__(self, speed, use_color, compact_prompt):
         self.sleep_scale = 1.0 / max(speed, 0.01)
         self.use_color = use_color
         self.fill_char_delay = 0.045 * self.sleep_scale
+        self.compact_prompt = compact_prompt
 
     def pause(self, seconds):
         time.sleep(seconds * self.sleep_scale)
@@ -68,6 +74,10 @@ class Demo:
         self.pause(0.25)
 
     def prompt(self, in_repo):
+        if self.compact_prompt:
+            if in_repo:
+                return color("demo@multimodal:~/mbp$ ", BOLD + GREEN, self.use_color)
+            return color("demo@multimodal:~$ ", BOLD + GREEN, self.use_color)
         if in_repo:
             return color("demo@multimodal:~/multimodal-barretts-progression$ ", BOLD + GREEN, self.use_color)
         return color("demo@multimodal:~$ ", BOLD + GREEN, self.use_color)
@@ -336,7 +346,7 @@ def autoplay(demo):
 
 def main():
     args = parse_args()
-    demo = Demo(speed=args.speed, use_color=not args.no_color)
+    demo = Demo(speed=args.speed, use_color=not args.no_color, compact_prompt=args.compact_prompt)
 
     if not args.no_clear:
         demo.write("\033[2J\033[H")
