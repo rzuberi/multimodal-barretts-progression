@@ -14,6 +14,13 @@ cd multimodal-barretts-progression
 python train_model.py --config configs/example.yaml --dataset data/demo_patient_cohort.csv --fusion multimodal_transformer
 ```
 
+Shortcut mode:
+
+- press `1` to auto-type the clone command
+- press `2` to auto-type the `cd` command
+- press `3` to auto-type the training command
+- then press `Enter` to run that step
+
 Useful variants:
 
 ```bash
@@ -25,6 +32,7 @@ python3 scripts/demo_terminal_showcase.py --speed 2.0 --no-clear
 What it does:
 
 - waits for you to type the demo commands live
+- lets you press `1`, `2`, or `3` to fill the staged commands at a human typing speed
 - simulates cloning the public repo
 - simulates entering the repo directory
 - simulates a headless training command
