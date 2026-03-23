@@ -2,7 +2,9 @@
 
 import argparse
 import sys
+import termios
 import time
+import tty
 
 
 RESET = "\033[0m"
@@ -48,6 +50,7 @@ class Demo:
     def __init__(self, speed, use_color):
         self.sleep_scale = 1.0 / max(speed, 0.01)
         self.use_color = use_color
+        self.fill_char_delay = 0.045 * self.sleep_scale
 
     def pause(self, seconds):
         time.sleep(seconds * self.sleep_scale)
@@ -74,6 +77,11 @@ class Demo:
 
     def note(self, text):
         self.println(color(text, DIM + CYAN, self.use_color))
+
+    def fill_buffer(self, command):
+        for ch in command:
+            self.write(ch)
+            time.sleep(self.fill_char_delay)
 
 
 def progress_bar(frac, width):
@@ -210,10 +218,60 @@ def interactive_loop(demo):
 
     demo.note("Type the demo commands live. Use Ctrl+C to exit.")
     demo.note("Expected flow: clone -> cd -> python train_model.py ...")
+    demo.note("Shortcuts: press 1 for clone, 2 for cd, 3 for train command, then hit Enter.")
+
+    shortcuts = {
+        "1": EXPECTED_CLONE,
+        "2": EXPECTED_CD,
+        "3": EXPECTED_TRAIN,
+    }
+
+    def read_command(prompt):
+        if not sys.stdin.isatty():
+            return input(prompt)
+
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        buffer_chars = []
+        try:
+            tty.setraw(fd)
+            demo.write(prompt)
+            while True:
+                ch = sys.stdin.read(1)
+                if ch in ("\r", "\n"):
+                    demo.println()
+                    return "".join(buffer_chars)
+                if ch == "\x03":
+                    raise KeyboardInterrupt
+                if ch == "\x04":
+                    if not buffer_chars:
+                        demo.println()
+                        raise EOFError
+                    continue
+                if ch in ("\x7f", "\b"):
+                    if buffer_chars:
+                        buffer_chars.pop()
+                        demo.write("\b \b")
+                    continue
+                if ch == "\x1b":
+                    seq = sys.stdin.read(2)
+                    if seq == "[3":
+                        sys.stdin.read(1)
+                    continue
+                if not buffer_chars and ch in shortcuts:
+                    command = shortcuts[ch]
+                    buffer_chars = list(command)
+                    demo.fill_buffer(command)
+                    continue
+                if ch.isprintable():
+                    buffer_chars.append(ch)
+                    demo.write(ch)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
     while True:
         try:
-            command = input(demo.prompt(in_repo))
+            command = read_command(demo.prompt(in_repo))
         except EOFError:
             demo.println()
             break
