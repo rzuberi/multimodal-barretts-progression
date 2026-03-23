@@ -66,7 +66,7 @@ class Demo:
         sys.stdout.flush()
 
     def println(self, text=""):
-        self.write(text, end="\n")
+        self.write(text, end="\r\n")
 
     def section(self, title):
         self.println()
