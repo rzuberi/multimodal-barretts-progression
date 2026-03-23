@@ -13,8 +13,14 @@ GREEN = "\033[32m"
 YELLOW = "\033[33m"
 MAGENTA = "\033[35m"
 BLUE = "\033[34m"
-RED = "\033[31m"
 WHITE = "\033[37m"
+
+EXPECTED_CLONE = "git clone https://github.com/rzuberi/multimodal-barretts-progression"
+EXPECTED_CD = "cd multimodal-barretts-progression"
+EXPECTED_TRAIN = (
+    "python train_model.py --config configs/example.yaml "
+    "--dataset data/demo_patient_cohort.csv --fusion multimodal_transformer"
+)
 
 
 def parse_args():
@@ -23,8 +29,8 @@ def parse_args():
     )
     parser.add_argument("--speed", type=float, default=1.0, help="Playback speed multiplier. Higher is faster.")
     parser.add_argument("--no-color", action="store_true", help="Disable ANSI colors.")
-    parser.add_argument("--no-type", action="store_true", help="Print full commands instantly instead of typing.")
     parser.add_argument("--no-clear", action="store_true", help="Do not clear the screen at startup.")
+    parser.add_argument("--auto", action="store_true", help="Autoplay the full sequence without waiting for input.")
     return parser.parse_args()
 
 
@@ -34,11 +40,14 @@ def color(text, code, enabled):
     return code + text + RESET
 
 
+def normalize_command(text):
+    return " ".join(str(text).strip().split())
+
+
 class Demo:
-    def __init__(self, speed, use_color, type_commands):
+    def __init__(self, speed, use_color):
         self.sleep_scale = 1.0 / max(speed, 0.01)
         self.use_color = use_color
-        self.type_commands = type_commands
 
     def pause(self, seconds):
         time.sleep(seconds * self.sleep_scale)
@@ -50,21 +59,21 @@ class Demo:
     def println(self, text=""):
         self.write(text, end="\n")
 
-    def type_line(self, prompt, command):
-        self.write(prompt)
-        if self.type_commands:
-            for ch in command:
-                self.write(ch)
-                self.pause(0.018)
-            self.println()
-        else:
-            self.println(command)
-        self.pause(0.35)
-
     def section(self, title):
         self.println()
         self.println(color(title, BOLD + CYAN, self.use_color))
         self.pause(0.25)
+
+    def prompt(self, in_repo):
+        if in_repo:
+            return color("demo@multimodal:~/multimodal-barretts-progression$ ", BOLD + GREEN, self.use_color)
+        return color("demo@multimodal:~$ ", BOLD + GREEN, self.use_color)
+
+    def info(self, text):
+        self.println(color(text, DIM + WHITE, self.use_color))
+
+    def note(self, text):
+        self.println(color(text, DIM + CYAN, self.use_color))
 
 
 def progress_bar(frac, width):
@@ -73,21 +82,13 @@ def progress_bar(frac, width):
     return "[" + ("#" * done) + ("-" * (width - done)) + "]"
 
 
-def main():
-    args = parse_args()
-    demo = Demo(speed=args.speed, use_color=not args.no_color, type_commands=not args.no_type)
-
-    if not args.no_clear:
-        demo.write("\033[2J\033[H")
-
-    home_prompt = color("demo@multimodal:~$ ", BOLD + GREEN, demo.use_color)
-    repo_prompt = color("demo@multimodal:~/multimodal-barretts-progression$ ", BOLD + GREEN, demo.use_color)
-
+def print_intro(demo):
     demo.println(color("Multimodal Barrett's Progression Demo", BOLD + WHITE, demo.use_color))
-    demo.println(color("Deterministic terminal walkthrough for screen recording", DIM + WHITE, demo.use_color))
-    demo.pause(0.8)
+    demo.println(color("Interactive scripted shell for screen recording", DIM + WHITE, demo.use_color))
+    demo.pause(0.5)
 
-    demo.type_line(home_prompt, "git clone https://github.com/rzuberi/multimodal-barretts-progression")
+
+def print_clone_output(demo):
     clone_lines = [
         "Cloning into 'multimodal-barretts-progression'...",
         "remote: Enumerating objects: 248, done.",
@@ -97,15 +98,11 @@ def main():
         "Resolving deltas: 100% (119/119), done.",
     ]
     for line in clone_lines:
-        demo.println(color(line, DIM + WHITE, demo.use_color))
+        demo.info(line)
         demo.pause(0.18)
 
-    demo.type_line(home_prompt, "cd multimodal-barretts-progression")
-    demo.type_line(
-        repo_prompt,
-        "python train_model.py --config configs/example.yaml --dataset data/demo_patient_cohort.csv --fusion multimodal_transformer",
-    )
 
+def print_training_output(demo):
     demo.section("Loading Demo Configuration")
     config_lines = [
         "task: early progression detection",
@@ -117,11 +114,7 @@ def main():
     ]
     for line in config_lines:
         label, value = line.split(":", 1)
-        demo.println(
-            "  "
-            + color(label + ":", BOLD + BLUE, demo.use_color)
-            + color(value, WHITE, demo.use_color)
-        )
+        demo.println("  " + color(label + ":", BOLD + BLUE, demo.use_color) + color(value, WHITE, demo.use_color))
         demo.pause(0.12)
 
     demo.section("Reference Baselines")
@@ -146,8 +139,7 @@ def main():
     ]
 
     for epoch, loss, val_auc, gain_img, gain_cnv in epoch_rows:
-        frac = float(epoch) / 10.0
-        bar = progress_bar(frac, 24)
+        bar = progress_bar(float(epoch) / 10.0, 24)
         line = (
             "  Epoch {epoch:02d}/10  {bar}  loss={loss:.3f}  val_auc={val_auc:.3f}  "
             "vs_image={gain_img:+.3f}  vs_cnv={gain_cnv:+.3f}"
@@ -185,18 +177,117 @@ def main():
 
     demo.section("Artifacts")
     artifact_lines = [
-        "saved model      outputs/demo_multimodal/model.pt",
-        "metrics report   outputs/demo_multimodal/metrics.json",
-        "risk table       outputs/demo_multimodal/patient_risk_scores.csv",
-        "run status       complete",
+        ("saved model", "outputs/demo_multimodal/model.pt"),
+        ("metrics report", "outputs/demo_multimodal/metrics.json"),
+        ("risk table", "outputs/demo_multimodal/patient_risk_scores.csv"),
+        ("run status", "complete"),
     ]
-    for line in artifact_lines:
-        label, value = line.split("      ", 1) if "      " in line else line.split("   ", 1)
+    for label, value in artifact_lines:
         demo.println("  " + color(label, BOLD + BLUE, demo.use_color) + "  " + color(value, WHITE, demo.use_color))
         demo.pause(0.12)
 
     demo.println()
     demo.println(color("Demo complete. Ready for Q&A or a second run.", BOLD + GREEN, demo.use_color))
+
+
+def is_expected_clone(command):
+    return normalize_command(command) == normalize_command(EXPECTED_CLONE)
+
+
+def is_expected_cd(command):
+    return normalize_command(command) == normalize_command(EXPECTED_CD)
+
+
+def is_expected_train(command):
+    cmd = normalize_command(command)
+    return cmd.startswith("python train_model.py ") or cmd == normalize_command(EXPECTED_TRAIN)
+
+
+def interactive_loop(demo):
+    in_repo = False
+    clone_done = False
+    train_done = False
+
+    demo.note("Type the demo commands live. Use Ctrl+C to exit.")
+    demo.note("Expected flow: clone -> cd -> python train_model.py ...")
+
+    while True:
+        try:
+            command = input(demo.prompt(in_repo))
+        except EOFError:
+            demo.println()
+            break
+
+        cmd = normalize_command(command)
+        if not cmd:
+            continue
+        if cmd in ("exit", "quit"):
+            break
+        if cmd == "help":
+            demo.note("Try:")
+            demo.note("  " + EXPECTED_CLONE)
+            demo.note("  " + EXPECTED_CD)
+            demo.note("  " + EXPECTED_TRAIN)
+            continue
+        if cmd == "clear":
+            demo.write("\033[2J\033[H")
+            print_intro(demo)
+            continue
+
+        if not clone_done:
+            if is_expected_clone(cmd):
+                print_clone_output(demo)
+                clone_done = True
+                continue
+            demo.note("Demo is waiting for the clone command.")
+            continue
+
+        if clone_done and not in_repo:
+            if is_expected_cd(cmd):
+                in_repo = True
+                continue
+            demo.note("Demo is waiting for: cd multimodal-barretts-progression")
+            continue
+
+        if in_repo and not train_done:
+            if is_expected_train(cmd):
+                print_training_output(demo)
+                train_done = True
+                continue
+            demo.note("Demo is waiting for a python train_model.py command.")
+            continue
+
+        demo.note("Demo finished. Type 'clear' to restart or 'exit' to quit.")
+
+
+def autoplay(demo):
+    steps = [
+        (False, EXPECTED_CLONE, print_clone_output),
+        (False, EXPECTED_CD, None),
+        (True, EXPECTED_TRAIN, print_training_output),
+    ]
+    in_repo = False
+    for step_in_repo, command, action in steps:
+        demo.println(demo.prompt(step_in_repo) + command)
+        demo.pause(0.35)
+        if action is not None:
+            action(demo)
+        in_repo = step_in_repo
+    return in_repo
+
+
+def main():
+    args = parse_args()
+    demo = Demo(speed=args.speed, use_color=not args.no_color)
+
+    if not args.no_clear:
+        demo.write("\033[2J\033[H")
+
+    print_intro(demo)
+    if args.auto:
+        autoplay(demo)
+    else:
+        interactive_loop(demo)
 
 
 if __name__ == "__main__":
