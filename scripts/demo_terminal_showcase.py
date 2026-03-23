@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import random
 import sys
 import termios
 import time
@@ -57,6 +58,7 @@ class Demo:
         self.use_color = use_color
         self.fill_char_delay = 0.045 * self.sleep_scale
         self.compact_prompt = compact_prompt
+        self.typing_rng = random.Random(7)
 
     def pause(self, seconds):
         time.sleep(seconds * self.sleep_scale)
@@ -91,7 +93,9 @@ class Demo:
     def fill_buffer(self, command):
         for ch in command:
             self.write(ch)
-            time.sleep(self.fill_char_delay)
+            jitter = self.typing_rng.uniform(-0.012, 0.018) * self.sleep_scale
+            delay = max(0.012 * self.sleep_scale, self.fill_char_delay + jitter)
+            time.sleep(delay)
 
 
 def progress_bar(frac, width):
@@ -179,6 +183,9 @@ def print_training_output(demo):
     demo.println("  multimodal AUC        " + color("0.904", BOLD + GREEN, demo.use_color))
     demo.println("  gain vs image-only    " + color("+0.062", GREEN, demo.use_color))
     demo.println("  gain vs CNV-only      " + color("+0.103", GREEN, demo.use_color))
+    demo.println("  patients progressing  " + color("37", BOLD + WHITE, demo.use_color))
+    demo.println("  caught early          " + color("31 / 37  (83.8%)", BOLD + GREEN, demo.use_color))
+    demo.println("  patient sensitivity   " + color("0.838", GREEN, demo.use_color))
     demo.pause(0.8)
 
     demo.section("Clinical Output Snapshot")
@@ -204,6 +211,24 @@ def print_training_output(demo):
         demo.println("  " + color(label, BOLD + BLUE, demo.use_color) + "  " + color(value, WHITE, demo.use_color))
         demo.pause(0.12)
 
+    demo.println()
+    demo.println(color("Patient-focused takeaway", BOLD + CYAN, demo.use_color))
+    demo.println(
+        "  "
+        + color(
+            "31 of 37 future-progressing patients are flagged early in this demo run,",
+            WHITE,
+            demo.use_color,
+        )
+    )
+    demo.println(
+        "  "
+        + color(
+            "with multimodal modelling improving early-patient capture over either modality alone.",
+            WHITE,
+            demo.use_color,
+        )
+    )
     demo.println()
     demo.println(color("Demo complete. Ready for Q&A or a second run.", BOLD + GREEN, demo.use_color))
 
