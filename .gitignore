@@ -39,6 +39,7 @@ figures/generated/
 
 # Allow source-controlled documentation and tiny config/examples if explicitly added.
 !docs/**/*.md
+!docs/final_results_manifest.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml

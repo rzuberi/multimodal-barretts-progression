@@ -1,0 +1,87 @@
+# Final Results Manifest — Barrett Chapter 1
+
+## Purpose
+
+This manifest links the clean GitHub repository to external HPC cohort/result folders without tracking raw data, WSIs, model checkpoints, large prediction files, or full result directories.
+
+All paths below are external paths relative to the Barrett training root:
+
+`/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training`
+
+The machine-readable companion file is `docs/final_results_manifest.csv`. Future scripts should read that CSV and then load only the external files they need.
+
+## Locked Chapter 1 analysis
+
+- Primary endpoint: `NextBiopsyProgression_LGD2plus`.
+- Clinical definition: HGD/IMC/OAC or two consecutive LGD biopsies.
+- Primary evaluation: 5-fold patient-disjoint CV.
+- Primary reporting level: patient-level.
+- Supplementary reporting: biopsy-level and sample/slide-level.
+- LGD3+: supplementary / legacy / interpretability-supporting.
+- LOPO: not primary for now.
+
+## Main LGD2+ final-candidate results
+
+| result family | status | external path | summary file | prediction file | missing metrics | planned output |
+|---|---|---|---|---|---|---|
+| Primary LGD2+ cohort | `FINAL_CANDIDATE` | `data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/` | `derived_master.csv` | n/a | final cohort-flow docs and early-prediction flag | Table 1 cohort flow |
+| CNV-only core | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/cnv_anchor/` | `global_results_summary.csv` | `runs/cnv/all_samples/core_binary/cv/predictions_all_samples_cnv_random_forest_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | patient AUPRC, Brier/calibration, PPV/NPV, FP/TN, fixed operating points | Main model comparison table |
+| CNV variant/resolution sweep | `SUPPLEMENTARY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/cnv_variants/cnv_anchor/` | `global_results_summary.csv` | `runs/cnv/all_samples/variant_binary/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | patient-level clinical metrics by variant | Supplementary CNV variant table |
+| Image-only Gigapath | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/gigapath/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_set_transformer_lite_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
+| Image-only UNI2 | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/uni2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
+| Image-only Virchow2 | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/virchow2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
+| Early fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_early_mean_mlp*_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
+| Intermediate fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_intermediate_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
+| Co-attention fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_coattn_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
+| Foundation-combo fusion | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/foundation_combo/` | `cv_summary_foundation_combo_fusion.csv` | `cv_predictions_foundation_combo_fusion.csv` | patient IDs and patient metrics need join/review | Supplementary foundation-fusion table |
+| Clinical augmentation | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_clinical_augmentation_20260319_190949/` | `core_lvl2/*/global_results_summary.csv` | review manually | decide thesis scope; patient clinical metrics | Supplementary clinical covariates table |
+
+## Required recomputation from existing outputs
+
+The following should be recomputed from saved external prediction files, without retraining:
+
+- Patient-level clinical metrics with PPV, NPV, TP, FP, TN, FN.
+- False-positive burden, including false positives per detected progressor.
+- Patient-level confusion matrices.
+- Patient-level AUPRC.
+- Patient-level Brier score and calibration summaries.
+- Sensitivity at fixed specificity and specificity at fixed sensitivity.
+- Confidence intervals or fold/bootstrap variability at patient level.
+- Early-prediction-only analysis excluding `DaysFromCurrentToEvent == 0`.
+
+Primary input pattern for this recomputation:
+
+`data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/*/runs/*/all_samples/*/cv/predictions_all_samples_*NextBiopsyProgression_LGD2plus*_rep01_fold{1..5}.csv`
+
+The prediction files audited include `sample_id`, `patient_id`, `fold`, `y_true`, `y_pred`, and `y_prob`.
+
+## Supplementary / legacy result families
+
+| result family | status | external path | thesis use |
+|---|---|---|---|
+| LGD3+ 5-fold results | `SUPPLEMENTARY` | `data/foundation_grid_runs/campaign_lgd3plus_CANONICAL_fullcoverage_20260304_195943/`; `reports/biopsy_patient_aggregation_20260306_102801/` | Supplementary / legacy endpoint comparison |
+| LGD3+ interpretation outputs | `SUPPLEMENTARY` | `analysis/clinician_figures_nextbiopsyprogression_batch10/`; `analysis/explainability/`; `analysis/cnv_explainability/` | Interpretability support only unless regenerated for LGD2+ |
+| Killcoyne/CNV reproduction | `LEGACY` | `analysis/killcoyne_paperfaithful_fullsplit_20260427_145056/`; `analysis/fixed_lambda_lopo_truepath_panels_20260428_1048/` | Historical CNV baseline context |
+| Survival/time-window outputs | `SUPPLEMENTARY` | `analysis/patientday_survival_strict_lgd2_nextbiopsy_20260319_v2/` | Supplementary time-window analysis |
+| Old 50-fold/smoke/LOPO families | `EXPLORATORY` | `data/virchow2_mil_runs/`; older `data/foundation_grid_runs/campaign_20260226_210057/`; related smoke folders | Do not use for primary claims |
+
+## Missing or partial result families
+
+| item | status | note |
+|---|---|---|
+| LGD2+ histology attention/top-patch outputs | `MISSING` | Existing top-patch/attention outputs are mainly LGD3+. |
+| LGD2+ CNV top genes/windows | `MISSING` | Existing CNV explainability appears mostly LGD3+. |
+| LGD2+ fusion help/hurt/fail cases | `MISSING` | LGD3+ rescue/hurt reports exist, but LGD2+ case analysis was not found. |
+| LGD2+ tile/magnification comparison | `REVIEW_MANUALLY` | Patch-selection/level evidence exists, but no clean final LGD2+ comparison table was found. |
+| Foundation-combo patient-level metrics | `REVIEW_MANUALLY` | Prediction file found, but audited header lacks `patient_id`; join required before patient metrics. |
+| Final early-prediction-only results | `NEEDS_RECOMPUTE` | No final filtered output found. |
+
+## Next scripts that should consume this manifest
+
+- `scripts/02_recompute_patient_detection_metrics.py`
+- `scripts/03_make_cohort_table.py`
+- `scripts/04_make_main_results_table.py`
+- `scripts/05_make_early_prediction_table.py`
+- `scripts/06_make_interpretability_summary.py`
+
+These scripts should read `docs/final_results_manifest.csv`, resolve external paths under `$BARRETTS_EXPERIMENT_ROOT`, and write any generated outputs outside Git unless they are small documentation summaries.
