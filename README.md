@@ -5,10 +5,11 @@
 - No raw data, derived cohort tables, slide files, CNV matrices, embeddings, checkpoints, prediction CSVs, or result folders are stored in this repository.
 - The primary endpoint is now locked as `NextBiopsyProgression_LGD2plus`: HGD/IMC/OAC or two consecutive LGD biopsies.
 - The primary evaluation is now locked as 5-fold patient-disjoint CV, not LOPO.
-- Existing LGD2+ 5-fold patient-level results are present, but the final clinical table is incomplete: patient-level AUPRC, Brier/calibration, fixed-sensitivity/specificity operating points, and full confusion matrices still need recomputation from saved predictions.
-- A clean early-prediction-only supplementary analysis excluding `DaysFromCurrentToEvent == 0` has not yet been generated as a final result.
+- LGD2+ patient-level clinical metrics have been recomputed from saved external predictions in `reports/thesis_ch1/`.
+- A clean early-prediction-only supplementary analysis excluding `DaysFromCurrentToEvent == 0` is now generated in `reports/thesis_ch1/`.
 - LGD2+ biological interpretation outputs were not found in the audited experiment folder.
 - A clean tile/magnification comparison table for the final LGD2+ endpoint was not found.
+- Model definitions have not yet been migrated into `src/barrett/models/`; see `docs/model_code_migration_plan.md`.
 - This branch is a reset from the previous demo-oriented repository contents; it starts from the local experiment audits and defines the next reproducible project direction.
 
 ## Current Focus
@@ -23,8 +24,8 @@ The immediate working plan is:
 2. Use 5-fold patient-disjoint CV as the primary evaluation.
 3. Use patient-level results as primary; biopsy/sample-level results are supplementary.
 4. Keep LGD3+ as supplementary / legacy / interpretability-supporting.
-5. Recompute the missing patient-level clinical metrics from saved LGD2+ prediction files.
-6. Decide whether early-prediction-only analysis is supplementary or required for the main table.
+5. Use the recomputed patient-level clinical metrics from saved LGD2+ prediction files.
+6. Treat early-prediction-only analysis as a supplementary sensitivity analysis.
 7. Add LGD2+ biological interpretation outputs for histology, CNV, and multimodal disagreement/rescue cases.
 
 ## Repository Scope
@@ -36,6 +37,7 @@ This repository should contain:
 - data contracts and cohort definitions;
 - reproducible scripts that operate on external data paths;
 - small configuration files;
+- reusable evaluation modules under `src/barrett/`;
 - documentation for how to regenerate results.
 
 This repository should not contain:
@@ -45,7 +47,7 @@ This repository should not contain:
 - patient-level raw clinical metadata;
 - derived master CSVs;
 - fold assignment CSVs;
-- prediction CSVs;
+- raw prediction CSVs;
 - model checkpoints;
 - generated figures from private cases;
 - large logs or Slurm outputs.
@@ -82,12 +84,20 @@ export BARRETTS_EXPERIMENT_ROOT=/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_r
 export BARRETTS_MASTER_CSV="$BARRETTS_EXPERIMENT_ROOT/data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/derived_master.csv"
 ```
 
+Then recompute the lightweight Chapter 1 metric summaries:
+
+```bash
+/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python \
+  scripts/02_recompute_patient_detection_metrics.py
+```
+
 Then follow:
 
 - `docs/data_contract.md` for required table columns.
 - `docs/experiment_plan.md` for the minimum final result set.
+- `docs/code_data_boundary.md` for what belongs in Git versus external storage.
 - `scripts/assert_no_data_tracked.sh` before any commit.
 
 ## Current Status
 
-This repository is documentation-first. Endpoint and primary evaluation are now locked; the remaining work is final metric recomputation, early-prediction sensitivity analysis, and LGD2+ interpretation packaging.
+This repository now contains reusable evaluation code and lightweight Chapter 1 metric summaries. Endpoint and primary evaluation are locked; remaining work is LGD2+ interpretation packaging, cohort-flow table generation, and selective model-code migration if reruns become necessary.

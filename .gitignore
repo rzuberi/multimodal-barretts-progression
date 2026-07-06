@@ -40,6 +40,8 @@ figures/generated/
 # Allow source-controlled documentation and tiny config/examples if explicitly added.
 !docs/**/*.md
 !docs/final_results_manifest.csv
+!src/barrett/data/
+!src/barrett/data/*.py
 !reports/
 !reports/thesis_ch1/
 !reports/thesis_ch1/*.md

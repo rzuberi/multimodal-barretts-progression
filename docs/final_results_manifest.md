@@ -36,9 +36,9 @@ The machine-readable companion file is `docs/final_results_manifest.csv`. Future
 | Foundation-combo fusion | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/foundation_combo/` | `cv_summary_foundation_combo_fusion.csv` | `cv_predictions_foundation_combo_fusion.csv` | patient IDs and patient metrics need join/review | Supplementary foundation-fusion table |
 | Clinical augmentation | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_clinical_augmentation_20260319_190949/` | `core_lvl2/*/global_results_summary.csv` | review manually | decide thesis scope; patient clinical metrics | Supplementary clinical covariates table |
 
-## Required recomputation from existing outputs
+## Completed recomputation from existing outputs
 
-The following should be recomputed from saved external prediction files, without retraining:
+The following have been recomputed from saved external prediction files, without retraining, by `scripts/02_recompute_patient_detection_metrics.py`:
 
 - Patient-level clinical metrics with PPV, NPV, TP, FP, TN, FN.
 - False-positive burden, including false positives per detected progressor.
@@ -54,6 +54,8 @@ Primary input pattern for this recomputation:
 `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/*/runs/*/all_samples/*/cv/predictions_all_samples_*NextBiopsyProgression_LGD2plus*_rep01_fold{1..5}.csv`
 
 The prediction files audited include `sample_id`, `patient_id`, `fold`, `y_true`, `y_pred`, and `y_prob`.
+
+Small generated summaries are tracked under `reports/thesis_ch1/`; raw prediction files remain external.
 
 ## Supplementary / legacy result families
 

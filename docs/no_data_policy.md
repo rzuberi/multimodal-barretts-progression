@@ -9,7 +9,7 @@ This repository must not contain raw, derived, or patient-level data.
 - CNV matrices/profiles/features: `.csv`, `.tsv`, `.npy`, `.npz`, `.h5`, `.hdf5`
 - Derived cohort tables and manifests: `.csv`, `.tsv`, `.xlsx`, `.xls`
 - Model checkpoints: `.pt`, `.pth`, `.ckpt`, `.pkl`, `.pickle`
-- Prediction files and patient-level result tables
+- Raw prediction files and large patient-level result tables
 - Raw clinical metadata or scrape outputs
 - Slurm logs and large generated reports
 
@@ -19,6 +19,7 @@ This repository must not contain raw, derived, or patient-level data.
 - Small scripts that operate on external paths.
 - Small schema/config examples with no patient data.
 - Audit summaries that contain paths, counts, and methodology but no raw tables.
+- Explicitly allowlisted lightweight thesis summary CSVs under `reports/thesis_ch1/`.
 
 ## Required Check Before Push
 
