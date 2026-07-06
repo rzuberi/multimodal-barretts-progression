@@ -1,5 +1,0 @@
-task_type,best_modality,n_tasks
-binary,multimodal,16
-multiclass,image,1
-multiclass,multimodal,1
-regression,multimodal,3

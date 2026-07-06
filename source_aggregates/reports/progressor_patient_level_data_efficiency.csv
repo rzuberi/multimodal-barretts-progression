@@ -1,5 +1,0 @@
-endpoint,comparison_group,data_use,backbone_or_system,model_label,patient_auc,n_patients_eval,n_positive_patients,note
-Progressor_label,Best image-only baseline,Full image bags,UNI2,Attention MIL,0.8791,160,41,Best image-only patient-level baseline.
-Progressor_label,Best full multimodal baseline,Full image bags + full CNV input,UNI2,Early fusion MLP with time covariates,0.9219,160,41,Main multimodal baseline.
-Progressor_label,Best reduced-patch multimodal,Uniformly sampled subset of pathology patches + CNV,UNI2,Early fusion MLP with time covariates,0.9274,160,41,Reduced-patch model slightly exceeded the full multimodal baseline.
-Progressor_label,Best simplified CNV-only model,Small arm-level CNV summary,CNV only,Random forest,0.8692,160,41,Uses top arm-level CNV regions rather than the full richer representation.

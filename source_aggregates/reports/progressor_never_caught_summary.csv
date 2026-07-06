@@ -1,4 +1,0 @@
-task_name,model_id,modality,encoder,model_name,biopsy_aggregation_strategy,n_progressor_patients_with_preprogression_biopsies,n_never_caught_patients_maxscore_lt_0p5,pct_never_caught,median_preprogression_biopsies_never_caught,median_days_first_prebiopsy_to_progression_never_caught
-Progressor_label,image|uni2|abmil_nogate,image,uni2,abmil_nogate,biopsy_max,29,2,6.896551724137931,1.0,836.0
-Progressor_label,cnv|cnv_anchor|cnv_random_forest,cnv,cnv_anchor,cnv_random_forest,biopsy_mean,29,14,48.275862068965516,2.0,1237.5
-Progressor_label,multimodal|uni2|early_mean_mlp,multimodal,uni2,early_mean_mlp,biopsy_mean,29,6,20.689655172413794,2.0,1908.5

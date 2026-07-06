@@ -1,4 +1,0 @@
-cnv_anchor
-gigapath
-uni2
-virchow2
