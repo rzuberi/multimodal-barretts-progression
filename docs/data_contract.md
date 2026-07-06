@@ -18,7 +18,8 @@ Required labels:
 - `CurrentGradeNorm`
 - `CurrentGradeInt`
 - `NextBiopsyLabel`
-- final endpoint column, either `NextBiopsyProgression_LGD2plus` or `NextBiopsyProgression_LGD3plus`
+- primary endpoint column: `NextBiopsyProgression_LGD2plus`
+- supplementary endpoint column, when available: `NextBiopsyProgression_LGD3plus`
 
 Required timing:
 
@@ -48,8 +49,8 @@ Required cohort flags to generate:
 Required split/evaluation fields:
 
 - `patient_id_for_split`
-- `heldout_patient_id` for LOPO predictions
-- `fold_id` only for non-LOPO CV analyses
+- `fold_id` for primary 5-fold patient-disjoint CV
+- `heldout_patient_id` only for supplementary LOPO analyses
 
 ## Early-Prediction Filter
 
@@ -66,7 +67,19 @@ For strict next-biopsy prediction, also require a known next-biopsy label:
 NextBiopsyLabel is not null
 ```
 
-## Endpoint Rules To Lock
+## Primary Endpoint Rule
+
+LGD2+ is locked as primary:
+
+```text
+NextBiopsyProgression_LGD2plus = 1
+if the next biopsy is HGD/IMC/OAC
+or the next biopsy satisfies the second consecutive LGD event rule
+```
+
+Operationally, this corresponds to HGD/IMC/OAC or two consecutive LGD biopsies.
+
+## Supplementary Endpoint Rule
 
 LGD3+ audited rule:
 
@@ -76,4 +89,4 @@ if NextBiopsyLabel >= 3
 or NextBiopsyLabel == 2 and LGDStreakSoFar >= 2
 ```
 
-LGD2+ strict next-biopsy table exists externally, but the final endpoint choice remains open.
+LGD3+ is retained only as supplementary / legacy / interpretability-supporting.
