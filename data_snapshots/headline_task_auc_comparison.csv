@@ -1,6 +1,0 @@
-task,best_multimodal_auc,best_image_auc,best_cnv_auc
-NextBiopsyProgression_LGD3plus,0.8543649085231225,0.8341749854756225,
-Progressor_label,0.8434595670251424,0.8228130683272579,
-HasNextBiopsy,0.8732250026396369,,
-NextBiopsyExistsInDataset,0.8813471221911697,,
-AtRisk_1y,0.9948290425320389,,

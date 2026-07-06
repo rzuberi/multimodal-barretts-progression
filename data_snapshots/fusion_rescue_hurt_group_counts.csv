@@ -1,5 +1,0 @@
-image_status,multimodal_status,n_patients,mean_days_to_progression,median_days_to_progression
-caught_by_image,caught_by_multimodal,23,1187.625,1096.0
-caught_by_image,missed_by_multimodal,4,3152.0,2806.0
-missed_by_image,caught_by_multimodal,0,,
-missed_by_image,missed_by_multimodal,2,836.0,836.0

@@ -1,3 +1,0 @@
-task_name,rho_days_to_progression_vs_image_weight,p_value,n_biopsies_used,method
-Progressor_label,-0.20689765178800354,0.04909786530356921,91,scipy_spearman
-NextBiopsyProgression_LGD3plus,-0.04422428347429785,0.6772310171871421,91,scipy_spearman
