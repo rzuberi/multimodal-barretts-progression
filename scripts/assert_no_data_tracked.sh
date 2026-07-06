@@ -7,6 +7,7 @@ bad_dirs='(^|/)(data|raw_data|derived_data|results|checkpoints|models|embeddings
 tracked="$(
   git ls-files \
     | grep -v '^docs/final_results_manifest\.csv$' \
+    | grep -v '^src/barrett/data/' \
     | grep -v '^reports/thesis_ch1/lgd2_patient_level_metrics_all_samples\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only\.csv$' \
     || true

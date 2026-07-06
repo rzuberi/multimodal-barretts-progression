@@ -1,0 +1,54 @@
+chapter: "Barrett thesis Chapter 1"
+endpoint: "NextBiopsyProgression_LGD2plus"
+clinical_definition: "HGD/IMC/OAC or two consecutive LGD biopsies"
+evaluation_design: "5-fold patient-disjoint CV"
+primary_reporting_level: "patient"
+primary_aggregation: "patient_max"
+supplementary_aggregations:
+  - "patient_mean"
+  - "biopsy_max"
+  - "biopsy_mean"
+  - "sample"
+analysis_sets:
+  all_samples:
+    filter: null
+  early_prediction_only:
+    exclude:
+      column: "DaysFromCurrentToEvent"
+      equals: 0
+metrics:
+  threshold_default: 0.5
+  discrimination:
+    - "roc_auc"
+    - "auprc"
+  clinical_detection:
+    - "accuracy"
+    - "balanced_accuracy"
+    - "sensitivity"
+    - "specificity"
+    - "ppv"
+    - "npv"
+    - "tp"
+    - "fp"
+    - "tn"
+    - "fn"
+    - "progressors_detected"
+    - "progressors_missed"
+    - "false_positives_per_detected_progressor"
+  calibration:
+    - "brier_score"
+    - "ece"
+  fixed_operating_points:
+    - "sensitivity_at_90_specificity"
+    - "sensitivity_at_95_specificity"
+    - "specificity_at_90_sensitivity"
+    - "specificity_at_95_sensitivity"
+  confidence_intervals:
+    method: "patient bootstrap"
+    default_resamples: 500
+inputs:
+  manifest: "docs/final_results_manifest.csv"
+outputs:
+  all_samples: "reports/thesis_ch1/lgd2_patient_level_metrics_all_samples.csv"
+  early_prediction_only: "reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv"
+

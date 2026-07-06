@@ -1,0 +1,9 @@
+# Copy to a private, untracked local config if needed.
+# Do not commit local overrides with real private paths if they expose sensitive data locations.
+
+experiment_root: "/path/to/barretts_training"
+manifest_csv: "docs/final_results_manifest.csv"
+external_master_csv: "${experiment_root}/data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/derived_master.csv"
+external_lgd2_campaign_root: "${experiment_root}/data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251"
+report_output_dir: "reports/thesis_ch1"
+
