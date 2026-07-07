@@ -102,3 +102,55 @@ Do not run all 8 cases yet. First identify a Python environment for the legacy W
 runner with `torch`, `openslide`, `pandas`, `numpy`, and `PIL` importing quickly. Run
 `scripts/11_validate_histology_runtime_env.py` in that environment, then rerun only
 `row_idx 0` using the remapped external manifest.
+
+## Candidate Environment Discovery
+
+Candidate runtime environments were tested with `scripts/11_validate_histology_runtime_env.py`.
+
+Selected environment:
+
+`/home/zuberi01/miniforge3/envs/pathology/bin/python`
+
+Reason:
+
+- imports `torch`, `numpy`, `pandas`, `PIL`, and `openslide`;
+- most pathology/WSI-aligned passing environment name;
+- external `.conda_mil` Python timed out during runtime preflight.
+
+## Successful Row 0 Rerun
+
+After path and runtime preflights passed, row 0 was rerun only:
+
+```bash
+cd /mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training
+/home/zuberi01/miniforge3/envs/pathology/bin/python scripts/run_wsi_explainability_case.py \
+  --manifest_csv analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv \
+  --row_idx 0 \
+  --out_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi \
+  --cache_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/cache \
+  --top_tiles 25 \
+  --tissue_only \
+  --skip_if_exists
+```
+
+Result:
+
+- case/model: `A_true_positive_early_02` / `abmil`
+- success: `yes`
+- second case attempted: `no`
+
+External output directory:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi/NextBiopsyProgression_LGD2plus/all_samples/uni2/abmil/A_true_positive_early/PR1_BED_060__SLX-12455.D701_D504__fold2`
+
+External files generated and kept out of Git:
+
+- `top_tiles_grid.png`
+- `bottom_tiles_grid.png`
+- `heatmap_overlay.png`
+- `heatmap_overlay_shuffle.png`
+- `tile_scores.csv`
+- `metadata.json`
+
+Next recommendation: inspect row 0 outputs first. If they are acceptable, run only the
+next planned row/case on request; do not automatically run all 8.

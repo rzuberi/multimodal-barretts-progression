@@ -165,3 +165,42 @@ Audit files:
 - `reports/thesis_ch1/lgd2_histology_runtime_env_warnings.md`
 
 Do not retry the WSI dry run until both path preflight and runtime preflight pass.
+
+## Selected runtime and row 0 result
+
+Candidate environments were tested in `lgd2_histology_candidate_envs.csv` and
+`lgd2_histology_candidate_envs.md`.
+
+Selected runtime:
+
+`/home/zuberi01/miniforge3/envs/pathology/bin/python`
+
+Selected runtime preflight:
+
+- pass: `True`
+- `torch`: pass
+- `numpy`: pass
+- `pandas`: pass
+- `PIL`: pass
+- `openslide`: pass
+
+Row 0 command run:
+
+```bash
+cd /mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training
+/home/zuberi01/miniforge3/envs/pathology/bin/python scripts/run_wsi_explainability_case.py \
+  --manifest_csv analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv \
+  --row_idx 0 \
+  --out_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi \
+  --cache_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/cache \
+  --top_tiles 25 \
+  --tissue_only \
+  --skip_if_exists
+```
+
+Result:
+
+- case/model: `A_true_positive_early_02` / `abmil`
+- command success: `True`
+- second case attempted: `False`
+- heavy outputs written externally only.
