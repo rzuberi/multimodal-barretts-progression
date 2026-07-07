@@ -4,5 +4,5 @@
 
 ## Case-Level Warnings
 
-- `A_true_positive_early_02`: Missing external histology interpretation outputs for this case.
-- `B_false_negative_07`: Missing external histology interpretation outputs for this case.
+- `A_true_positive_early_02`: Missing external histology interpretation outputs for this case.; Command failed before WSI/feature/checkpoint loading: ModuleNotFoundError: No module named 'torch'
+- `B_false_negative_07`: Missing external histology interpretation outputs for this case.; Not attempted because first dry-run case failed.

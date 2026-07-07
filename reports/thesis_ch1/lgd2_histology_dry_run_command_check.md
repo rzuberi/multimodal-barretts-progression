@@ -101,3 +101,39 @@ The histology dry run was still **not run** in this stage, by design. The next s
 action is a case-level external dry run for `row_idx 0` only, writing to:
 
 `analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/`
+
+## Dry-run execution attempt 2026-07-07
+
+The external full-path manifest was rebuilt with remapped paths:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv`
+
+The remapped UNI2 feature index was written externally:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/index/uni2_index_remapped_dry_run.csv`
+
+Attempted first command only:
+
+```bash
+cd /mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training
+/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python scripts/run_wsi_explainability_case.py \
+  --manifest_csv analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv \
+  --row_idx 0 \
+  --out_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi \
+  --cache_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/cache \
+  --top_tiles 25 \
+  --tissue_only \
+  --skip_if_exists
+```
+
+Result:
+
+- Case/model: `A_true_positive_early_02` / `abmil`
+- Command run: `yes`
+- Command success: `no`
+- Failure point: Python import before WSI/feature/checkpoint loading
+- Error summary: `ModuleNotFoundError: No module named 'torch'`
+- Second case attempted: `no`
+
+No WSI files were opened, no feature tensors were loaded, no checkpoints were loaded,
+and no heatmaps/tile outputs were generated.

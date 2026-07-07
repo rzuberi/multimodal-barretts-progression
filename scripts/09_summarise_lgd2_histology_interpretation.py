@@ -54,9 +54,15 @@ def _write_markdown(df: pd.DataFrame, warnings: list[str], out_path: Path) -> No
         "slide_id",
         "image_probability",
         "fusion_probability",
+        "command_run",
+        "command_success",
         "top_patches_generated",
-        "attention_tile_scores_generated",
-        "heatmaps_overlays_generated",
+        "tile_scores_generated",
+        "attention_scores_generated",
+        "heatmap_generated",
+        "overlay_generated",
+        "number_of_top_patches",
+        "number_of_tiles_scored",
         "top_patch_refs",
         "attention_summary",
         "warnings",
@@ -93,6 +99,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--external-output-dir", default=EXTERNAL_HISTOLOGY_ROOT)
     p.add_argument("--top-patch-csv", default="")
     p.add_argument("--attention-csv", default="")
+    p.add_argument("--command-status-csv", default="")
     p.add_argument("--output-dir", default="reports/thesis_ch1")
     p.add_argument("--output-prefix", default="lgd2_histology_interpretation")
     return p.parse_args()
@@ -110,6 +117,22 @@ def main() -> None:
         top_patch_csv=args.top_patch_csv or None,
         attention_csv=args.attention_csv or None,
     )
+    if args.command_status_csv:
+        status = pd.read_csv(args.command_status_csv)
+        if "case_id" in status.columns:
+            cols = [c for c in ["case_id", "command_run", "command_success", "warnings"] if c in status.columns]
+            df = df.merge(status[cols], on="case_id", how="left", suffixes=("", "_command"))
+            for col in ["command_run", "command_success"]:
+                cmd_col = f"{col}_command"
+                if cmd_col in df.columns:
+                    df[col] = df[cmd_col].combine_first(df[col])
+                    df = df.drop(columns=[cmd_col])
+            if "warnings_command" in df.columns:
+                df["warnings"] = [
+                    "; ".join([x for x in [str(a) if str(a) != "nan" else "", str(b) if str(b) != "nan" else ""] if x])
+                    for a, b in zip(df["warnings"], df["warnings_command"])
+                ]
+                df = df.drop(columns=["warnings_command"])
     prefix = str(args.output_prefix).rstrip("_")
     csv_path = out_dir / f"{prefix}_summary.csv"
     md_path = out_dir / f"{prefix}_summary.md"
