@@ -407,6 +407,28 @@ Current decision:
 - use remaining valid cases as supplementary candidates if they do not fit the main
   chapter narrative.
 
+## First multimodal case-study packs
+
+The first lightweight LGD2+ multimodal case-study packs have been assembled for:
+
+- `A_true_positive_early_02`
+- `B_false_negative_07`
+- `E_cnv_rescue_19`
+
+Fusion probability interpretation is complete for these cases using existing CNV-only, ABMIL image-only, and early-fusion probabilities. Histology panels are available externally for all selected cases and include top/bottom tile grids, heatmap overlays, shuffled overlays, tile-score tables, and metadata JSON.
+
+CNV region/gene interpretation was not generated in this stage. The selected cases have CNV probabilities and CNV IDs, but LGD2+ feature-importance, feature-matrix/model, and window-to-gene-map inputs remain unvalidated. The case packs are therefore ready for thesis drafting at the probability-plus-histology level, with CNV panels marked as pending.
+
+New lightweight files:
+
+- `lgd2_multimodal_case_pack_selection.csv` / `.md`
+- `lgd2_fusion_case_interpretation.csv` / `.md`
+- `lgd2_case_storyboard_first3.md`
+- `lgd2_case_pack_histology_panel_inventory.csv` / `.md`
+- `lgd2_case_pack_cnv_input_status.csv` / `.md`
+- `lgd2_case_pack_cnv_top_windows.csv` / `.md`
+- `lgd2_multimodal_case_figure_plan_first3.md`
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
