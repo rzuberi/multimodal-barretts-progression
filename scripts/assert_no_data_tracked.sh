@@ -21,6 +21,7 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_histology_interpretation_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_dry_run_cases\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_dry_run_summary\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_path_remap_audit\.csv$' \
     || true
 )"
 

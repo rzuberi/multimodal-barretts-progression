@@ -69,3 +69,35 @@ cd /mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training
 - Command actually run: `no`
 - Blocker: raw slide paths from `ImageAbsPath` are not visible in this shell (`/scratchc/.../*.ndpi` does not exist); selected UNI2 feature refs also require path remapping from legacy `/scratchc` to the visible slow-scratch tree before the legacy runner can load them.
 - No heavy WSI/tile/heatmap outputs were generated.
+
+## Path remapping / mount validation
+
+This section supersedes the earlier direct-path-only input check above.
+
+Path-remap audit:
+
+- `reports/thesis_ch1/lgd2_histology_path_remap_audit.csv`
+- `reports/thesis_ch1/lgd2_histology_path_remap_audit.md`
+- `reports/thesis_ch1/lgd2_histology_path_remap_warnings.md`
+
+Validation result:
+
+- Cases checked: `2`
+- Fully resolvable cases: `2`
+- Dry-run can proceed in this shell after remapping: `True`
+- Config source: `configs/path_remap.template.yaml (template fallback)`
+
+Remap rules attempted:
+
+- `/scratchc/fmlab/datasets/imaging/` -> `/mnt/scratchc/fmlab/datasets/imaging/`
+- `/scratchc/fmlab/zuberi01/phd/barretts_retraining/` -> `/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/`
+- `/scratchc/fmlab/` -> `/mnt/scratche/slow/fmlab/`
+
+Remaining missing required references:
+
+- None in the path audit.
+
+The histology dry run was still **not run** in this stage, by design. The next safe
+action is a case-level external dry run for `row_idx 0` only, writing to:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/`
