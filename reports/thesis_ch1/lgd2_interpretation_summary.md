@@ -387,6 +387,26 @@ tile-score dumps are committed to Git. Next recommended step: manually inspect a
 external visual outputs and choose final thesis figures. Do not make biological claims
 from the lightweight score summaries alone.
 
+## Histology figure-candidate decision
+
+Manual visual review found all 8 regenerated ABMIL histology outputs acceptable for
+the current Chapter 1 candidate pool. All 8 are therefore retained for later final
+figure selection while the full chapter narrative is written.
+
+Candidate manifest:
+
+- `lgd2_histology_final_figure_candidates.csv`
+- `lgd2_histology_final_figure_candidates.md`
+
+Current decision:
+
+- include all 8 as histology interpretation candidates;
+- do not choose the final main-figure subset yet;
+- revisit selection after LGD2+ CNV windows/genes and fusion/composite case summaries
+  are available;
+- use remaining valid cases as supplementary candidates if they do not fit the main
+  chapter narrative.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
