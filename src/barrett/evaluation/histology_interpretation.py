@@ -299,6 +299,7 @@ def summarize_histology_outputs(
         case_files = []
         if case_dir.exists():
             case_files = [str(p) for p in case_dir.glob("**/*") if p.is_file()]
+        names = [Path(p).name.lower() for p in case_files]
 
         if not top_df.empty and "case_id" in top_df.columns:
             sub = top_df[top_df["case_id"].astype(str) == cid]
@@ -317,6 +318,9 @@ def summarize_histology_outputs(
         if not top_refs and case_files:
             hits = [compact_external_ref(p) for p in case_files if "top" in Path(p).name.lower()][:5]
             top_refs = "; ".join(hits)
+        top_patches_generated = bool(top_refs)
+        attention_tile_scores_generated = any(n == "tile_scores.csv" or "tile_score" in n for n in names) or bool(attention_summary)
+        heatmaps_overlays_generated = any(("heatmap" in n or "overlay" in n) and n.endswith((".png", ".jpg", ".jpeg")) for n in names)
         if not top_refs and not attention_summary:
             case_warn.append("Missing external histology interpretation outputs for this case.")
 
@@ -329,11 +333,19 @@ def summarize_histology_outputs(
             "image_probability": r.get("image_probability", ""),
             "fusion_probability": r.get("fusion_probability", ""),
             "top_patch_refs": top_refs or "MISSING",
+            "top_patches_generated": top_patches_generated,
+            "attention_tile_scores_generated": attention_tile_scores_generated,
+            "heatmaps_overlays_generated": heatmaps_overlays_generated,
             "attention_summary": attention_summary or "MISSING",
             "attention_spread": attention_spread or "MISSING",
             "external_histology_output_ref": str(case_dir),
             "warnings": "; ".join(case_warn),
         }
         row["histology_interpretation_sentence"] = histology_sentence(pd.Series(row), has_outputs=not case_warn)
+        row["interpretation_readiness_sentence"] = (
+            "Ready for thesis review: top patches, tile scores, and heatmap/overlay outputs were found."
+            if (top_patches_generated and attention_tile_scores_generated and heatmaps_overlays_generated)
+            else "Not ready for thesis figure selection: regenerated histology outputs are missing or incomplete."
+        )
         rows.append(row)
     return pd.DataFrame(rows), warnings

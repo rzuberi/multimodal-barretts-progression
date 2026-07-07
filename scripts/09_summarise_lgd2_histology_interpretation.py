@@ -54,6 +54,9 @@ def _write_markdown(df: pd.DataFrame, warnings: list[str], out_path: Path) -> No
         "slide_id",
         "image_probability",
         "fusion_probability",
+        "top_patches_generated",
+        "attention_tile_scores_generated",
+        "heatmaps_overlays_generated",
         "top_patch_refs",
         "attention_summary",
         "warnings",
@@ -91,6 +94,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--top-patch-csv", default="")
     p.add_argument("--attention-csv", default="")
     p.add_argument("--output-dir", default="reports/thesis_ch1")
+    p.add_argument("--output-prefix", default="lgd2_histology_interpretation")
     return p.parse_args()
 
 
@@ -106,9 +110,10 @@ def main() -> None:
         top_patch_csv=args.top_patch_csv or None,
         attention_csv=args.attention_csv or None,
     )
-    csv_path = out_dir / "lgd2_histology_interpretation_summary.csv"
-    md_path = out_dir / "lgd2_histology_interpretation_summary.md"
-    warn_path = out_dir / "lgd2_histology_interpretation_warnings.md"
+    prefix = str(args.output_prefix).rstrip("_")
+    csv_path = out_dir / f"{prefix}_summary.csv"
+    md_path = out_dir / f"{prefix}_summary.md"
+    warn_path = out_dir / f"{prefix}_warnings.md"
     df.to_csv(csv_path, index=False)
     _write_markdown(df, warnings, md_path)
     _write_warnings(df, warnings, warn_path)
