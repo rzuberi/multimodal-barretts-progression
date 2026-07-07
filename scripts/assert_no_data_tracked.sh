@@ -32,6 +32,7 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_histology_remaining6_cases\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_all8_output_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_all8_interpretation_summary\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_final_figure_candidates\.csv$' \
     || true
 )"
 
