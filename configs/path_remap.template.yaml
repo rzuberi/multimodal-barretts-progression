@@ -1,0 +1,27 @@
+# Template only. Copy to configs/path_remap.local.yaml and edit for the active node/session.
+# Do not commit local path overrides.
+
+remaps:
+  # Legacy WSI mount examples.
+  - from: "/scratchc/fmlab/datasets/imaging/"
+    to: "/mnt/scratchc/fmlab/datasets/imaging/"
+
+  # Slow-scratch project-root examples.
+  - from: "/scratchc/fmlab/zuberi01/phd/barretts_retraining/"
+    to: "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/"
+
+  # Generic fallback examples. Put more specific rules above broader rules.
+  - from: "/scratchc/fmlab/"
+    to: "/mnt/scratche/slow/fmlab/"
+
+candidate_roots:
+  # Add active mounts here in the local copy if relative refs need expansion.
+  - "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining"
+  - "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/data/foundation_outputs"
+  - "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training"
+  - "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training/data"
+  - "/mnt/scratchc"
+  - "/scratchc"
+
+# External output root example:
+# analysis/lgd2_interpretation_regeneration_20260707/histology/

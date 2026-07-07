@@ -222,6 +222,35 @@ raw WSI slide tree is mounted, and either restore the legacy `/scratchc` feature
 or build a dry-run feature index with paths remapped to the visible external feature
 files.
 
+## Histology path-remapping status
+
+The path-remapping/preflight layer has now been added:
+
+- `src/barrett/utils/path_remap.py`
+- `configs/path_remap.template.yaml`
+- `scripts/10_validate_lgd2_histology_paths.py`
+
+Current audit files:
+
+- `lgd2_histology_path_remap_audit.csv`
+- `lgd2_histology_path_remap_audit.md`
+- `lgd2_histology_path_remap_warnings.md`
+
+The dry-run audit checked `A_true_positive_early_02` and `B_false_negative_07`.
+Both cases are fully resolvable after applying the template fallback remaps:
+
+- raw WSI slide paths resolve after `/scratchc` mount remapping;
+- UNI2 feature NPZ paths resolve after Barrett retraining root remapping;
+- `abmil` and `early_mean_mlp` checkpoint refs resolve through the external
+  `barretts_training/data` candidate root;
+- output parent resolves under the external analysis folder.
+
+No WSI was opened, no feature NPZ was loaded, and no checkpoint was loaded. The dry
+run should now be attempted only as a case-level external command, starting with
+`row_idx 0`, and should still write heavy outputs only under:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/`
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
