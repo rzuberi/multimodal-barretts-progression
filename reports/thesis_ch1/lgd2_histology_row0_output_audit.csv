@@ -1,0 +1,7 @@
+case_id,output_file,exists,size_bytes,parse_status,key_fields,status,warning
+A_true_positive_early_02,top_tiles_grid.png,True,2161009,image_opened,dimensions=1156x1356,PASS,
+A_true_positive_early_02,bottom_tiles_grid.png,True,2030529,image_opened,dimensions=1156x1356,PASS,
+A_true_positive_early_02,heatmap_overlay.png,True,1971212,image_opened,dimensions=1489x2048,PASS,
+A_true_positive_early_02,heatmap_overlay_shuffle.png,True,1972424,image_opened,dimensions=1489x2048,PASS,
+A_true_positive_early_02,tile_scores.csv,True,11289,parsed,"tile_idx,x_level,y_level,score_raw,score_norm,tissue_keep",PASS,
+A_true_positive_early_02,metadata.json,True,2718,parsed,sample_id=SLX-12455.D701_D504; patient_id=PR1/BED/060; model=abmil; model_prob_explain=0.9470732163624669; n_tiles_used=256; attribution_method=attention,PASS,

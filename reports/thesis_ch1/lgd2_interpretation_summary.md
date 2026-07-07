@@ -315,6 +315,33 @@ The dry-run summary marks row 0 ready for thesis review at the output-presence l
 top patches, tile scores, and heatmap/overlay outputs were found. Next step is to
 inspect row 0 outputs before running the missed-progressor case or all 8 cases.
 
+## Histology dry-run output validation
+
+Row 0 structural validation:
+
+- case/model: `A_true_positive_early_02` / `abmil`
+- result: valid
+- outputs found externally: top tile grid, bottom tile grid, heatmap overlay, shuffled
+  heatmap overlay, tile-score CSV, metadata JSON
+- tiles scored: `256`
+
+Because row 0 was structurally valid, the second dry-run case was run:
+
+- case/model: `B_false_negative_07` / `abmil`
+- result: success
+- structural validation: valid
+- outputs found externally: top tile grid, bottom tile grid, heatmap overlay, shuffled
+  heatmap overlay, tile-score CSV, metadata JSON
+- tiles scored: `256`
+
+Both dry-run cases are ready for manual visual inspection. This confirms the
+case-level ABMIL histology interpretation pipeline is functioning for the two selected
+dry-run examples, but it does not yet validate the biological content of the images.
+
+Recommendation: manually inspect the two external visual outputs first. If they look
+correct, it is reasonable to run the remaining 6 selected cases with the same
+`pathology` environment and external output root.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):

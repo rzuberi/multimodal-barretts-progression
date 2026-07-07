@@ -1,0 +1,5 @@
+# Lgd2 Histology Row0 Interpretation Summary
+
+| case_id | case_category | patient_id | sample_id | slide_id | true_label | image_probability | fusion_probability | number_of_tiles_scored | top_5_tile_refs | top_5_scores | bottom_5_tile_refs | bottom_5_scores | output_directory_external_ref | interpretation_readiness_status | warnings |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A_true_positive_early_02 | A_true_positive_early | PR1/BED/060 | SLX-12455.D701_D504 | 13H 20009427 B1 PR1 BED 060 B2842 1.ndpi | 1 | 0.9635841250419616 | 0.9931897521018982 | 256 | tile_idx=187.0; tile_idx=53.0; tile_idx=23.0; tile_idx=170.0; tile_idx=178.0 | 0.04553629; 0.044974424; 0.032111093; 0.02829201; 0.026603399 | tile_idx=9.0; tile_idx=14.0; tile_idx=157.0; tile_idx=61.0; tile_idx=39.0 | 0.00012080146; 0.0001473025; 0.00015033412; 0.00016637241; 0.00017122478 | ../analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi/NextBiopsyProgression_LGD2plus/all_samples/uni2/abmil/A_true_positive_early/PR1_BED_060__SLX-12455.D701_D504__fold2 | READY_FOR_MANUAL_REVIEW |  |
