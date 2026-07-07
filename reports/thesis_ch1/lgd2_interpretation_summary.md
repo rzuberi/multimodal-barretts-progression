@@ -143,6 +143,54 @@ blocker is that the LGD2+ selected-case CNV feature/model/worklist inputs have n
 been validated. Existing top-window/top-gene outputs found on disk are legacy/LGD3+
 support only and must not be used as primary LGD2+ evidence.
 
+## Histology interpretation regeneration status
+
+Histology interpretation has **not** been regenerated yet. This stage created the
+LGD2+ WSI case manifest, audited inputs, and ran the missing-output-safe summary
+loader only.
+
+Ready selected cases:
+
+- `A_true_positive_early_01`
+- `A_true_positive_early_02`
+- `B_false_negative_07`
+- `C_false_positive_12`
+- `E_cnv_rescue_19`
+- `F_histology_rescue_24`
+- `G_fusion_hurt_26`
+- `I_modality_disagreement_37`
+
+All 8 selected cases have:
+
+- slide IDs / basenames;
+- UNI2 feature references in the external feature index;
+- fold-matched `abmil` image checkpoint references;
+- fold-matched `early_mean_mlp` fusion checkpoint references;
+- early-prediction-only timing with no at-event rows.
+
+No selected case is blocked at the input-reference stage. The missing outputs are the
+actual regenerated LGD2+ top patches, tile-score tables, attention heatmaps/overlays,
+and attention-spread summaries.
+
+Expected external histology output root:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/`
+
+Current generated lightweight files:
+
+- `lgd2_histology_interpretation_input_audit.md`
+- `lgd2_histology_interpretation_commands.md`
+- `lgd2_wsi_case_manifest.csv`
+- `lgd2_wsi_case_manifest.md`
+- `lgd2_wsi_case_manifest_warnings.md`
+- `lgd2_histology_interpretation_summary.csv`
+- `lgd2_histology_interpretation_summary.md`
+- `lgd2_histology_interpretation_warnings.md`
+
+The exact command templates are in `lgd2_histology_interpretation_commands.md`.
+The legacy WSI runner opens slides, loads feature tensors/checkpoints, and writes
+PNG/tile-score outputs, so it must be run externally and not from Git output paths.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
