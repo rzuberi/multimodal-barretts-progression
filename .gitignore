@@ -66,6 +66,9 @@ figures/generated/
 !reports/thesis_ch1/lgd2_histology_row0_interpretation_summary.csv
 !reports/thesis_ch1/lgd2_histology_row1_output_audit.csv
 !reports/thesis_ch1/lgd2_histology_row1_interpretation_summary.csv
+!reports/thesis_ch1/lgd2_histology_remaining6_cases.csv
+!reports/thesis_ch1/lgd2_histology_all8_output_audit.csv
+!reports/thesis_ch1/lgd2_histology_all8_interpretation_summary.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml

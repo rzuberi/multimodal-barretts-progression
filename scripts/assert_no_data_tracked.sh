@@ -29,6 +29,9 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_histology_row0_interpretation_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_row1_output_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_row1_interpretation_summary\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_remaining6_cases\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_all8_output_audit\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_all8_interpretation_summary\.csv$' \
     || true
 )"
 
