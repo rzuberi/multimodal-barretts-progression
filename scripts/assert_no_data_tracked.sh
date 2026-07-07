@@ -10,6 +10,9 @@ tracked="$(
     | grep -v '^src/barrett/data/' \
     | grep -v '^reports/thesis_ch1/lgd2_patient_level_metrics_all_samples\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_cohort_flow\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_main_model_comparison\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_early_prediction_model_comparison\.csv$' \
     || true
 )"
 

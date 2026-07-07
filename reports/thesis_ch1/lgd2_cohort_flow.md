@@ -1,0 +1,41 @@
+# LGD2+ Cohort Flow
+
+External master cohort: `/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training/data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/derived_master.csv`
+
+| section | metric | value | notes |
+|---|---|---:|---|
+| cohort | sample_slide_rows | 959 |  |
+| cohort | patients | 160 |  |
+| cohort | biopsies | 470 |  |
+| cohort | unique_cnv_profiles | 941 |  |
+| cohort | duplicated_cnv_paths | 18 |  |
+| missingness | missing_cnv_paths | 0 |  |
+| missingness | missing_image_paths | 0 |  |
+| row_labels | lgd2_positive_rows | 231 |  |
+| row_labels | lgd2_negative_rows | 690 |  |
+| row_labels | lgd2_missing_rows | 38 |  |
+| patient_labels_all_samples | positive_patients | 55 |  |
+| patient_labels_all_samples | negative_patients | 100 |  |
+| patient_labels_all_samples | missing_label_patients | 5 |  |
+| patient_labels_all_samples | labelled_patients | 155 |  |
+| timing | event_time_rows_days_0 | 172 |  |
+| timing | rows_after_early_prediction_filter | 787 |  |
+| patient_labels_early_prediction_only | positive_patients | 50 |  |
+| patient_labels_early_prediction_only | negative_patients | 100 |  |
+| patient_labels_early_prediction_only | missing_label_patients | 4 |  |
+| patient_labels_early_prediction_only | labelled_patients | 150 |  |
+| current_grade_distribution | HGD | 84 | column=CurrentGradeNorm |
+| current_grade_distribution | ID | 74 | column=CurrentGradeNorm |
+| current_grade_distribution | IMC | 36 | column=CurrentGradeNorm |
+| current_grade_distribution | LGD | 155 | column=CurrentGradeNorm |
+| current_grade_distribution | NDBE | 609 | column=CurrentGradeNorm |
+| current_grade_distribution | OAC | 1 | column=CurrentGradeNorm |
+| fold_balance | fold_1 | 33 | samples=214; sample_pos=66; sample_neg=148; patient_pos=14; patient_neg=19; join=prediction.patient_id; sample_id->basename(CNVAbsPath) for timing/biopsy |
+| fold_balance | fold_2 | 31 | samples=161; sample_pos=34; sample_neg=127; patient_pos=9; patient_neg=22; join=prediction.patient_id; sample_id->basename(CNVAbsPath) for timing/biopsy |
+| fold_balance | fold_3 | 31 | samples=199; sample_pos=54; sample_neg=145; patient_pos=13; patient_neg=18; join=prediction.patient_id; sample_id->basename(CNVAbsPath) for timing/biopsy |
+| fold_balance | fold_4 | 30 | samples=165; sample_pos=35; sample_neg=130; patient_pos=9; patient_neg=21; join=prediction.patient_id; sample_id->basename(CNVAbsPath) for timing/biopsy |
+| fold_balance | fold_5 | 30 | samples=164; sample_pos=37; sample_neg=127; patient_pos=10; patient_neg=20; join=prediction.patient_id; sample_id->basename(CNVAbsPath) for timing/biopsy |
+
+## Warnings
+
+- None.
