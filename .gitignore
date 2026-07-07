@@ -70,6 +70,11 @@ figures/generated/
 !reports/thesis_ch1/lgd2_histology_all8_output_audit.csv
 !reports/thesis_ch1/lgd2_histology_all8_interpretation_summary.csv
 !reports/thesis_ch1/lgd2_histology_final_figure_candidates.csv
+!reports/thesis_ch1/lgd2_multimodal_case_pack_selection.csv
+!reports/thesis_ch1/lgd2_fusion_case_interpretation.csv
+!reports/thesis_ch1/lgd2_case_pack_histology_panel_inventory.csv
+!reports/thesis_ch1/lgd2_case_pack_cnv_input_status.csv
+!reports/thesis_ch1/lgd2_case_pack_cnv_top_windows.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml

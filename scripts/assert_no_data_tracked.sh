@@ -33,6 +33,11 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_histology_all8_output_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_all8_interpretation_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_final_figure_candidates\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_multimodal_case_pack_selection\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_fusion_case_interpretation\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_case_pack_histology_panel_inventory\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_case_pack_cnv_input_status\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_case_pack_cnv_top_windows\.csv$' \
     || true
 )"
 
