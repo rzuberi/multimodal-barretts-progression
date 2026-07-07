@@ -286,6 +286,35 @@ there, then rerun only `row_idx 0` using:
 Do not scale to all 8 cases until `row_idx 0` completes and the external outputs are
 summarised successfully.
 
+## Histology environment discovery and row 0 result
+
+Candidate environments tested: 11.
+
+Passing runtime preflight:
+
+- `/home/zuberi01/miniforge3/envs/pathology/bin/python`
+- `/home/zuberi01/miniforge3/envs/virchow2/bin/python`
+- `/home/zuberi01/miniforge3/envs/erin/bin/python`
+
+Selected environment:
+
+`/home/zuberi01/miniforge3/envs/pathology/bin/python`
+
+Selection reason: it is the most pathology/WSI-aligned passing environment; external
+`.conda_mil` timed out during runtime preflight.
+
+Row 0 was attempted with the selected environment:
+
+- case/model: `A_true_positive_early_02` / `abmil`
+- success: yes
+- generated externally: top tile grid, bottom tile grid, heatmap overlay, shuffled
+  heatmap overlay, tile-score CSV, metadata JSON
+- `B_false_negative_07`: not attempted
+
+The dry-run summary marks row 0 ready for thesis review at the output-presence level:
+top patches, tile scores, and heatmap/overlay outputs were found. Next step is to
+inspect row 0 outputs before running the missed-progressor case or all 8 cases.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
