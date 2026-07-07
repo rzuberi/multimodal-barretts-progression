@@ -295,10 +295,21 @@ def summarize_histology_outputs(
         top_refs = ""
         attention_summary = ""
         attention_spread = ""
+        number_of_top_patches = ""
+        number_of_tiles_scored = ""
         case_dir = out_dir / cid
         case_files = []
+        case_dirs = []
         if case_dir.exists():
+            case_dirs = [case_dir]
             case_files = [str(p) for p in case_dir.glob("**/*") if p.is_file()]
+        else:
+            sample_id = str(r.get("sample_id", ""))
+            if sample_id:
+                meta_hits = sorted(out_dir.glob(f"**/*__{sample_id}__fold*/metadata.json"))
+                case_dirs = sorted({p.parent for p in meta_hits})
+                for d in case_dirs:
+                    case_files.extend([str(p) for p in d.glob("*") if p.is_file()])
         names = [Path(p).name.lower() for p in case_files]
 
         if not top_df.empty and "case_id" in top_df.columns:
@@ -319,8 +330,30 @@ def summarize_histology_outputs(
             hits = [compact_external_ref(p) for p in case_files if "top" in Path(p).name.lower()][:5]
             top_refs = "; ".join(hits)
         top_patches_generated = bool(top_refs)
-        attention_tile_scores_generated = any(n == "tile_scores.csv" or "tile_score" in n for n in names) or bool(attention_summary)
-        heatmaps_overlays_generated = any(("heatmap" in n or "overlay" in n) and n.endswith((".png", ".jpg", ".jpeg")) for n in names)
+        tile_score_paths = [Path(p) for p in case_files if Path(p).name.lower() == "tile_scores.csv" or "tile_score" in Path(p).name.lower()]
+        heatmap_paths = [Path(p) for p in case_files if "heatmap" in Path(p).name.lower() and Path(p).suffix.lower() in {".png", ".jpg", ".jpeg"}]
+        overlay_paths = [Path(p) for p in case_files if "overlay" in Path(p).name.lower() and Path(p).suffix.lower() in {".png", ".jpg", ".jpeg"}]
+        attention_tile_scores_generated = bool(tile_score_paths) or bool(attention_summary)
+        heatmaps_overlays_generated = bool(heatmap_paths or overlay_paths)
+        metadata_paths = [Path(p) for p in case_files if Path(p).name.lower() == "metadata.json"]
+        command_run = bool(case_files)
+        command_success = bool(metadata_paths and tile_score_paths and (heatmap_paths or overlay_paths))
+        if tile_score_paths:
+            try:
+                number_of_tiles_scored = str(max(0, sum(1 for _ in open(tile_score_paths[0], encoding="utf-8")) - 1))
+            except Exception:
+                number_of_tiles_scored = ""
+        if metadata_paths:
+            try:
+                import json
+
+                meta = json.load(open(metadata_paths[0], encoding="utf-8"))
+                if not number_of_tiles_scored and meta.get("n_tiles_used", "") != "":
+                    number_of_tiles_scored = str(meta.get("n_tiles_used", ""))
+            except Exception:
+                pass
+        if top_refs:
+            number_of_top_patches = str(len([x for x in top_refs.split(";") if x.strip()]))
         if not top_refs and not attention_summary:
             case_warn.append("Missing external histology interpretation outputs for this case.")
 
@@ -332,13 +365,21 @@ def summarize_histology_outputs(
             "true_label": r.get("true_label", ""),
             "image_probability": r.get("image_probability", ""),
             "fusion_probability": r.get("fusion_probability", ""),
+            "command_run": command_run,
+            "command_success": command_success,
             "top_patch_refs": top_refs or "MISSING",
             "top_patches_generated": top_patches_generated,
+            "tile_scores_generated": bool(tile_score_paths),
+            "attention_scores_generated": attention_tile_scores_generated,
+            "heatmap_generated": bool(heatmap_paths),
+            "overlay_generated": bool(overlay_paths),
             "attention_tile_scores_generated": attention_tile_scores_generated,
             "heatmaps_overlays_generated": heatmaps_overlays_generated,
+            "number_of_top_patches": number_of_top_patches,
+            "number_of_tiles_scored": number_of_tiles_scored,
             "attention_summary": attention_summary or "MISSING",
             "attention_spread": attention_spread or "MISSING",
-            "external_histology_output_ref": str(case_dir),
+            "external_histology_output_ref": "; ".join(str(d) for d in case_dirs) if case_dirs else str(case_dir),
             "warnings": "; ".join(case_warn),
         }
         row["histology_interpretation_sentence"] = histology_sentence(pd.Series(row), has_outputs=not case_warn)

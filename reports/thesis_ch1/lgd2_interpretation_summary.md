@@ -251,6 +251,29 @@ run should now be attempted only as a case-level external command, starting with
 
 `analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/`
 
+## Histology dry-run execution status
+
+The first case-level dry run was attempted after path remapping:
+
+- Case/model attempted: `A_true_positive_early_02` / `abmil`
+- Command success: `no`
+- Failure: `ModuleNotFoundError: No module named 'torch'`
+- Failure happened before WSI opening, feature loading, checkpoint loading, or output generation.
+
+The second selected dry-run case, `B_false_negative_07`, was not attempted because the
+first case failed. No top patches, tile-score tables, heatmaps, overlays, or tile grids
+were generated.
+
+Current blocker is no longer path resolution; it is the Python environment for the
+legacy WSI runner. The next step is to identify an environment where `torch`,
+`openslide`, `pandas`, `numpy`, and `PIL` import cleanly, then rerun only `row_idx 0`
+using:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv`
+
+Do not scale to all 8 cases until `row_idx 0` completes and the external outputs are
+summarised successfully.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):
