@@ -1,0 +1,5 @@
+# Lgd2 Histology Row1 Interpretation Summary
+
+| case_id | case_category | patient_id | sample_id | slide_id | true_label | image_probability | fusion_probability | number_of_tiles_scored | top_5_tile_refs | top_5_scores | bottom_5_tile_refs | bottom_5_scores | output_directory_external_ref | interpretation_readiness_status | warnings |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| B_false_negative_07 | B_false_negative | AHM1146 | SLX-13692.D703_D508 | S09 26616 2 1 G3497.ndpi | 1 | 0.1040728092193603 | 0.2848115861415863 | 256 | tile_idx=9.0; tile_idx=239.0; tile_idx=181.0; tile_idx=146.0; tile_idx=73.0 | 0.01266778; 0.011998858; 0.011351064; 0.0109072095; 0.010797691 | tile_idx=184.0; tile_idx=107.0; tile_idx=175.0; tile_idx=102.0; tile_idx=119.0 | 0.00037300243; 0.00039716563; 0.0003982984; 0.00040464068; 0.00040662478 | ../analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi/NextBiopsyProgression_LGD2plus/all_samples/uni2/abmil/B_false_negative/AHM1146__SLX-13692.D703_D508__fold3 | READY_FOR_MANUAL_REVIEW |  |

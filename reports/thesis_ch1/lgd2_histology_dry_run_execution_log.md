@@ -154,3 +154,60 @@ External files generated and kept out of Git:
 
 Next recommendation: inspect row 0 outputs first. If they are acceptable, run only the
 next planned row/case on request; do not automatically run all 8.
+
+## Row 0 Output Validation
+
+Row 0 output audit:
+
+- case/model: `A_true_positive_early_02` / `abmil`
+- structurally valid: `True`
+- metadata JSON parsed: `True`
+- tile-score CSV parsed: `True`
+- tiles scored: `256`
+- top patch grid, bottom patch grid, heatmap overlay, and shuffled heatmap overlay all exist and are non-empty.
+
+## Row 1 Dry Run
+
+After row 0 passed structural validation, only the second dry-run case was run:
+
+```bash
+cd /mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training
+/home/zuberi01/miniforge3/envs/pathology/bin/python scripts/run_wsi_explainability_case.py \
+  --manifest_csv analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv \
+  --row_idx 2 \
+  --out_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi \
+  --cache_root analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/cache \
+  --top_tiles 25 \
+  --tissue_only \
+  --skip_if_exists
+```
+
+Result:
+
+- case/model: `B_false_negative_07` / `abmil`
+- success: `yes`
+- all 8 cases run: `no`
+
+External row 1 output directory:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi/NextBiopsyProgression_LGD2plus/all_samples/uni2/abmil/B_false_negative/AHM1146__SLX-13692.D703_D508__fold3`
+
+External files generated and kept out of Git:
+
+- `top_tiles_grid.png`
+- `bottom_tiles_grid.png`
+- `heatmap_overlay.png`
+- `heatmap_overlay_shuffle.png`
+- `tile_scores.csv`
+- `metadata.json`
+
+## Row 1 Output Validation
+
+- structurally valid: `True`
+- metadata JSON parsed: `True`
+- tile-score CSV parsed: `True`
+- tiles scored: `256`
+- top patch grid, bottom patch grid, heatmap overlay, and shuffled heatmap overlay all exist and are non-empty.
+
+Next recommendation: manually inspect both external visual outputs. If they look
+correct, run the remaining 6 selected cases with the same environment and output root.

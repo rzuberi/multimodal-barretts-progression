@@ -25,6 +25,10 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_histology_path_remap_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_runtime_env_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_candidate_envs\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_row0_output_audit\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_row0_interpretation_summary\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_row1_output_audit\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_histology_row1_interpretation_summary\.csv$' \
     || true
 )"
 
