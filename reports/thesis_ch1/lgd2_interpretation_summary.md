@@ -103,6 +103,46 @@ The following remain external and missing for LGD2+:
 The external run plan is in `lgd2_interpretation_external_run_plan.md`. The old-script
 adaptation checklist is in `lgd2_interpretation_script_adaptation_checklist.md`.
 
+## CNV interpretation regeneration status
+
+CNV interpretation has **not** been regenerated yet. The first CNV stage completed here
+is an input audit plus a missing-output-safe summary loader.
+
+Ready selected cases:
+
+- `A_true_positive_early_01`
+- `A_true_positive_early_02`
+- `B_false_negative_07`
+- `C_false_positive_12`
+- `E_cnv_rescue_19`
+- `F_histology_rescue_24`
+- `G_fusion_hurt_26`
+- `I_modality_disagreement_37`
+
+Expected external output root:
+
+`analysis/lgd2_interpretation_regeneration_20260707/`
+
+Expected CNV outputs:
+
+- per-case top CNV windows;
+- per-case top genes/window-to-gene maps;
+- feature-importance/coefficient summaries if safely available;
+- optional CNV profile plots kept external.
+
+Current generated lightweight files:
+
+- `lgd2_cnv_interpretation_input_audit.md`
+- `lgd2_cnv_interpretation_commands.md`
+- `lgd2_cnv_interpretation_summary.csv`
+- `lgd2_cnv_interpretation_summary.md`
+- `lgd2_cnv_interpretation_warnings.md`
+
+The exact command templates are in `lgd2_cnv_interpretation_commands.md`. The key
+blocker is that the LGD2+ selected-case CNV feature/model/worklist inputs have not
+been validated. Existing top-window/top-gene outputs found on disk are legacy/LGD3+
+support only and must not be used as primary LGD2+ evidence.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):

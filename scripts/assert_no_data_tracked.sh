@@ -16,6 +16,7 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_interpretation_case_selection\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_final_interpretation_case_subset\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_modality_case_summary\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_cnv_interpretation_summary\.csv$' \
     || true
 )"
 
