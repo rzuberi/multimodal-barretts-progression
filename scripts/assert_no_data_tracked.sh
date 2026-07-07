@@ -13,6 +13,7 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_cohort_flow\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_main_model_comparison\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_early_prediction_model_comparison\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_interpretation_case_selection\.csv$' \
     || true
 )"
 
