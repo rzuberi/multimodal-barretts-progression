@@ -47,6 +47,9 @@ figures/generated/
 !reports/thesis_ch1/*.md
 !reports/thesis_ch1/lgd2_patient_level_metrics_all_samples.csv
 !reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv
+!reports/thesis_ch1/lgd2_cohort_flow.csv
+!reports/thesis_ch1/lgd2_main_model_comparison.csv
+!reports/thesis_ch1/lgd2_early_prediction_model_comparison.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml
