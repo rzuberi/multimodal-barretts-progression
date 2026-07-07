@@ -3,10 +3,10 @@
 Thesis-facing summary of the interpretation stage for the primary endpoint
 `NextBiopsyProgression_LGD2plus` (HGD/IMC/OAC or two consecutive LGD biopsies).
 
-**Status: interpretation has NOT been regenerated.** This stage selects cases and
-plans regeneration. All LGD2+ interpretation artefacts (attention maps, top patches,
-CNV windows/genes, fusion case figures) are still MISSING and must be produced before
-any thesis figure is drawn. See `lgd2_interpretability_availability.md` and
+**Current status:** LGD2+ ABMIL histology interpretation has now been regenerated
+externally for the fixed 8-case subset and structurally validated. CNV interpretation,
+fusion-specific interpretation, and composite clinician-facing figures remain missing.
+See `lgd2_interpretability_availability.md` and
 `lgd2_interpretation_regeneration_plan.md`.
 
 ## Which cases were selected
@@ -341,6 +341,51 @@ dry-run examples, but it does not yet validate the biological content of the ima
 Recommendation: manually inspect the two external visual outputs first. If they look
 correct, it is reasonable to run the remaining 6 selected cases with the same
 `pathology` environment and external output root.
+
+## Histology interpretation regeneration status
+
+Manual visual inspection of the first two dry-run cases was completed and judged valid
+enough to proceed. The remaining 6 selected cases were then run one at a time with:
+
+`/home/zuberi01/miniforge3/envs/pathology/bin/python`
+
+All 8 selected LGD2+ cases now have structurally complete external ABMIL histology
+outputs:
+
+- `A_true_positive_early_01`
+- `A_true_positive_early_02`
+- `B_false_negative_07`
+- `C_false_positive_12`
+- `E_cnv_rescue_19`
+- `F_histology_rescue_24`
+- `G_fusion_hurt_26`
+- `I_modality_disagreement_37`
+
+External output root:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi/`
+
+Per-case external outputs include:
+
+- `top_tiles_grid.png`
+- `bottom_tiles_grid.png`
+- `heatmap_overlay.png`
+- `heatmap_overlay_shuffle.png`
+- `tile_scores.csv`
+- `metadata.json`
+
+Lightweight all-8 reports now live in:
+
+- `lgd2_histology_all8_output_audit.csv` / `.md`
+- `lgd2_histology_all8_interpretation_summary.csv` / `.md`
+- `lgd2_histology_all8_warnings.md`
+- `lgd2_histology_all8_execution_log.md`
+- `lgd2_histology_case_category_comparison.md`
+
+No WSI files, tile images, heatmaps, overlays, feature tensors, checkpoints, or full
+tile-score dumps are committed to Git. Next recommended step: manually inspect all 8
+external visual outputs and choose final thesis figures. Do not make biological claims
+from the lightweight score summaries alone.
 
 ## Which model to interpret first
 

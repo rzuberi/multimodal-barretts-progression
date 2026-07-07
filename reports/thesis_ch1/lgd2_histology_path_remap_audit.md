@@ -1,7 +1,7 @@
 # LGD2+ Histology Path Remap Audit
 
-- Cases checked: 2
-- Fully resolvable cases: 2
+- Cases checked: 8
+- Fully resolvable cases: 8
 - Dry-run can proceed in this shell: `True`
 - Config source: `configs/path_remap.template.yaml (template fallback)`
 - Master table resolved: `True` via `candidate_root:/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training`

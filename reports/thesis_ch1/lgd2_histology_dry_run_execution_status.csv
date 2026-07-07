@@ -1,3 +1,9 @@
 case_id,model_attempted,row_idx_attempted,command_run,command_success,warnings
-A_true_positive_early_02,abmil,0,True,True,
+A_true_positive_early_01,abmil,0,True,True,
+A_true_positive_early_02,abmil,1,True,True,
 B_false_negative_07,abmil,2,True,True,
+C_false_positive_12,abmil,3,True,True,
+E_cnv_rescue_19,abmil,4,True,True,
+F_histology_rescue_24,abmil,5,True,True,
+G_fusion_hurt_26,abmil,6,True,True,
+I_modality_disagreement_37,abmil,7,True,True,
