@@ -54,6 +54,8 @@ figures/generated/
 !reports/thesis_ch1/lgd2_final_interpretation_case_subset.csv
 !reports/thesis_ch1/lgd2_modality_case_summary.csv
 !reports/thesis_ch1/lgd2_cnv_interpretation_summary.csv
+!reports/thesis_ch1/lgd2_wsi_case_manifest.csv
+!reports/thesis_ch1/lgd2_histology_interpretation_summary.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml
