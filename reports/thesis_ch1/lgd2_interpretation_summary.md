@@ -58,6 +58,51 @@ Concrete detail is in `lgd2_interpretation_case_selection.csv` /
 3. Category I (disagreement) — one case showing fusion resolving a CNV-vs-image conflict correctly.
 4. Category B and G (miss / fusion-hurt) — one each, for an honest limitations panel.
 
+## Final 8-case thesis-figure subset
+
+The final subset is now fixed in `lgd2_final_interpretation_case_subset.csv` /
+`lgd2_final_interpretation_case_subset.md`.
+
+Selected categories:
+
+- 2 x `A_true_positive_early`
+- 1 x `B_false_negative`
+- 1 x `C_false_positive`
+- 1 x `E_cnv_rescue`
+- 1 x `F_histology_rescue`
+- 1 x `G_fusion_hurt`
+- 1 x `I_modality_disagreement`
+
+All selected rows are from the `early_prediction_only` analysis set and none are
+at-event rows. The selected table stores slide/CNV basenames only, not private mounted
+paths.
+
+## Probability-only interpretation already available
+
+`lgd2_modality_case_summary.csv` / `.md` now provide, for each selected case:
+
+- CNV, image, and early-fusion probabilities;
+- fusion-minus-unimodal differences;
+- absolute CNV-image disagreement;
+- dominant modality hint;
+- fusion-help / fusion-hurt flags;
+- one-sentence probability-level interpretation.
+
+This is not a substitute for biological interpretation, but it is enough to define the
+case-study question before regenerating heavy outputs.
+
+## Still requires external regeneration
+
+The following remain external and missing for LGD2+:
+
+- histology top patches, tile-score tables, attention heatmaps/overlays;
+- CNV top windows, gene maps, importances/coefficients/SHAP;
+- model-internal modality-dependence scores;
+- composite clinician-facing figures.
+
+The external run plan is in `lgd2_interpretation_external_run_plan.md`. The old-script
+adaptation checklist is in `lgd2_interpretation_script_adaptation_checklist.md`.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):

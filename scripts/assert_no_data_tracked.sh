@@ -14,6 +14,8 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_main_model_comparison\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_early_prediction_model_comparison\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_interpretation_case_selection\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_interpretation_case_subset\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_modality_case_summary\.csv$' \
     || true
 )"
 
