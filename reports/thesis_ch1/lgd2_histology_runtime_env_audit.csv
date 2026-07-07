@@ -1,0 +1,6 @@
+dependency,required,import_success,version,error,status
+torch,True,False,,ModuleNotFoundError: No module named 'torch',FAIL
+numpy,True,True,2.4.4,,PASS
+pandas,True,True,3.0.1,,PASS
+PIL,True,False,,ModuleNotFoundError: No module named 'PIL',FAIL
+openslide,True,False,,ModuleNotFoundError: No module named 'openslide',FAIL

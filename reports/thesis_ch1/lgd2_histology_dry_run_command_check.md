@@ -137,3 +137,31 @@ Result:
 
 No WSI files were opened, no feature tensors were loaded, no checkpoints were loaded,
 and no heatmaps/tile outputs were generated.
+
+## Runtime environment validation
+
+Path preflight status:
+
+- `scripts/10_validate_lgd2_histology_paths.py`: pass
+- dry-run cases checked: `2`
+- fully resolvable after remapping: `2`
+
+Runtime preflight command:
+
+```bash
+/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python scripts/11_validate_histology_runtime_env.py
+```
+
+Runtime preflight status:
+
+- pass: `False`
+- Python executable: `/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python`
+- missing imports: `torch`, `PIL`, `openslide`
+
+Audit files:
+
+- `reports/thesis_ch1/lgd2_histology_runtime_env_audit.csv`
+- `reports/thesis_ch1/lgd2_histology_runtime_env_audit.md`
+- `reports/thesis_ch1/lgd2_histology_runtime_env_warnings.md`
+
+Do not retry the WSI dry run until both path preflight and runtime preflight pass.

@@ -58,6 +58,24 @@ Failure summary:
 ModuleNotFoundError: No module named 'torch'
 ```
 
+## Runtime Preflight
+
+Runtime preflight was added after the failed dry run:
+
+```bash
+/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python scripts/11_validate_histology_runtime_env.py
+```
+
+Result:
+
+- pass: `False`
+- Python executable: `/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python`
+- Python version: `3.12.13`
+- missing imports: `torch`, `PIL`, `openslide`
+
+Latest blocker is runtime dependency resolution, not path resolution. No data/model
+execution occurred before the import failure.
+
 ## Outputs
 
 No WSI-derived heavy outputs were generated. The expected external output directory
@@ -81,5 +99,6 @@ Lightweight summaries updated in Git:
 ## Recommendation
 
 Do not run all 8 cases yet. First identify a Python environment for the legacy WSI
-runner with `torch`, `openslide`, `pandas`, `numpy`, and `PIL` importing quickly. Then
-rerun only `row_idx 0` using the remapped external manifest.
+runner with `torch`, `openslide`, `pandas`, `numpy`, and `PIL` importing quickly. Run
+`scripts/11_validate_histology_runtime_env.py` in that environment, then rerun only
+`row_idx 0` using the remapped external manifest.

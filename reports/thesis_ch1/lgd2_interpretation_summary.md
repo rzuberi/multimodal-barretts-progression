@@ -265,9 +265,21 @@ first case failed. No top patches, tile-score tables, heatmaps, overlays, or til
 were generated.
 
 Current blocker is no longer path resolution; it is the Python environment for the
-legacy WSI runner. The next step is to identify an environment where `torch`,
-`openslide`, `pandas`, `numpy`, and `PIL` import cleanly, then rerun only `row_idx 0`
-using:
+legacy WSI runner. Runtime preflight in the current environment fails:
+
+- Python: `/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python`
+- missing imports: `torch`, `PIL`, `openslide`
+- passing imports: `numpy`, `pandas`
+
+Runtime audit files:
+
+- `lgd2_histology_runtime_env_audit.csv`
+- `lgd2_histology_runtime_env_audit.md`
+- `lgd2_histology_runtime_env_warnings.md`
+
+The next step is to identify an environment where `torch`, `openslide`, `pandas`,
+`numpy`, and `PIL` import cleanly, run `scripts/11_validate_histology_runtime_env.py`
+there, then rerun only `row_idx 0` using:
 
 `analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/wsi_case_manifest_fullpaths_remapped.csv`
 
