@@ -191,6 +191,37 @@ The exact command templates are in `lgd2_histology_interpretation_commands.md`.
 The legacy WSI runner opens slides, loads feature tensors/checkpoints, and writes
 PNG/tile-score outputs, so it must be run externally and not from Git output paths.
 
+## Histology dry-run status
+
+Dry-run cases selected:
+
+- `A_true_positive_early_02`: high-confidence true-positive, `abmil` probability 0.964, early-fusion probability 0.993.
+- `B_false_negative_07`: missed progressor, `abmil` probability 0.104, early-fusion probability 0.285.
+
+The WSI explainability command was **not run**. Pre-run validation found that the
+raw slide paths required by `run_wsi_explainability_case.py` are not visible in this
+shell (`/scratchc/.../*.ndpi` paths do not exist). The selected UNI2 feature files
+also need path remapping from legacy `/scratchc` references to the visible slow-scratch
+tree before the legacy runner can load them.
+
+No top patches, tile-score tables, heatmap overlays, or tile grids were generated in
+this stage. The dry-run output target remains:
+
+`analysis/lgd2_interpretation_regeneration_20260707/histology/dry_run/`
+
+Current dry-run files:
+
+- `lgd2_histology_dry_run_cases.csv`
+- `lgd2_histology_dry_run_command_check.md`
+- `lgd2_histology_dry_run_summary.csv`
+- `lgd2_histology_dry_run_summary.md`
+- `lgd2_histology_dry_run_warnings.md`
+
+Recommendation: do not run all 8 cases yet. First run from a node/session where the
+raw WSI slide tree is mounted, and either restore the legacy `/scratchc` feature paths
+or build a dry-run feature index with paths remapped to the visible external feature
+files.
+
 ## Which model to interpret first
 
 Recommended order (matches manifest thesis priority):

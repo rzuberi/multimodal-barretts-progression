@@ -115,6 +115,34 @@ def test_histology_summary_loads_fake_top_patch_csv():
     assert "not found" not in " ".join(warnings)
 
 
+def test_histology_summary_detects_external_case_files():
+    manifest = pd.DataFrame(
+        [
+            {
+                "case_id": "A_true_positive_early_01",
+                "case_category": "A",
+                "patient_id": "P1",
+                "slide_id": "slide1.ndpi",
+                "true_label": 1,
+                "image_probability": 0.9,
+                "fusion_probability": 0.95,
+            }
+        ]
+    )
+    with TemporaryDirectory() as tmp:
+        case_dir = Path(tmp) / "A_true_positive_early_01"
+        case_dir.mkdir()
+        (case_dir / "top_tiles_grid.png").write_text("fake", encoding="utf-8")
+        (case_dir / "tile_scores.csv").write_text("tile,score\n1,0.9\n", encoding="utf-8")
+        (case_dir / "heatmap_overlay.png").write_text("fake", encoding="utf-8")
+        df, warnings = summarize_histology_outputs(manifest, Path(tmp))
+    assert bool(df["top_patches_generated"].iloc[0]) is True
+    assert bool(df["attention_tile_scores_generated"].iloc[0]) is True
+    assert bool(df["heatmaps_overlays_generated"].iloc[0]) is True
+    assert "Ready for thesis review" in df["interpretation_readiness_sentence"].iloc[0]
+    assert not warnings
+
+
 def test_histology_sentence_mentions_missing_outputs():
     row = pd.Series({"case_id": "case1", "image_probability": 0.1, "fusion_probability": 0.2})
     assert "not regenerated" in histology_sentence(row, has_outputs=False)
