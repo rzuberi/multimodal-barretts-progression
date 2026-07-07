@@ -60,6 +60,7 @@ figures/generated/
 !reports/thesis_ch1/lgd2_histology_dry_run_execution_status.csv
 !reports/thesis_ch1/lgd2_histology_dry_run_summary.csv
 !reports/thesis_ch1/lgd2_histology_path_remap_audit.csv
+!reports/thesis_ch1/lgd2_histology_runtime_env_audit.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml
