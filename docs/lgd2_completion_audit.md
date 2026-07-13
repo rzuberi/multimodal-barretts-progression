@@ -50,6 +50,15 @@ These derived count metrics are useful, but the final table should be regenerate
 
 ## What Is Still Missing
 
+> RESOLVED since this audit (see `PROJECT_STATE.md` for canonical status): the final
+> patient-level clinical metric table, calibration/Brier, fixed operating points,
+> confidence intervals, and the early-prediction-only analysis are all COMPLETE in
+> `reports/thesis_ch1/`. LGD2+ ABMIL histology attention/top-patch interpretation is
+> COMPLETE for all eight selected cases. Late fusion is integrated at patient level.
+> Genuinely still missing: LGD2+ CNV region/gene interpretation (BLOCKED — needs a
+> compute run), model-internal fusion attribution, and a clean tile/magnification table.
+> The table below is retained for historical provenance.
+
 | Missing item | Why it matters | Can be done without retraining? |
 |---|---|---|
 | Final patient-level clinical metric table | Stored patient table lacks AUPRC, Brier/calibration, fixed operating-point metrics, FP/TN columns, PPV/NPV, and false-positive burden | Yes, saved `y_prob` predictions exist |

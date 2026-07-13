@@ -7,7 +7,7 @@
 - The primary evaluation is now locked as 5-fold patient-disjoint CV, not LOPO.
 - LGD2+ patient-level clinical metrics have been recomputed from saved external predictions in `reports/thesis_ch1/`.
 - A clean early-prediction-only supplementary analysis excluding `DaysFromCurrentToEvent == 0` is now generated in `reports/thesis_ch1/`.
-- LGD2+ biological interpretation outputs were not found in the audited experiment folder.
+- ABMIL histology interpretation is complete for all eight selected LGD2+ cases; probability-level fusion interpretation is complete for the first three case packs. CNV region/gene interpretation and model-internal fusion attribution remain the open biological-interpretation gaps.
 - A clean tile/magnification comparison table for the final LGD2+ endpoint was not found.
 - Model definitions have not yet been migrated into `src/barrett/models/`; see `docs/model_code_migration_plan.md`.
 - This branch is a reset from the previous demo-oriented repository contents; it starts from the local experiment audits and defines the next reproducible project direction.

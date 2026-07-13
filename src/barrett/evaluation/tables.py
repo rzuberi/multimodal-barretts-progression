@@ -45,6 +45,7 @@ def select_representative_models(metrics: pd.DataFrame) -> pd.DataFrame:
     selected.append(best_row(patient[patient["fusion_type"].eq("early_fusion")], "best_early_fusion"))
     selected.append(best_row(patient[patient["fusion_type"].eq("intermediate_fusion")], "best_intermediate_fusion"))
     selected.append(best_row(patient[patient["fusion_type"].eq("coattention")], "best_coattention"))
+    selected.append(best_row(patient[patient["fusion_type"].eq("late_fusion")], "best_late_fusion"))
     selected.append(best_row(patient[patient["model_family"].eq("multimodal")], "best_multimodal_overall"))
     out = pd.concat([x for x in selected if not x.empty], ignore_index=True)
     if out.empty:
