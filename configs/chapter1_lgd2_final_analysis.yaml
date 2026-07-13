@@ -1,0 +1,28 @@
+chapter: "Barrett thesis Chapter 1 - final strict pre-event analysis"
+endpoint: "NextBiopsyProgression_LGD2plus"
+clinical_definition: "HGD/IMC/OAC or two consecutive LGD biopsies"
+event_rule: "two_consecutive_lgd"   # locked; canonical EventDate uses LGDx3 and is NOT used
+analysis: "strict_pre_event"
+evaluation_design: "5-fold patient-disjoint outer CV with nested inner selection"
+primary_reporting_level: "patient"
+primary_aggregation: "patient_max"
+primary_metric: "auprc"
+secondary_metrics: ["roc_auc", "brier_score"]
+canonical_row_key: "SampleID"
+split:
+  n_outer_folds: 5
+  seed: 20260713
+  stratified: true
+selection:
+  rank_order: ["auprc_desc", "roc_auc_desc", "brier_asc", "configuration_id"]
+  data: "inner_validation_only"
+thresholds:
+  primary_criterion: "validation_target_specificity_0p90"
+  cross_fitted: true
+  post_hoc_pooled: "exploratory_only"
+external_release_prefix: "analysis/chapter1_lgd2_final_pre_event_"
+git_boundary: "scripts/schemas/configs/markdown/compact-metric-tables only; no heavy data"
+scientific_wording: >
+  In this matched internal cohort, adding histopathology to CNV improved patient-level
+  prediction of future next-biopsy LGD2+ neoplastic progression under patient-disjoint
+  nested cross-validation. Not cancer/OAC prediction. No external validation.
