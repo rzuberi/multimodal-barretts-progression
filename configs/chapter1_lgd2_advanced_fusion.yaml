@@ -1,0 +1,57 @@
+registry_version: "chapter1_lgd2_advanced_fusion_v1"
+endpoint: "NextBiopsyProgression_LGD2plus"
+analysis_role: "SUPPLEMENTARY_POST_HOC_ARCHITECTURE_SEARCH"
+training_manifest: "training_manifest_advanced_v1.csv"
+feature_views:
+  cnv: "feature_views/cnv"
+  foundation_indexes:
+    gigapath: "feature_views/gigapath/gigapath_index.csv"
+    uni2: "feature_views/uni2/uni2_index.csv"
+    virchow2: "feature_views/virchow2/virchow2_index.csv"
+inner_cv:
+  n_folds: 3
+  seed: 20260713
+selection:
+  aggregation: "patient_max"
+  rank_order: ["auprc_desc", "roc_auc_desc", "brier_asc", "configuration_id"]
+threshold:
+  criterion: "target_specificity"
+  target: 0.90
+calibration:
+  method: "platt"
+families:
+  reliability_gated_fusion:
+    model_name: "reliability_gated_residual"
+    candidates:
+      - {configuration_id: "gate_convex", hidden: 128, residual_scale: 0.0, aux_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+      - {configuration_id: "gate_residual", hidden: 128, residual_scale: 0.1, aux_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  hierarchical_patient_fusion:
+    model_name: "hierarchical_slide_biopsy_patient"
+    candidates:
+      - {configuration_id: "hierarchical_lr1e4", hidden: 128, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+      - {configuration_id: "hierarchical_lr3e4", hidden: 128, dropout: 0.2, lr: 0.0003, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+  cnv_token_cross_attention:
+    model_name: "chromosome_token_bidirectional_cross_attention"
+    candidates:
+      - {configuration_id: "crossattn_lr1e4", token_dim: 64, n_heads: 4, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+      - {configuration_id: "crossattn_lr3e4", token_dim: 64, n_heads: 4, dropout: 0.2, lr: 0.0003, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+  low_rank_bilinear_fusion:
+    model_name: "factorized_bilinear_abmil_cnv"
+    candidates:
+      - {configuration_id: "bilinear_rank16", hidden: 128, rank: 16, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+      - {configuration_id: "bilinear_rank32", hidden: 128, rank: 32, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  multitask_temporal_fusion:
+    model_name: "multitask_progression_time"
+    candidates:
+      - {configuration_id: "multitask_aux0p2", hidden: 128, aux_weight: 0.2, time_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+      - {configuration_id: "multitask_aux0p5", hidden: 128, aux_weight: 0.5, time_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  optimal_transport_fusion:
+    model_name: "chromosome_histology_sinkhorn"
+    candidates:
+      - {configuration_id: "ot_eps0p1", token_dim: 64, epsilon: 0.1, sinkhorn_iters: 8, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+      - {configuration_id: "ot_eps0p2", token_dim: 64, epsilon: 0.2, sinkhorn_iters: 8, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+  foundation_ensemble_fusion:
+    model_name: "multifoundation_mixture"
+    candidates:
+      - {configuration_id: "foundation_uniform", hidden: 128, learned_gate: false, aux_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
+      - {configuration_id: "foundation_learned_gate", hidden: 128, learned_gate: true, aux_weight: 0.2, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 4, max_epochs: 20, patience: 5}
