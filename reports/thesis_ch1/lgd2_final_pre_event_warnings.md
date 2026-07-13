@@ -1,3 +1,5 @@
-# LGD2+ Pre-Event Cohort Warnings
+# LGD2+ Final Pre-event Warnings
 
-- Canonical EventDate disagrees with the locked two-LGD timeline for 10/38 event patients (max 1139 days). Canonical EventDate uses an LGDx3 rule and is NOT used for eligibility; the event boundary is derived from the full timeline under the locked two-consecutive-LGD rule.
+- The primary paired AUPRC confidence interval for late mean versus CNV-only includes zero.
+- The endpoint is next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
+- This is internal cross-validation without external cohort validation.

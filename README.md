@@ -2,15 +2,25 @@
 
 ## Missing / Not Yet Done
 
-- No raw data, derived cohort tables, slide files, CNV matrices, embeddings, checkpoints, prediction CSVs, or result folders are stored in this repository.
-- The primary endpoint is now locked as `NextBiopsyProgression_LGD2plus`: HGD/IMC/OAC or two consecutive LGD biopsies.
-- The primary evaluation is now locked as 5-fold patient-disjoint CV, not LOPO.
-- LGD2+ patient-level clinical metrics have been recomputed from saved external predictions in `reports/thesis_ch1/`.
-- A clean early-prediction-only supplementary analysis excluding `DaysFromCurrentToEvent == 0` is now generated in `reports/thesis_ch1/`.
-- ABMIL histology interpretation is complete for all eight selected LGD2+ cases; probability-level fusion interpretation is complete for the first three case packs. CNV region/gene interpretation and model-internal fusion attribution remain the open biological-interpretation gaps.
-- A clean tile/magnification comparison table for the final LGD2+ endpoint was not found.
-- Model definitions have not yet been migrated into `src/barrett/models/`; see `docs/model_code_migration_plan.md`.
-- This branch is a reset from the previous demo-oriented repository contents; it starts from the local experiment audits and defines the next reproducible project direction.
+- External cohort validation is missing; current evidence is internal five-fold patient-disjoint nested CV.
+- Final-model LGD2+ CNV gene/window interpretation and final-model histology attention regeneration are still needed. Existing eight-case histology figures came from the developmental models.
+- Final interpretation cases must be reselected from the strict pre-event OOF predictions before thesis figures are frozen.
+- A clean final tile/magnification sensitivity table remains missing.
+- The primary paired AUPRC improvement for the best multimodal model is not conclusive: its 95% interval includes zero.
+- The endpoint is next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
+- No raw data, cohort tables, WSIs, feature tensors, checkpoints, OOF prediction dumps, or full result folders are stored in this repository.
+
+## Final Candidate Result
+
+The strict pre-event rerun is complete on 707 matched rows and 150 patients using identical folds for CNV-only, UNI2 ABMIL, early fusion, intermediate fusion, late mean, and late stack-logit.
+
+- Best AUPRC: late mean `0.630`; CNV-only `0.538`.
+- Best AUC: late mean `0.774`; CNV-only `0.663`.
+- Late mean minus CNV AUPRC: `+0.091` (95% paired bootstrap CI `-0.036` to `0.219`).
+- Late mean minus CNV AUC: `+0.111` (95% CI `0.002` to `0.219`).
+- Late mean minus CNV Brier: `-0.032` (95% CI `-0.062` to `-0.004`; lower is better).
+
+Thus histopathology adds useful signal in point estimates and secondary metrics, but the prespecified primary AUPRC comparison remains uncertain.
 
 ## Current Focus
 
@@ -24,9 +34,9 @@ The immediate working plan is:
 2. Use 5-fold patient-disjoint CV as the primary evaluation.
 3. Use patient-level results as primary; biopsy/sample-level results are supplementary.
 4. Keep LGD3+ as supplementary / legacy / interpretability-supporting.
-5. Use the recomputed patient-level clinical metrics from saved LGD2+ prediction files.
-6. Treat early-prediction-only analysis as a supplementary sensitivity analysis.
-7. Add LGD2+ biological interpretation outputs for histology, CNV, and multimodal disagreement/rescue cases.
+5. Use the new strict pre-event nested-CV outputs as final candidates; retain older campaign results as developmental.
+6. Use cross-fitted inner-validation thresholds for primary clinical detection metrics; report threshold 0.5 as reference.
+7. Regenerate biological interpretation from the final checkpoints and reselect cases from final OOF predictions.
 
 ## Repository Scope
 
@@ -75,7 +85,7 @@ Key audited facts:
 The two source audit reports are in `docs/audits/`.
 The current completion audit is in `docs/lgd2_completion_audit.md`.
 
-## What To Run Next
+## Reproduce Final Tables
 
 After cloning this branch on the cluster, set external paths in your shell or job config:
 
@@ -84,11 +94,21 @@ export BARRETTS_EXPERIMENT_ROOT=/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_r
 export BARRETTS_MASTER_CSV="$BARRETTS_EXPERIMENT_ROOT/data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/derived_master.csv"
 ```
 
-Then recompute the lightweight Chapter 1 metric summaries:
+The frozen external release is:
+
+```text
+analysis/chapter1_lgd2_final_pre_event_20260713_final/
+```
+
+Validate and collect complete OOF outputs, then regenerate the lightweight final tables:
 
 ```bash
-/home/zuberi01/miniforge3/envs/barretts_multimodal/bin/python \
-  scripts/02_recompute_patient_detection_metrics.py
+/home/zuberi01/miniforge3/envs/erin/bin/python scripts/27_collect_lgd2_final_oof.py \
+  --release-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final \
+  --output-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1
+
+/home/zuberi01/miniforge3/envs/erin/bin/python scripts/28_make_lgd2_final_pre_event_results.py \
+  --output-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1
 ```
 
 Then follow:
@@ -100,4 +120,4 @@ Then follow:
 
 ## Current Status
 
-This repository now contains reusable evaluation code and lightweight Chapter 1 metric summaries. Endpoint and primary evaluation are locked; remaining work is LGD2+ interpretation packaging, cohort-flow table generation, and selective model-code migration if reruns become necessary.
+This repository now contains the frozen model registry, migrated model definitions, patient-disjoint nested-CV runner, late-fusion derivation, output contracts, final patient-level tables, and lightweight provenance reports. Heavy data and model artifacts remain external.

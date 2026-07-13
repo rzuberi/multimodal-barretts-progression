@@ -22,17 +22,32 @@ The machine-readable companion file is `docs/final_results_manifest.csv`. Future
 
 ## Main LGD2+ final-candidate results
 
+### Strict pre-event nested-CV rerun
+
+These are the current final candidates. The older campaign rows below remain developmental context.
+
+| result family | external path | OOF predictions | status | intended use |
+|---|---|---|---|---|
+| CNV-only RF | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/cnv_only/` | `oof/cnv_only_oof_predictions.csv` | `FINAL_CANDIDATE` | Primary baseline |
+| UNI2 ABMIL | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/image_only/` | `oof/image_only_oof_predictions.csv` | `FINAL_CANDIDATE` | Image baseline |
+| Early fusion | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/early_fusion/` | `oof/early_fusion_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
+| Intermediate fusion | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/intermediate_fusion/` | `oof/intermediate_fusion_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
+| Late mean | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/late_mean/` | `oof/late_mean_oof_predictions.csv` | `FINAL_CANDIDATE` | Headline point-estimate model |
+| Late stack-logit | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/late_stack_logit/` | `oof/late_stack_logit_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
+
+All six files contain identical 707 rows and 150 patients. Final patient tables are `reports/thesis_ch1/lgd2_final_pre_event_*.csv`; the external completeness manifest records hashes and fold artifacts.
+
 | result family | status | external path | summary file | prediction file | missing metrics | planned output |
 |---|---|---|---|---|---|---|
-| Primary LGD2+ cohort | `FINAL_CANDIDATE` | `data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/` | `derived_master.csv` | n/a | final cohort-flow docs and early-prediction flag | Table 1 cohort flow |
-| CNV-only core | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/cnv_anchor/` | `global_results_summary.csv` | `runs/cnv/all_samples/core_binary/cv/predictions_all_samples_cnv_random_forest_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | patient AUPRC, Brier/calibration, PPV/NPV, FP/TN, fixed operating points | Main model comparison table |
+| Primary LGD2+ cohort | `LEGACY` | `data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/` | `derived_master.csv` | n/a | final cohort-flow docs and early-prediction flag | Table 1 cohort flow |
+| CNV-only core | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/cnv_anchor/` | `global_results_summary.csv` | `runs/cnv/all_samples/core_binary/cv/predictions_all_samples_cnv_random_forest_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | patient AUPRC, Brier/calibration, PPV/NPV, FP/TN, fixed operating points | Main model comparison table |
 | CNV variant/resolution sweep | `SUPPLEMENTARY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/cnv_variants/cnv_anchor/` | `global_results_summary.csv` | `runs/cnv/all_samples/variant_binary/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | patient-level clinical metrics by variant | Supplementary CNV variant table |
-| Image-only Gigapath | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/gigapath/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_set_transformer_lite_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
-| Image-only UNI2 | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/uni2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
-| Image-only Virchow2 | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/virchow2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
-| Early fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_early_mean_mlp*_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
-| Intermediate fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_intermediate_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
-| Co-attention fusion | `FINAL_CANDIDATE` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_coattn_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
+| Image-only Gigapath | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/gigapath/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_set_transformer_lite_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
+| Image-only UNI2 | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/uni2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
+| Image-only Virchow2 | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/virchow2/` | `global_results_summary.csv` | `runs/image/all_samples/core_gpu/cv/predictions_all_samples_*_NextBiopsyProgression_LGD2plus_rep01_fold{1..5}.csv` | full patient clinical metrics | Supplementary foundation image table |
+| Early fusion | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_early_mean_mlp*_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
+| Intermediate fusion | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_intermediate_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main model comparison table |
+| Co-attention fusion | `LEGACY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/{gigapath,uni2,virchow2}/` | `global_results_summary.csv` | `runs/multimodal/all_samples/core_gpu/cv/predictions_all_samples_coattn_abmil_cnv_windows_armdiff_plus_arms_plus_cx_NextBiopsyProgression_LGD2plus_k0_uniform_epca0_rep01_fold{1..5}.csv` | full patient clinical metrics | Main/supplementary model comparison |
 | Foundation-combo fusion | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_nextbiopsy_lgd2_refresh_cuda_20260319_142251/core_lvl2/foundation_combo/` | `cv_summary_foundation_combo_fusion.csv` | `cv_predictions_foundation_combo_fusion.csv` | patient IDs and patient metrics need join/review | Supplementary foundation-fusion table |
 | Clinical augmentation | `REVIEW_MANUALLY` | `data/foundation_grid_runs/campaign_lgd2_clinical_augmentation_20260319_190949/` | `core_lvl2/*/global_results_summary.csv` | review manually | decide thesis scope; patient clinical metrics | Supplementary clinical covariates table |
 
@@ -87,5 +102,8 @@ Small generated summaries are tracked under `reports/thesis_ch1/`; raw predictio
 - `scripts/04_make_main_results_table.py`
 - `scripts/05_make_early_prediction_table.py`
 - `scripts/06_make_interpretability_summary.py`
+- `scripts/27_collect_lgd2_final_oof.py`
+- `scripts/28_make_lgd2_final_pre_event_results.py`
+- `scripts/30_select_lgd2_final_interpretation_cases.py`
 
 These scripts should read `docs/final_results_manifest.csv`, resolve external paths under `$BARRETTS_EXPERIMENT_ROOT`, and write any generated outputs outside Git unless they are small documentation summaries.

@@ -56,10 +56,20 @@ def _cross_fitted_decisions(frame: pd.DataFrame, output_root: Path, family: str)
         patient["y_pred"] = (patient["y_prob"] >= threshold).astype(int)
         tn, fp, fn, tp = confusion_counts(patient["y_true"].to_numpy(), patient["y_pred"].to_numpy())
         fold_rows.append({
-            "model_family": family, "outer_fold": fold, "threshold": threshold,
+            "model_family": family, "outer_fold": fold,
+            "threshold_method": "inner_validation_target_90_specificity",
+            "threshold": threshold,
             "validation_achieved_specificity": choice.get("achieved"),
             "validation_fallback": choice.get("fallback"),
             "n_patients": len(patient), "tp": tp, "fp": fp, "tn": tn, "fn": fn,
+        })
+        default_pred = (patient["y_prob"].to_numpy() >= 0.5).astype(int)
+        d_tn, d_fp, d_fn, d_tp = confusion_counts(patient["y_true"].to_numpy(), default_pred)
+        fold_rows.append({
+            "model_family": family, "outer_fold": fold,
+            "threshold_method": "default_0p5", "threshold": 0.5,
+            "validation_achieved_specificity": np.nan, "validation_fallback": False,
+            "n_patients": len(patient), "tp": d_tp, "fp": d_fp, "tn": d_tn, "fn": d_fn,
         })
         parts.append(patient)
     return pd.concat(parts, ignore_index=True), fold_rows
@@ -110,8 +120,12 @@ def main() -> int:
         path = output / f"oof/{family}_oof_predictions.csv"
         frame = pd.read_csv(path, dtype={"row_key": str})
         patient = _patient_max(frame)
+        calibrated_patient = _patient_max(frame, "y_prob_calibrated")
         patient_frames[family] = patient
         discrimination = compute_metrics(patient["y_true"], patient["y_prob"], threshold=0.5)
+        calibrated = compute_metrics(
+            calibrated_patient["y_true"], calibrated_patient["y_prob"], threshold=0.5
+        )
         decisions, fold_rows = _cross_fitted_decisions(frame, output, family)
         clinical = _decision_metrics(decisions)
         row = {
@@ -120,11 +134,32 @@ def main() -> int:
             "n_negative_patients": int((patient["y_true"] == 0).sum()),
             "auprc": discrimination["auprc"], "roc_auc": discrimination["roc_auc"],
             "brier_score": discrimination["brier_score"], "ece": discrimination["ece"],
+            "calibrated_brier_score": calibrated["brier_score"],
+            "calibrated_ece": calibrated["ece"],
             "threshold_method": "cross_fitted_inner_validation_target_90_specificity",
             **clinical,
         }
         metric_rows.append(row)
         operating_rows.extend(fold_rows)
+        pooled = _decision_metrics(decisions)
+        operating_rows.append({
+            "model_family": family, "outer_fold": "POOLED",
+            "threshold_method": "cross_fitted_inner_validation_target_90_specificity",
+            "threshold": np.nan, "validation_achieved_specificity": np.nan,
+            "validation_fallback": any(bool(item["validation_fallback"]) for item in fold_rows if item["threshold_method"] != "default_0p5"),
+            "n_patients": len(decisions),
+            **{key: pooled[key] for key in ("tp", "fp", "tn", "fn")},
+        })
+        default_decisions = decisions.copy()
+        default_decisions["y_pred"] = (default_decisions["y_prob"] >= 0.5).astype(int)
+        default_pooled = _decision_metrics(default_decisions)
+        operating_rows.append({
+            "model_family": family, "outer_fold": "POOLED",
+            "threshold_method": "default_0p5", "threshold": 0.5,
+            "validation_achieved_specificity": np.nan, "validation_fallback": False,
+            "n_patients": len(default_decisions),
+            **{key: default_pooled[key] for key in ("tp", "fp", "tn", "fn")},
+        })
     metrics = pd.DataFrame(metric_rows).sort_values(
         ["auprc", "roc_auc", "brier_score"], ascending=[False, False, True]
     ).reset_index(drop=True)
@@ -142,6 +177,7 @@ def main() -> int:
     operating = pd.DataFrame(operating_rows)
     comparison = metrics[[
         "rank", "model_family", "auprc", "roc_auc", "brier_score", "ece",
+        "calibrated_brier_score", "calibrated_ece",
         "sensitivity", "specificity", "ppv", "npv", "tp", "fp", "tn", "fn",
         "false_positives_per_detected_progressor",
     ]].copy()
@@ -158,26 +194,33 @@ def main() -> int:
         (reports / f"{name}.md").write_text(_markdown_table(name, table), encoding="utf-8")
 
     best = metrics.iloc[0]
+    late = paired[(paired["model_a"] == "late_mean") & (paired["model_b"] == "cnv_only")].iloc[0]
     early = paired[(paired["model_a"] == "early_fusion") & (paired["model_b"] == "cnv_only")].iloc[0]
-    supports_early = early["delta_auprc_ci_low"] > 0
     interpretation = [
         "# LGD2+ Final Pre-event Interpretation",
         "",
         f"Highest patient-level AUPRC: **{best['model_family']}** ({best['auprc']:.3f}).",
+        f"Late mean minus CNV AUPRC: {late['delta_auprc']:.3f} "
+        f"(95% paired bootstrap CI {late['delta_auprc_ci_low']:.3f} to {late['delta_auprc_ci_high']:.3f}).",
+        f"Late mean minus CNV ROC AUC: {late['delta_roc_auc']:.3f} "
+        f"(95% CI {late['delta_roc_auc_ci_low']:.3f} to {late['delta_roc_auc_ci_high']:.3f}); "
+        f"Brier difference: {late['delta_brier']:.3f} "
+        f"(95% CI {late['delta_brier_ci_low']:.3f} to {late['delta_brier_ci_high']:.3f}).",
         f"Early fusion minus CNV AUPRC: {early['delta_auprc']:.3f} "
         f"(95% paired bootstrap CI {early['delta_auprc_ci_low']:.3f} to {early['delta_auprc_ci_high']:.3f}).",
         "",
-        (
-            "The paired interval excludes zero, supporting an internal-cohort improvement from adding histopathology."
-            if supports_early else
-            "The paired interval includes zero; the rerun does not establish a statistically clear early-fusion improvement."
-        ),
+        "Late mean improved all point estimates over CNV-only. Its paired ROC AUC and Brier intervals excluded zero, but the prespecified primary AUPRC interval included zero. The evidence therefore supports a likely multimodal benefit without establishing a statistically clear primary-metric improvement in this cohort.",
+        "Early and intermediate fusion also improved AUPRC point estimates over CNV-only, but their paired intervals included zero. Late stack-logit did not improve AUPRC.",
         "",
         "This endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression. External generalisability was not tested.",
     ]
     (reports / "lgd2_final_pre_event_interpretation.md").write_text("\n".join(interpretation) + "\n", encoding="utf-8")
     (reports / "lgd2_final_pre_event_warnings.md").write_text(
-        "# LGD2+ Final Pre-event Warnings\n\nNone generated by the result script.\n", encoding="utf-8"
+        "# LGD2+ Final Pre-event Warnings\n\n"
+        "- The primary paired AUPRC confidence interval for late mean versus CNV-only includes zero.\n"
+        "- The endpoint is next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.\n"
+        "- This is internal cross-validation without external cohort validation.\n",
+        encoding="utf-8",
     )
     print(f"PASS: wrote final reports; best AUPRC={best['model_family']} {best['auprc']:.3f}")
     return 0
