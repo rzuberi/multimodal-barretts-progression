@@ -23,6 +23,17 @@ The strict pre-event rerun is complete on 707 matched rows and 150 patients usin
 
 Thus histopathology adds useful signal in point estimates and secondary metrics, but the prespecified primary AUPRC comparison remains uncertain.
 
+## Supplementary Advanced Architectures
+
+Seven post-hoc architectures were implemented and run under the same strict pre-event cohort and patient-disjoint nested-CV contract: reliability-gated residual fusion, hierarchical patient fusion, chromosome-token cross-attention, low-rank bilinear fusion, multitask temporal fusion, optimal-transport fusion, and a GigaPath/UNI2/Virchow2 foundation ensemble.
+
+- Foundation ensemble had the highest AUPRC: `0.636` versus late mean `0.630`; paired difference `+0.006` (95% CI `-0.098` to `0.096`).
+- Hierarchical patient fusion had AUPRC `0.631`, the highest AUC (`0.798`), and the lowest Brier score (`0.180`).
+- Hierarchical minus late mean AUPRC was `+0.001` (95% CI `-0.108` to `0.132`).
+- The other advanced architectures did not improve AUPRC over late mean.
+
+These are supplementary post-hoc architecture comparisons. They do not replace late mean as the locked headline model or make the primary improvement statistically conclusive. See `reports/thesis_ch1/lgd2_advanced_fusion_execution_report.md`.
+
 ## Current Focus
 
 This project is being rebuilt around a single thesis question:

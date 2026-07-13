@@ -2,7 +2,7 @@
 
 ## Outcome
 
-`COMPLETE`. The strict pre-event five-fold rerun, leakage-safe late fusion, supplementary co-attention rerun, OOF validation, patient-level metrics, paired comparisons, and final case reselection all completed.
+`COMPLETE`. The strict pre-event five-fold rerun, leakage-safe late fusion, supplementary co-attention and seven-family advanced architecture runs, OOF validation, patient-level metrics, paired comparisons, and final case reselection all completed.
 
 ## Repository state
 
@@ -185,6 +185,22 @@ Supplementary post-hoc co-attention minus CNV-only AUPRC was +0.010 (95% CI -0.1
 Adding histopathology improved multimodal point estimates over CNV-only, with late mean strongest. Paired AUC and Brier intervals favor late mean, but the prespecified primary AUPRC interval includes zero. Supplementary co-attention did not outperform late mean, early fusion, or intermediate fusion by AUPRC. The defensible conclusion is a likely multimodal benefit that is not statistically conclusive on the primary metric in this internal cohort. The endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
 
 Eight final interpretation cases were reselected from the strict OOF predictions. Final-checkpoint attention and CNV region/gene regeneration remains a subsequent interpretation task, not a missing model-comparison result.
+
+## Supplementary advanced architecture run
+
+Implementation commit `6c22ddf` added seven architecture families with two prespecified candidates each. All candidates were selected independently within each outer fold using pooled inner-validation patient-level AUPRC. The run used the same 707 rows, 150 patients, five frozen outer folds, patient-max aggregation, and validation-derived 90%-specificity thresholds as the locked comparison.
+
+- Foundation ensemble: AUPRC 0.636, AUC 0.728, Brier 0.208.
+- Hierarchical patient fusion: AUPRC 0.631, AUC 0.798, Brier 0.180.
+- Optimal transport: AUPRC 0.565.
+- Multitask temporal: AUPRC 0.534.
+- Low-rank bilinear: AUPRC 0.514.
+- CNV-token cross-attention: AUPRC 0.507.
+- Reliability-gated residual: AUPRC 0.502.
+
+Foundation ensemble minus late mean AUPRC was +0.006 (95% paired bootstrap CI -0.098 to 0.096). Hierarchical patient fusion minus late mean AUPRC was +0.001 (95% CI -0.108 to 0.132). These supplementary post-hoc results do not displace late mean as the locked headline model.
+
+All 35 folds passed the artifact contract. Sixteen initial production shards failed before training after landing on `clust1-cuda-4` with an uncorrectable GPU ECC error; failed attempts were retained externally and rerun successfully with that node excluded. The validated external root is `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/`.
 
 ## Exact next command
 

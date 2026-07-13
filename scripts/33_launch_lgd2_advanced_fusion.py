@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--families", nargs="+", choices=sorted(ALL_FAMILIES), default=sorted(ALL_FAMILIES))
     parser.add_argument("--folds", nargs="+", type=int, default=[1, 2, 3, 4, 5])
     parser.add_argument("--queue", choices=("h200", "cuda", "mixed"), default="mixed")
+    parser.add_argument("--exclude-nodes", help="Optional Slurm node exclusion list, for example clust1-cuda-4")
     parser.add_argument("--submit", action="store_true")
     args = parser.parse_args()
     release, output = Path(args.release_root).resolve(), Path(args.output_root).resolve()
@@ -62,6 +63,8 @@ def main() -> int:
                 f"--chdir={REPO_ROOT}", f"--output={logs}/%x_%j.out", f"--error={logs}/%x_%j.err",
                 "--wrap=" + shlex.join(command),
             ]
+            if args.exclude_nodes:
+                sbatch.insert(-1, f"--exclude={args.exclude_nodes}")
             record = {"family": family, "outer_fold": fold, "queue": queue, "status": "GENERATED",
                       "command": shlex.join(command), "sbatch_command": shlex.join(sbatch)}
             if args.submit:

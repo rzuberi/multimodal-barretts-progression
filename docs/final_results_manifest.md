@@ -38,6 +38,22 @@ These are the current final candidates. The older campaign rows below remain dev
 
 All seven files contain identical 707 rows and 150 patients. Final patient tables are `reports/thesis_ch1/lgd2_final_pre_event_*.csv`; the external completeness manifest records hashes and fold artifacts. Co-attention was retrained after inspection of the prespecified primary results and is therefore supplementary post-hoc evidence.
 
+### Supplementary advanced architecture run
+
+All seven advanced families use the same 707 strict pre-event rows, 150 patients, frozen outer folds, inner-validation model selection, and validation-derived thresholds. They were specified after inspecting the locked primary results and remain `SUPPLEMENTARY`.
+
+| family | feature inputs | external OOF prediction | AUPRC | status |
+|---|---|---|---:|---|
+| Foundation ensemble | GigaPath + UNI2 + Virchow2 + CNV | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/foundation_ensemble_fusion_oof_predictions.csv` | 0.636 | `SUPPLEMENTARY` |
+| Hierarchical patient fusion | UNI2 + CNV + pre-event hierarchy | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/hierarchical_patient_fusion_oof_predictions.csv` | 0.631 | `SUPPLEMENTARY` |
+| Optimal-transport fusion | UNI2 + chromosome CNV tokens | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/optimal_transport_fusion_oof_predictions.csv` | 0.565 | `SUPPLEMENTARY` |
+| Multitask temporal fusion | UNI2 + CNV | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/multitask_temporal_fusion_oof_predictions.csv` | 0.534 | `SUPPLEMENTARY` |
+| Low-rank bilinear fusion | UNI2 + CNV | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/low_rank_bilinear_fusion_oof_predictions.csv` | 0.514 | `SUPPLEMENTARY` |
+| CNV-token cross-attention | UNI2 + chromosome CNV tokens | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/cnv_token_cross_attention_oof_predictions.csv` | 0.507 | `SUPPLEMENTARY` |
+| Reliability-gated fusion | UNI2 + CNV | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_advanced_fusion_nested_cv_v1/oof/reliability_gated_fusion_oof_predictions.csv` | 0.502 | `SUPPLEMENTARY` |
+
+The foundation ensemble and hierarchical models were effectively tied with late mean on AUPRC; their paired 95% intervals versus late mean include zero. Heavy OOF predictions and checkpoints remain external.
+
 | result family | status | external path | summary file | prediction file | missing metrics | planned output |
 |---|---|---|---|---|---|---|
 | Primary LGD2+ cohort | `LEGACY` | `data/derived_nextbiopsy_lgd2_strict_nextbiopsy_CANONICAL_ONLY_20260319/` | `derived_master.csv` | n/a | final cohort-flow docs and early-prediction flag | Table 1 cohort flow |

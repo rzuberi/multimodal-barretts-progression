@@ -85,11 +85,16 @@ def main() -> int:
     (reports / "lgd2_advanced_fusion_paired_differences.md").write_text("# LGD2+ Advanced Fusion Paired Differences\n\n" + markdown_table(paired, list(paired.columns)) + "\n")
     best_advanced = table[table["model_family"].isin(ALL_FAMILIES)].iloc[0]
     best_all = table.iloc[0]
+    hierarchical = table[table["model_family"].eq("hierarchical_patient_fusion")].iloc[0]
     lines = ["# LGD2+ Advanced Fusion Interpretation", "", "These architectures were specified after inspection of the locked primary results and are supplementary post-hoc comparisons.", "",
              f"Best advanced architecture by AUPRC: **{best_advanced.model_family}** ({best_advanced.auprc:.3f}).",
-             f"Best model across the combined table: **{best_all.model_family}** ({best_all.auprc:.3f}).", ""]
+             f"Best model across the combined table by AUPRC: **{best_all.model_family}** ({best_all.auprc:.3f}).",
+             f"Hierarchical patient fusion had AUPRC {hierarchical.auprc:.3f}, the best AUC ({hierarchical.roc_auc:.3f}), and the best Brier score ({hierarchical.brier_score:.3f}).", ""]
     contrast = paired[(paired["model_a"] == best_advanced.model_family) & (paired["model_b"] == "late_mean")].iloc[0]
     lines.append(f"Best advanced minus late mean AUPRC: {contrast.delta_auprc:.3f} (95% paired bootstrap CI {contrast.delta_auprc_ci_low:.3f} to {contrast.delta_auprc_ci_high:.3f}).")
+    hierarchical_contrast = paired[(paired["model_a"] == "hierarchical_patient_fusion") & (paired["model_b"] == "late_mean")].iloc[0]
+    lines.append(f"Hierarchical patient fusion minus late mean AUPRC: {hierarchical_contrast.delta_auprc:.3f} (95% CI {hierarchical_contrast.delta_auprc_ci_low:.3f} to {hierarchical_contrast.delta_auprc_ci_high:.3f}).")
+    lines.extend(["", "Neither interval excludes zero. These post-hoc architectures do not displace late mean as the locked primary result."])
     (reports / "lgd2_advanced_fusion_interpretation.md").write_text("\n".join(lines) + "\n")
     print(f"PASS: best advanced={best_advanced.model_family} {best_advanced.auprc:.3f}")
     return 0

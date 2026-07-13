@@ -55,6 +55,9 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_final_training_smoke_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_interpretation_cases\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_advanced_fusion_oof_completeness\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_advanced_fusion_model_comparison\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_advanced_fusion_paired_differences\.csv$' \
     || true
 )"
 
