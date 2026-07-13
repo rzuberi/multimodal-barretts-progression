@@ -50,6 +50,18 @@
 | intermediate_fusion | 5 | default_0p5 | 0.500 |  | False | 30 | 6 | 9 | 11 | 4 |
 | intermediate_fusion | POOLED | cross_fitted_inner_validation_target_90_specificity |  |  | False | 150 | 24 | 16 | 84 | 26 |
 | intermediate_fusion | POOLED | default_0p5 | 0.500 |  | False | 150 | 32 | 37 | 63 | 18 |
+| coattention_fusion | 1 | inner_validation_target_90_specificity | 0.706 | 0.900 | False | 30 | 8 | 12 | 8 | 2 |
+| coattention_fusion | 1 | default_0p5 | 0.500 |  | False | 30 | 10 | 13 | 7 | 0 |
+| coattention_fusion | 2 | inner_validation_target_90_specificity | 0.692 | 0.912 | False | 30 | 8 | 3 | 17 | 2 |
+| coattention_fusion | 2 | default_0p5 | 0.500 |  | False | 30 | 9 | 6 | 14 | 1 |
+| coattention_fusion | 3 | inner_validation_target_90_specificity | 0.829 | 0.912 | False | 30 | 2 | 1 | 19 | 8 |
+| coattention_fusion | 3 | default_0p5 | 0.500 |  | False | 30 | 6 | 4 | 16 | 4 |
+| coattention_fusion | 4 | inner_validation_target_90_specificity | 0.864 | 0.900 | False | 30 | 1 | 0 | 20 | 9 |
+| coattention_fusion | 4 | default_0p5 | 0.500 |  | False | 30 | 6 | 3 | 17 | 4 |
+| coattention_fusion | 5 | inner_validation_target_90_specificity | 0.674 | 0.912 | False | 30 | 7 | 4 | 16 | 3 |
+| coattention_fusion | 5 | default_0p5 | 0.500 |  | False | 30 | 10 | 12 | 8 | 0 |
+| coattention_fusion | POOLED | cross_fitted_inner_validation_target_90_specificity |  |  | False | 150 | 26 | 20 | 80 | 24 |
+| coattention_fusion | POOLED | default_0p5 | 0.500 |  | False | 150 | 41 | 38 | 62 | 9 |
 | late_mean | 1 | inner_validation_target_90_specificity | 0.450 | 0.900 | False | 30 | 4 | 8 | 12 | 6 |
 | late_mean | 1 | default_0p5 | 0.500 |  | False | 30 | 4 | 7 | 13 | 6 |
 | late_mean | 2 | inner_validation_target_90_specificity | 0.424 | 0.900 | False | 30 | 6 | 2 | 18 | 4 |

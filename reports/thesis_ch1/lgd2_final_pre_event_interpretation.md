@@ -6,7 +6,7 @@ Late mean minus CNV ROC AUC: 0.111 (95% CI 0.002 to 0.219); Brier difference: -0
 Early fusion minus CNV AUPRC: 0.051 (95% paired bootstrap CI -0.053 to 0.167).
 
 Late mean improved all point estimates over CNV-only. Its paired ROC AUC and Brier intervals excluded zero, but the prespecified primary AUPRC interval included zero. The evidence therefore supports a likely multimodal benefit without establishing a statistically clear primary-metric improvement in this cohort.
-
 Early and intermediate fusion also improved AUPRC point estimates over CNV-only, but their paired intervals included zero. Late stack-logit did not improve AUPRC.
+Supplementary post-hoc co-attention minus CNV AUPRC: 0.010 (95% paired bootstrap CI -0.103 to 0.136).
 
 This endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression. External generalisability was not tested.

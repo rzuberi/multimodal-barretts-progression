@@ -11,5 +11,6 @@ External output root: `/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining
 | image_only | 5/5 | 707 | 150 |
 | early_fusion | 5/5 | 707 | 150 |
 | intermediate_fusion | 5/5 | 707 | 150 |
+| coattention_fusion | 5/5 | 707 | 150 |
 | late_mean | 5/5 | 707 | 150 |
 | late_stack_logit | 5/5 | 707 | 150 |

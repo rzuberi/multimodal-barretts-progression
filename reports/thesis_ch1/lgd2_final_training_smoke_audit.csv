@@ -1,5 +1,6 @@
 model_family,outer_fold,status,expected_rows,prediction_rows,expected_patients,prediction_patients,selected_configuration_id,probability_min,probability_max,problems
-cnv_only,1,PASS,174,174,30,30,cnv_rf_conservative,0.024860016897453,0.4752763187563119,
+cnv_only,1,PASS,174,174,30,30,cnv_rf_conservative,0.0296067456414413,0.441248855544851,
 image_only,1,PASS,174,174,30,30,uni2_abmil_fixed,0.0046329516917467,0.9773442149162292,
 early_fusion,1,PASS,174,174,30,30,early_mean_mlp_fixed,0.0001367598597425,0.9994794726371764,
 intermediate_fusion,1,PASS,174,174,30,30,intermediate_lr1e4,0.0005010684835724,0.9998252987861632,
+coattention_fusion,1,PASS,174,174,30,30,coattention_lr1e4,0.0015608728863298,0.9905104041099548,

@@ -32,10 +32,11 @@ These are the current final candidates. The older campaign rows below remain dev
 | UNI2 ABMIL | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/image_only/` | `oof/image_only_oof_predictions.csv` | `FINAL_CANDIDATE` | Image baseline |
 | Early fusion | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/early_fusion/` | `oof/early_fusion_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
 | Intermediate fusion | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/intermediate_fusion/` | `oof/intermediate_fusion_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
+| Co-attention fusion | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/coattention_fusion/` | `oof/coattention_fusion_oof_predictions.csv` | `SUPPLEMENTARY` | Post-hoc architecture comparison |
 | Late mean | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/late_mean/` | `oof/late_mean_oof_predictions.csv` | `FINAL_CANDIDATE` | Headline point-estimate model |
 | Late stack-logit | `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/late_stack_logit/` | `oof/late_stack_logit_oof_predictions.csv` | `FINAL_CANDIDATE` | Main comparison |
 
-All six files contain identical 707 rows and 150 patients. Final patient tables are `reports/thesis_ch1/lgd2_final_pre_event_*.csv`; the external completeness manifest records hashes and fold artifacts.
+All seven files contain identical 707 rows and 150 patients. Final patient tables are `reports/thesis_ch1/lgd2_final_pre_event_*.csv`; the external completeness manifest records hashes and fold artifacts. Co-attention was retrained after inspection of the prespecified primary results and is therefore supplementary post-hoc evidence.
 
 | result family | status | external path | summary file | prediction file | missing metrics | planned output |
 |---|---|---|---|---|---|---|
