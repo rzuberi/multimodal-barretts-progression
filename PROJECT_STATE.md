@@ -22,13 +22,22 @@ These paths are references to the cluster experiment folder and are not reposito
 - LGD3+ legacy master: `data/derived_nextbiopsy_lgd3plus_CANONICAL_20260304_154336/derived_master.csv`
 - LGD3+ legacy interpretation/report support: `reports/biopsy_patient_aggregation_20260306_102801/`, `reports/progressor_distance_to_progression_20260306_104927/`, `analysis/clinician_figures_nextbiopsyprogression_batch10/`
 
-## Known Risks
+## Completed
 
-- Current-event samples are included in primary all-samples LGD2+ results; early-prediction-only analysis remains supplementary/missing.
-- Patient-level LGD2+ aggregation exists, but its stored table lacks patient-level AUPRC, Brier/calibration, fixed operating-point metrics, FP/TN counts, PPV/NPV, and false-positive burden.
-- LGD2+ interpretation outputs were not found; existing interpretation is mainly LGD3+.
-- Tile/magnification testing is not packaged as a clean final LGD2+ result.
-- Some supportive outputs mix endpoint/history and should stay legacy or supplementary.
+- Patient-level LGD2+ metrics (AUPRC, ROC AUC, Brier/calibration, PPV/NPV, FP/TN, fixed operating points, bootstrap CIs) are computed in `reports/thesis_ch1/lgd2_patient_level_metrics_all_samples.csv`.
+- Early-prediction-only sensitivity analysis (excludes `DaysFromCurrentToEvent == 0`) is complete: `reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv`.
+- Cohort-flow and main model-comparison tables are complete.
+- Late fusion (`mean`, `stack_logit`) integrated at patient level for uni2/virchow2/gigapath; see manifest rows `lgd2_late_fusion_*`.
+- ABMIL histology interpretation complete for all eight selected LGD2+ cases (external outputs, `pathology` env); no environment blocker remains.
+- Probability-level fusion case interpretation complete for the first three case packs (`A_true_positive_early_02`, `B_false_negative_07`, `E_cnv_rescue_19`).
+
+## Remaining Gaps
+
+- LGD2+ CNV top-windows/genes interpretation is BLOCKED: no persisted CNV estimator or exported LGD2+ feature-importance, and no LGD2+ window-to-gene map. LGD3+ legacy outputs are a different endpoint and not valid primary evidence. Unblocking requires a compute run (not lightweight); see `reports/thesis_ch1/lgd2_cnv_interpretation_input_audit.md`.
+- Model-internal fusion attribution (beyond probability comparisons) is missing.
+- Composite clinician-facing multimodal case figures are missing.
+- Clean final tile/magnification LGD2+ comparison table is not yet packaged.
+- Foundation-combo needs `patient_id` join validation; clinical-augmentation scope undecided. Both remain `REVIEW_MANUALLY` and are excluded from the primary comparison.
 
 ## Repository Principle
 

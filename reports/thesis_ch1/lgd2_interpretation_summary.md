@@ -217,10 +217,16 @@ Current dry-run files:
 - `lgd2_histology_dry_run_summary.md`
 - `lgd2_histology_dry_run_warnings.md`
 
-Recommendation: do not run all 8 cases yet. First run from a node/session where the
-raw WSI slide tree is mounted, and either restore the legacy `/scratchc` feature paths
-or build a dry-run feature index with paths remapped to the visible external feature
-files.
+Status (superseded): the historical recommendation below said "do not run all 8 cases
+yet". This is RESOLVED. ABMIL histology interpretation subsequently completed for all
+eight selected cases using the `pathology` environment; external top/bottom tile grids,
+heatmap overlays, shuffled overlays, tile-score CSVs and metadata JSON exist and were
+judged acceptable. No histology environment blocker remains. See `PROJECT_STATE.md` for
+canonical current status. Original historical note retained for provenance:
+
+> do not run all 8 cases yet. First run from a node/session where the raw WSI slide
+> tree is mounted, and either restore the legacy `/scratchc` feature paths or build a
+> dry-run feature index with paths remapped to the visible external feature files.
 
 ## Histology path-remapping status
 

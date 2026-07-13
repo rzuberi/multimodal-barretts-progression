@@ -71,12 +71,13 @@ Small generated summaries are tracked under `reports/thesis_ch1/`; raw predictio
 
 | item | status | note |
 |---|---|---|
-| LGD2+ histology attention/top-patch outputs | `MISSING` | Existing top-patch/attention outputs are mainly LGD3+. |
-| LGD2+ CNV top genes/windows | `MISSING` | Existing CNV explainability appears mostly LGD3+. |
-| LGD2+ fusion help/hurt/fail cases | `MISSING` | LGD3+ rescue/hurt reports exist, but LGD2+ case analysis was not found. |
+| LGD2+ histology attention/top-patch outputs | `COMPLETE` | ABMIL interpretation done for all eight selected cases (external outputs, `pathology` env). |
+| LGD2+ CNV top genes/windows | `MISSING` | BLOCKED: no persisted estimator/exported LGD2+ importance, no LGD2+ window-to-gene map. LGD3+ legacy is a different endpoint. |
+| LGD2+ fusion help/hurt/fail cases | `PARTIAL` | Probability-level case interpretation complete for the first three packs; model-internal attribution still missing. |
+| LGD2+ late fusion (mean; stack_logit) | `COMPLETE` | Patient-level metrics recomputed for uni2/virchow2/gigapath; rows `lgd2_late_fusion_*`. |
 | LGD2+ tile/magnification comparison | `REVIEW_MANUALLY` | Patch-selection/level evidence exists, but no clean final LGD2+ comparison table was found. |
 | Foundation-combo patient-level metrics | `REVIEW_MANUALLY` | Prediction file found, but audited header lacks `patient_id`; join required before patient metrics. |
-| Final early-prediction-only results | `NEEDS_RECOMPUTE` | No final filtered output found. |
+| Final early-prediction-only results | `COMPLETE` | Generated in `reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv`. |
 
 ## Next scripts that should consume this manifest
 

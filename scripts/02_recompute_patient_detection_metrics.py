@@ -210,6 +210,19 @@ def main() -> int:
         if pred.empty:
             warnings.append(WarningRow(result_id, "SKIP", "Prediction files loaded no rows."))
             continue
+        # Late-fusion files embed cnv_only/img_only/mean/stack_logit; keep only the
+        # fusion methods this manifest row declares (mean; stack_logit). The unimodal
+        # baselines have their own canonical manifest rows, so excluding them here
+        # prevents duplicate metric rows.
+        if str(manifest_row["fusion_type"]) == "late_fusion" and "fusion_method" in pred.columns:
+            allowed = {m.strip() for m in str(manifest_row["model_name"]).split(";") if m.strip()}
+            pred = pred[pred["fusion_method"].isin(allowed)].copy()
+            if pred.empty:
+                warnings.append(WarningRow(result_id, "SKIP", f"No rows for late-fusion methods {sorted(allowed)}."))
+                continue
+            dup = pred.duplicated(subset=["fusion_method", "sample_id"]).sum()
+            if dup:
+                warnings.append(WarningRow(result_id, "WARN", f"{int(dup)} duplicate (fusion_method, sample_id) rows."))
         pred, join_key = join_master(pred, master)
         if pred["patient_id"].isna().any():
             n_missing = int(pred["patient_id"].isna().sum())

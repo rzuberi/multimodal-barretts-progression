@@ -35,6 +35,10 @@ MODEL_GROUP_COLS = [
     "method_name",
     "n_experts",
     "experts",
+    # late-fusion predictions carry no model_name; fusion_method keeps the
+    # `mean` and `stack_logit` variants as separate metric rows. Absent from
+    # every other family's files, so group_columns/model_label ignore it there.
+    "fusion_method",
 ]
 
 
@@ -157,14 +161,25 @@ def load_predictions(files: list[Path], usecols_extra: list[str] | None = None) 
     frames = []
     for path in files:
         header = pd.read_csv(path, nrows=0).columns.tolist()
-        base_cols = ["sample_id", "patient_id", "fold", "y_true", "y_prob", "y_pred", "condition", "task_name"]
+        base_cols = [
+            "sample_id", "patient_id", "fold", "y_true", "y_prob", "y_pred",
+            "condition", "task_name",
+            # late-fusion prediction schema: a fused score plus its provenance.
+            "fused_prob", "image_model", "stack_note",
+        ]
         cols = [c for c in base_cols + MODEL_GROUP_COLS + (usecols_extra or []) if c in header]
         part = pd.read_csv(path, usecols=cols)
         part["prediction_file"] = str(path)
         frames.append(part)
     if not frames:
         return pd.DataFrame()
-    return pd.concat(frames, ignore_index=True)
+    out = pd.concat(frames, ignore_index=True)
+    # Accept `fused_prob` as the score alias only when a canonical `y_prob` is
+    # absent or entirely empty; never overwrite a real y_prob.
+    if "fused_prob" in out.columns:
+        if "y_prob" not in out.columns or out["y_prob"].isna().all():
+            out["y_prob"] = out["fused_prob"]
+    return out
 
 
 def join_master(pred: pd.DataFrame, master: pd.DataFrame) -> tuple[pd.DataFrame, str]:

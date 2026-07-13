@@ -180,7 +180,9 @@ def interpretation(all_metrics: pd.DataFrame, early_metrics: pd.DataFrame, warni
             "## Exclusions and caveats",
             "",
             "- Foundation-combo and clinical-augmentation rows remain excluded unless manual-review status changes.",
-            "- LGD2+ interpretability outputs are still missing.",
+            "- LGD2+ interpretability status: ABMIL histology interpretation is complete for all eight selected cases; "
+            "probability-level fusion case interpretation is complete for the first three case packs; "
+            "CNV region/gene interpretation and model-internal fusion attribution remain missing.",
             "- Model comparison is based on saved out-of-fold predictions; no model training was run here.",
         ]
     )

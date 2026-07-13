@@ -10,4 +10,5 @@ Ranking uses AUPRC, then ROC AUC, sensitivity/progressors detected, then lower f
 | best_coattention | lgd2_coattention_uni2 | model_name=coattn_abmil_cnv; cnv_variant=windows_armdiff_plus_arms_plus_cx; cnv_mask_name=none; instance_k=0; subsample_mode=uniform; embed_pca_dim=0 | 0.712 | 0.846 | 0.840 | 0.700 | 0.583 | 0.897 | 42 | 30 | 8 | 0.714 | 0.175 |
 | best_intermediate_fusion | lgd2_intermediate_fusion_gigapath | model_name=intermediate_abmil_cnv; cnv_variant=windows_armdiff_plus_arms_plus_cx; cnv_mask_name=none; instance_k=0; subsample_mode=uniform; embed_pca_dim=0 | 0.710 | 0.810 | 0.820 | 0.600 | 0.506 | 0.870 | 41 | 40 | 9 | 0.976 | 0.210 |
 | best_image_only | lgd2_image_uni2 | model_name=abmil | 0.706 | 0.801 | 0.820 | 0.520 | 0.461 | 0.852 | 41 | 48 | 9 | 1.171 | 0.220 |
+| best_late_fusion | lgd2_late_fusion_uni2 | fusion_method=mean | 0.689 | 0.811 | 0.580 | 0.820 | 0.617 | 0.796 | 29 | 18 | 21 | 0.621 | 0.179 |
 | cnv_only | lgd2_cnv_core | model_name=cnv_random_forest; cnv_variant=windows_armdiff_plus_arms_plus_cx; cnv_mask_name=none | 0.553 | 0.674 | 0.280 | 0.960 | 0.778 | 0.727 | 14 | 4 | 36 | 0.286 | 0.201 |
