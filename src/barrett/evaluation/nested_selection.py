@@ -66,9 +66,11 @@ def make_inner_folds(patients, n_inner: int, seed: int) -> dict:
 
 
 def patient_max(df: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate to one row per patient using the max y_prob (patient_max)."""
-    idx = df.groupby("patient_id")["y_prob"].idxmax()
-    return df.loc[idx].reset_index(drop=True)
+    """Aggregate score and outcome independently at patient level."""
+    return (
+        df.groupby("patient_id", as_index=False)
+        .agg(y_true=("y_true", "max"), y_prob=("y_prob", "max"))
+    )
 
 
 def _check_leakage(fold_df: pd.DataFrame, outer_test_patients: set) -> None:

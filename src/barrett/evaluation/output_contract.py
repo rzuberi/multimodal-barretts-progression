@@ -6,7 +6,7 @@ fail closed: they return a list of human-readable problem strings, empty == OK.
 
 from __future__ import annotations
 
-from typing import Dict, Iterable, List, Mapping, Set
+from typing import Iterable, List, Mapping, Set
 
 import math
 
@@ -75,7 +75,11 @@ def _is_missing(value) -> bool:
         return False
 
 
-def validate_predictions(df, expected_folds: int = 5) -> List[str]:
+def validate_predictions(
+    df,
+    expected_folds: int = 5,
+    expected_fold_values: Iterable[int] | None = None,
+) -> List[str]:
     """Validate an outer-test prediction table. Empty list means it passed."""
     problems: List[str] = []
 
@@ -117,8 +121,13 @@ def validate_predictions(df, expected_folds: int = 5) -> List[str]:
     if out_of_range:
         problems.append(f"y_prob outside [0,1]: {out_of_range}")
 
-    # Outer-fold coverage: every expected fold must be present, per model_name.
-    expected = set(range(expected_folds))
+    # Frozen Chapter 1 folds are numbered 1..5. A caller validating one fold
+    # can pass expected_fold_values=[fold] without weakening other checks.
+    expected = (
+        {int(value) for value in expected_fold_values}
+        if expected_fold_values is not None
+        else set(range(1, expected_folds + 1))
+    )
     for model_name, sub in df.groupby("model_name"):
         present = set(int(f) for f in sub["outer_fold"].tolist())
         missing_folds = expected - present

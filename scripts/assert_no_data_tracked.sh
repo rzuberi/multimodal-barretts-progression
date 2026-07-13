@@ -2,7 +2,9 @@
 set -euo pipefail
 
 bad_ext='(\.csv|\.tsv|\.xlsx|\.xls|\.jsonl|\.sqlite|\.db|\.pt|\.pth|\.ckpt|\.h5|\.hdf5|\.npy|\.npz|\.pkl|\.pickle|\.svs|\.ndpi|\.tif|\.tiff|\.png|\.jpg|\.jpeg|\.pdf)$'
-bad_dirs='(^|/)(data|raw_data|derived_data|results|checkpoints|models|embeddings|features)(/|$)'
+# Only repository-level artifact directories are forbidden. Source packages
+# such as src/barrett/data and src/barrett/models are code, not tracked data.
+bad_dirs='^(data|raw_data|derived_data|results|checkpoints|models|embeddings|features)(/|$)'
 
 tracked="$(
   git ls-files \
@@ -44,6 +46,13 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_final_split_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_final_rerun_readiness\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_cohort_flow\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_feature_mapping_audit\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_oof_completeness\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_patient_metrics\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_model_comparison\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_paired_differences\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_pre_event_cross_fitted_operating_points\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_final_training_smoke_audit\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only\.csv$' \
     || true
 )"
