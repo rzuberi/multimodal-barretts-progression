@@ -21,7 +21,7 @@ from barrett.evaluation.tables import markdown_table  # noqa: E402
 
 
 FAMILIES = (
-    "cnv_only", "image_only", "early_fusion", "intermediate_fusion",
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion",
     "late_mean", "late_stack_logit",
 )
 PRIMARY_CONTRASTS = (
@@ -34,6 +34,8 @@ PRIMARY_CONTRASTS = (
     ("intermediate_fusion", "image_only", "contextual"),
     ("late_mean", "image_only", "contextual"),
     ("late_stack_logit", "image_only", "contextual"),
+    ("coattention_fusion", "cnv_only", "supplementary_post_hoc"),
+    ("coattention_fusion", "image_only", "supplementary_post_hoc"),
 )
 
 
@@ -196,6 +198,9 @@ def main() -> int:
     best = metrics.iloc[0]
     late = paired[(paired["model_a"] == "late_mean") & (paired["model_b"] == "cnv_only")].iloc[0]
     early = paired[(paired["model_a"] == "early_fusion") & (paired["model_b"] == "cnv_only")].iloc[0]
+    coattention = paired[
+        (paired["model_a"] == "coattention_fusion") & (paired["model_b"] == "cnv_only")
+    ].iloc[0]
     interpretation = [
         "# LGD2+ Final Pre-event Interpretation",
         "",
@@ -211,6 +216,9 @@ def main() -> int:
         "",
         "Late mean improved all point estimates over CNV-only. Its paired ROC AUC and Brier intervals excluded zero, but the prespecified primary AUPRC interval included zero. The evidence therefore supports a likely multimodal benefit without establishing a statistically clear primary-metric improvement in this cohort.",
         "Early and intermediate fusion also improved AUPRC point estimates over CNV-only, but their paired intervals included zero. Late stack-logit did not improve AUPRC.",
+        f"Supplementary post-hoc co-attention minus CNV AUPRC: {coattention['delta_auprc']:.3f} "
+        f"(95% paired bootstrap CI {coattention['delta_auprc_ci_low']:.3f} to "
+        f"{coattention['delta_auprc_ci_high']:.3f}).",
         "",
         "This endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression. External generalisability was not tested.",
     ]
@@ -219,7 +227,8 @@ def main() -> int:
         "# LGD2+ Final Pre-event Warnings\n\n"
         "- The primary paired AUPRC confidence interval for late mean versus CNV-only includes zero.\n"
         "- The endpoint is next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.\n"
-        "- This is internal cross-validation without external cohort validation.\n",
+        "- This is internal cross-validation without external cohort validation.\n"
+        "- Co-attention was added after review of the prespecified primary model results and is supplementary post-hoc evidence.\n",
         encoding="utf-8",
     )
     print(f"PASS: wrote final reports; best AUPRC={best['model_family']} {best['auprc']:.3f}")

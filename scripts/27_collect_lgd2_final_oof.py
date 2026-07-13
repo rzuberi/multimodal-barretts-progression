@@ -19,7 +19,9 @@ from barrett.training.artifacts import collect_family, reject_repo_output  # noq
 from barrett.training.late_fusion import derive_late_fold  # noqa: E402
 
 
-BASE_FAMILIES = ("cnv_only", "image_only", "early_fusion", "intermediate_fusion")
+BASE_FAMILIES = (
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion",
+)
 ALL_FAMILIES = BASE_FAMILIES + ("late_mean", "late_stack_logit")
 
 

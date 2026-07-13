@@ -100,7 +100,7 @@ class FinalDataset(Dataset):
         }
         if self.family != "cnv_only":
             item["bag"] = torch.from_numpy(self.store.bag(sample_id)).float()
-        if self.family in {"early_fusion", "intermediate_fusion"}:
+        if self.family in {"early_fusion", "intermediate_fusion", "coattention_fusion"}:
             cnv = self.store.cnv_array([sample_id])[0]
             if self.cnv_median is not None:
                 cnv = np.where(np.isfinite(cnv), cnv, self.cnv_median)

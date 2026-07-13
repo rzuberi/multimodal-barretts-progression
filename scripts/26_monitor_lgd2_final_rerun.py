@@ -9,7 +9,9 @@ import subprocess
 from pathlib import Path
 
 
-FAMILIES = ("cnv_only", "image_only", "early_fusion", "intermediate_fusion")
+FAMILIES = (
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion",
+)
 
 
 def main() -> int:

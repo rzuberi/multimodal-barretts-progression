@@ -10,7 +10,9 @@ from pathlib import Path
 import pandas as pd
 
 
-FAMILIES = ("cnv_only", "image_only", "early_fusion", "intermediate_fusion", "late_mean")
+FAMILIES = (
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion", "late_mean",
+)
 TARGETS = (
     ("A_true_positive_early", 2),
     ("B_false_negative", 1),

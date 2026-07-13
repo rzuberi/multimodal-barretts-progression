@@ -35,6 +35,7 @@ FUSION_TYPE = {
     "image_only": "none",
     "early_fusion": "early",
     "intermediate_fusion": "intermediate",
+    "coattention_fusion": "coattention",
 }
 
 
@@ -187,7 +188,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--release-root", required=True)
     parser.add_argument("--model-registry", default=str(REPO_ROOT / "configs/chapter1_lgd2_final_models.yaml"))
-    parser.add_argument("--family", required=True, choices=["cnv_only", "image_only", "early_fusion", "intermediate_fusion"])
+    parser.add_argument(
+        "--family",
+        required=True,
+        choices=["cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion"],
+    )
     parser.add_argument("--outer-fold", required=True, type=int, choices=range(1, 6))
     parser.add_argument("--output-root", required=True)
     parser.add_argument("--device", default="auto")

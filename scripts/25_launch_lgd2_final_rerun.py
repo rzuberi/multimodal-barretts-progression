@@ -17,7 +17,9 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from barrett.training.artifacts import reject_repo_output  # noqa: E402
 
 
-PRIMARY_FAMILIES = ("cnv_only", "image_only", "early_fusion", "intermediate_fusion")
+PRIMARY_FAMILIES = (
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion",
+)
 
 
 def _job_spec(family: str) -> dict[str, str]:
