@@ -1,0 +1,10 @@
+# Lgd2 Final Pre Event Patient Metrics
+
+| rank | model_family | aggregation | analysis_set | n_patients | n_positive_patients | n_negative_patients | auprc | roc_auc | brier_score | ece | calibrated_brier_score | calibrated_ece | threshold_method | sensitivity | specificity | ppv | npv | balanced_accuracy | tp | fp | tn | fn | progressors_detected | progressors_missed | false_positives_per_detected_progressor |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | late_mean | patient_max | strict_pre_event | 150 | 50 | 100 | 0.630 | 0.774 | 0.184 | 0.075 | 0.200 | 0.075 | cross_fitted_inner_validation_target_90_specificity | 0.580 | 0.800 | 0.592 | 0.792 | 0.690 | 29 | 20 | 80 | 21 | 29 | 21 | 0.690 |
+| 2 | early_fusion | patient_max | strict_pre_event | 150 | 50 | 100 | 0.590 | 0.738 | 0.213 | 0.141 | 0.187 | 0.071 | cross_fitted_inner_validation_target_90_specificity | 0.580 | 0.850 | 0.659 | 0.802 | 0.715 | 29 | 15 | 85 | 21 | 29 | 21 | 0.517 |
+| 3 | intermediate_fusion | patient_max | strict_pre_event | 150 | 50 | 100 | 0.567 | 0.741 | 0.224 | 0.167 | 0.197 | 0.071 | cross_fitted_inner_validation_target_90_specificity | 0.480 | 0.840 | 0.600 | 0.764 | 0.660 | 24 | 16 | 84 | 26 | 24 | 26 | 0.667 |
+| 4 | image_only | patient_max | strict_pre_event | 150 | 50 | 100 | 0.557 | 0.731 | 0.245 | 0.215 | 0.201 | 0.073 | cross_fitted_inner_validation_target_90_specificity | 0.600 | 0.720 | 0.517 | 0.783 | 0.660 | 30 | 28 | 72 | 20 | 30 | 20 | 0.933 |
+| 5 | cnv_only | patient_max | strict_pre_event | 150 | 50 | 100 | 0.538 | 0.663 | 0.216 | 0.095 | 0.217 | 0.020 | cross_fitted_inner_validation_target_90_specificity | 0.280 | 0.900 | 0.583 | 0.714 | 0.590 | 14 | 10 | 90 | 36 | 14 | 36 | 0.714 |
+| 6 | late_stack_logit | patient_max | strict_pre_event | 150 | 50 | 100 | 0.530 | 0.737 | 0.202 | 0.110 | 0.215 | 0.013 | cross_fitted_inner_validation_target_90_specificity | 0.600 | 0.750 | 0.545 | 0.789 | 0.675 | 30 | 25 | 75 | 20 | 30 | 20 | 0.833 |

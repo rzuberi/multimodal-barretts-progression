@@ -2,13 +2,15 @@
 
 ## Outcome
 
-`PARTIAL` while required fold-1 smoke runs and final five-fold jobs are executing.
+`COMPLETE`. The strict pre-event five-fold rerun, leakage-safe late fusion, OOF validation, patient-level metrics, paired comparisons, and final case reselection all completed.
 
 ## Repository state
 
 - Starting commit: `5954b5789202025631367ba713f6164a00d907d7`.
 - Branch: `main`.
-- Final commit/push state: pending completion and review.
+- Base-run commit: `98ba86820b3a3a33cd61f1f6724f20da38e9c8da`; pushed to `origin/main` under `rzuberi` before training.
+- Late-alignment fix commit: `8d12c49`; pushed before corrected late-fusion regeneration.
+- Final documentation/report state: validated on `main` and pushed to `origin/main` after this report update; use repository `HEAD` for the immutable commit ID.
 - No raw cohort data, feature tensors, prediction dumps, checkpoints, or Slurm logs are being written into Git.
 
 ## Frozen analysis
@@ -80,21 +82,39 @@ Registry: `configs/chapter1_lgd2_final_models.yaml`.
 | `55143478` | Image fold 1 | FAILED | 00:06:15 | Wrong CUDA build; failed at first CUDA kernel. Preserved externally. |
 | `55144080` | Image fold 1 | CANCELLED | 00:03:xx | Compatible environment but pre-cache I/O was inefficient; preserved externally. |
 | `55144148` | Image fold 1 | PASS | 00:00:47 | Cached fixed UNI2 bags; 174 rows and 30 patients. |
-| `55144153` | Early fusion fold 1 | RUNNING/PENDING | pending | H200-compatible environment. |
-| `55144154` | Intermediate fusion fold 1 | RUNNING/PENDING | pending | H200-compatible environment; both candidates selected on inner validation. |
+| `55144153` | Early fusion fold 1 | PASS | 00:00:47 | 174 rows, 30 patients. |
+| `55144154` | Intermediate fusion fold 1 | PASS | 00:01:23 | Selected `intermediate_lr1e4` on inner validation. |
 
-Full folds 2-5 remain blocked until `scripts/29_audit_lgd2_final_smoke.py` reports 4/4 PASS.
+The smoke gate reported 4/4 PASS before full submission.
+
+## Final Slurm jobs
+
+- CNV-only: jobs `55144170`-`55144174`; all PASS; 20-31 seconds per fold.
+- Image-only: jobs `55144175`-`55144179`; all PASS; 32-41 seconds per fold.
+- Early fusion: jobs `55144180`-`55144184`; all PASS; 34-44 seconds per fold.
+- Intermediate fusion: jobs `55144185`-`55144189`; all PASS; 54-86 seconds per fold.
+- Launch manifest: `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/launch_manifest_full_20260713_161453.json`.
 
 ## Fold completion matrix
 
 | Family | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 |
 |---|---|---|---|---|---|
-| CNV-only | PASS smoke | not started | not started | not started | not started |
-| Image-only | PASS smoke | not started | not started | not started | not started |
-| Early fusion | running | not started | not started | not started | not started |
-| Intermediate fusion | running | not started | not started | not started | not started |
-| Late mean | pending base models | pending | pending | pending | pending |
-| Late stack-logit | pending base models | pending | pending | pending | pending |
+| CNV-only | PASS | PASS | PASS | PASS | PASS |
+| Image-only | PASS | PASS | PASS | PASS | PASS |
+| Early fusion | PASS | PASS | PASS | PASS | PASS |
+| Intermediate fusion | PASS | PASS | PASS | PASS | PASS |
+| Late mean | PASS | PASS | PASS | PASS | PASS |
+| Late stack-logit | PASS | PASS | PASS | PASS | PASS |
+
+## Fold selections and thresholds
+
+- CNV selected `cnv_rf_conservative` in all five folds. Validation-derived thresholds: 0.334, 0.345, 0.314, 0.323, 0.295.
+- Image used fixed `uni2_abmil_fixed`. Thresholds: 0.610, 0.609, 0.622, 0.691, 0.772.
+- Early fusion used fixed `early_mean_mlp_fixed`. Thresholds: 0.781, 0.516, 0.771, 0.785, 0.681.
+- Intermediate selected `intermediate_lr1e4` independently in all five folds. Thresholds: 0.808, 0.862, 0.529, 0.621, 0.676.
+- Late mean thresholds: 0.450, 0.424, 0.432, 0.444, 0.477.
+- Late stack-logit thresholds: 0.336, 0.281, 0.311, 0.264, 0.297.
+- No threshold selection used its matching outer-test labels; no fold required a threshold fallback.
 
 ## Artifacts retained externally per trained fold
 
@@ -111,29 +131,58 @@ Full folds 2-5 remain blocked until `scripts/29_audit_lgd2_final_smoke.py` repor
 ## Validation
 
 - Feature-view gate: PASS at 707/707 for both modalities.
-- Targeted and full toy suite: 137 tests passing in the `erin` environment.
+- Targeted and full toy suite: 138 tests passing in the `erin` environment.
 - Migrated ABMIL, early-fusion, and intermediate-fusion modules produce identical outputs to legacy definitions after loading identical state dictionaries.
-- Data guard: to be rerun after final report generation.
+- All six OOF files pass `scripts/19_validate_lgd2_training_artifacts.py`.
+- OOF completeness: 707 unique rows, 150 patients, five folds for every family; one patient occurs in exactly one outer fold.
+- OOF hashes: CNV `9e1c9a9f5ef6...`; image `1ee345ea6e89...`; early `707c6e603080...`; intermediate `058d6914c221...`; corrected late mean `964d624f7efe...`; corrected late stack-logit `6ecd41b7853e...`.
+- Data guard: PASS after staging final lightweight reports.
 
-## Current scientific status
+## Failures and deviations
 
-The strict rerun is not yet complete, so no new superiority claim is made. Developmental results remain suggestive only. The endpoint must be described as future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
+- Image smoke job `55143478` used an incompatible CUDA build and failed before a valid fold artifact. It was preserved externally and not reused.
+- Image smoke job `55144080` was cancelled after detecting repeated NPZ decompression. A process-local immutable feature cache removed redundant I/O without changing model inputs.
+- The first late-fusion derivation assigned merged probabilities without explicit `row_key` reindexing. A direct value-equality check detected the mismatch before final reporting. Invalid late outputs were moved to `failed_attempts/late_alignment_bug_20260713/`, keyed alignment and a regression test were added, and all late outputs/metrics were regenerated.
 
-## Exact continuation commands
+## Final patient-level results
 
-Audit the smoke gate:
+| Model | AUPRC | ROC AUC | Brier | Sensitivity | Specificity | TP | FP |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Late mean | 0.630 | 0.774 | 0.184 | 0.58 | 0.80 | 29 | 20 |
+| Early fusion | 0.590 | 0.738 | 0.213 | 0.58 | 0.85 | 29 | 15 |
+| Intermediate fusion | 0.567 | 0.741 | 0.224 | 0.48 | 0.84 | 24 | 16 |
+| Image-only | 0.557 | 0.731 | 0.245 | 0.60 | 0.72 | 30 | 28 |
+| CNV-only | 0.538 | 0.663 | 0.216 | 0.28 | 0.90 | 14 | 10 |
+| Late stack-logit | 0.530 | 0.737 | 0.202 | 0.60 | 0.75 | 30 | 25 |
+
+Clinical sensitivity/specificity/counts use fold-specific validation-derived thresholds. Threshold 0.5 is reported separately.
+
+Paired late mean minus CNV-only:
+
+- AUPRC +0.091 (95% paired bootstrap CI -0.036 to 0.219).
+- ROC AUC +0.111 (95% CI 0.002 to 0.219).
+- Brier -0.032 (95% CI -0.062 to -0.004; lower is better).
+
+Early fusion minus CNV-only AUPRC was +0.051 (95% CI -0.053 to 0.167). Intermediate fusion minus CNV-only AUPRC was +0.029 (95% CI -0.084 to 0.157).
+
+## Scientific conclusion
+
+Adding histopathology improved multimodal point estimates over CNV-only, with late mean strongest. Paired AUC and Brier intervals favor late mean, but the prespecified primary AUPRC interval includes zero. The defensible conclusion is a likely multimodal benefit that is not statistically conclusive on the primary metric in this internal cohort. The endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
+
+Eight final interpretation cases were reselected from the strict OOF predictions. Final-checkpoint attention and CNV region/gene regeneration remains a subsequent interpretation task, not a missing model-comparison result.
+
+## Exact next command
+
+Regenerate final-model interpretation only for the new OOF-selected cases listed in `reports/thesis_ch1/lgd2_final_pre_event_interpretation_cases.csv`. Start by validating recorded feature/checkpoint references; do not reuse developmental case labels automatically.
+
+The completed result tables can be reproduced with:
 
 ```bash
-/home/zuberi01/miniforge3/envs/erin/bin/python scripts/29_audit_lgd2_final_smoke.py \
+/home/zuberi01/miniforge3/envs/erin/bin/python scripts/27_collect_lgd2_final_oof.py \
   --release-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final \
-  --output-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final/training_smoke
-```
+  --output-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1
 
-After and only after 4/4 smoke PASS, generate the full launch manifest before submission:
-
-```bash
-/home/zuberi01/miniforge3/envs/erin/bin/python scripts/25_launch_lgd2_final_rerun.py \
-  --release-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final \
+/home/zuberi01/miniforge3/envs/erin/bin/python scripts/28_make_lgd2_final_pre_event_results.py \
   --output-root ../analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1 \
-  --mode full
+  --bootstrap 5000
 ```

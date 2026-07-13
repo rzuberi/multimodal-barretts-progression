@@ -92,6 +92,7 @@ figures/generated/
 !reports/thesis_ch1/lgd2_final_pre_event_paired_differences.csv
 !reports/thesis_ch1/lgd2_final_pre_event_cross_fitted_operating_points.csv
 !reports/thesis_ch1/lgd2_final_training_smoke_audit.csv
+!reports/thesis_ch1/lgd2_final_pre_event_interpretation_cases.csv
 !reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only.csv
 !README.md
 !PROJECT_STATE.md

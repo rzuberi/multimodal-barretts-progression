@@ -30,6 +30,12 @@ These paths are references to the cluster experiment folder and are not reposito
 - Late fusion (`mean`, `stack_logit`) integrated at patient level for uni2/virchow2/gigapath; see manifest rows `lgd2_late_fusion_*`.
 - ABMIL histology interpretation complete for all eight selected LGD2+ cases (external outputs, `pathology` env); no environment blocker remains.
 - Probability-level fusion case interpretation complete for the first three case packs (`A_true_positive_early_02`, `B_false_negative_07`, `E_cnv_rescue_19`).
+- Frozen strict pre-event cohort release: 707 matched rows, 150 patients, 693 unique CNV profiles; at-event and post-event rows excluded before splitting.
+- Final five-fold patient-disjoint nested-CV rerun complete for CNV-only, UNI2 ABMIL, early fusion, intermediate fusion, late mean, and late stack-logit on identical rows/patients.
+- Intermediate configuration selection, thresholds, calibration, preprocessing, and final epoch selection use inner validation only.
+- Final OOF contract passes at 707 rows / 150 patients for all six model families.
+- Best final-candidate model is late mean: AUPRC 0.630, AUC 0.774, Brier 0.184. CNV-only: 0.538, 0.663, 0.216.
+- Paired late-mean minus CNV differences: AUPRC +0.091 (95% CI -0.036 to 0.219), AUC +0.111 (0.002 to 0.219), Brier -0.032 (-0.062 to -0.004).
 
 ## Remaining Gaps
 
@@ -38,6 +44,10 @@ These paths are references to the cluster experiment folder and are not reposito
 - Composite clinician-facing multimodal case figures are missing.
 - Clean final tile/magnification LGD2+ comparison table is not yet packaged.
 - Foundation-combo needs `patient_id` join validation; clinical-augmentation scope undecided. Both remain `REVIEW_MANUALLY` and are excluded from the primary comparison.
+- Reselect interpretation cases from final strict pre-event OOF predictions; developmental case labels cannot be assumed unchanged.
+- Regenerate histology attention and CNV region/gene outputs from the final fold checkpoints for selected cases.
+- External validation remains absent. Do not generalise beyond this internal matched cohort.
+- The primary paired AUPRC interval includes zero; report a likely multimodal benefit, not definitive superiority.
 
 ## Repository Principle
 

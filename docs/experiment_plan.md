@@ -16,8 +16,8 @@ Build a coherent Chapter 1 result set for multimodal Barrett's progression predi
    - CNV-only baseline;
    - image-only MIL;
    - early fusion;
-   - intermediate/co-attention fusion;
-   - best selected foundation-model fusion.
+   - intermediate fusion selected on pooled inner-validation predictions;
+   - late mean and inner-OOF stack-logit.
 5. Clinical detection metrics:
    - ROC AUC;
    - AUPRC;
@@ -51,13 +51,19 @@ Build a coherent Chapter 1 result set for multimodal Barrett's progression predi
 - CNV-only Killcoyne-style LOPO baselines.
 - Survival/time-window analyses.
 
+## Final Candidate Results
+
+- Strict pre-event OOF coverage: 707 rows and 150 identical patients for every primary family.
+- Late mean is the top point-estimate model (AUPRC 0.630; AUC 0.774; Brier 0.184).
+- CNV-only baseline: AUPRC 0.538; AUC 0.663; Brier 0.216.
+- The paired AUPRC improvement is uncertain because its 95% CI includes zero; paired AUC and Brier differences favor late mean.
+- Final tables: `reports/thesis_ch1/lgd2_final_pre_event_*.csv` and `.md`.
+
 ## Missing Results
 
-- Patient-level LGD2+ clinical metric table with AUPRC, Brier/calibration, fixed operating-point metrics, PPV, NPV, FP/TN counts, and false-positive burden.
-- Early-prediction-only LGD2+ sensitivity analysis excluding `DaysFromCurrentToEvent == 0`.
-- LGD2+ interpretation figures.
+- Final-checkpoint CNV and histology interpretation after OOF-based case reselection.
 - Clean final tile/magnification comparison table for LGD2+.
-- Final result manifest listing exact external paths for primary and supplementary outputs.
+- External validation cohort results.
 
 ## Obsolete Or Developmental Results
 
