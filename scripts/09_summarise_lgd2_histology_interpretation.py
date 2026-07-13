@@ -14,6 +14,7 @@ if str(SRC) not in sys.path:
 
 from barrett.evaluation.histology_interpretation import (  # noqa: E402
     EXTERNAL_HISTOLOGY_ROOT,
+    resolve_external_path,
     summarize_histology_outputs,
 )
 
@@ -111,9 +112,12 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     manifest = pd.read_csv(args.wsi_case_manifest)
+    # Fall back to the external parent tree (..) when the relative default is not
+    # repo-local, matching resolve_external_path usage elsewhere in this module.
+    external_output_dir = resolve_external_path(args.external_output_dir)
     df, warnings = summarize_histology_outputs(
         manifest=manifest,
-        output_dir=args.external_output_dir,
+        output_dir=external_output_dir,
         top_patch_csv=args.top_patch_csv or None,
         attention_csv=args.attention_csv or None,
     )

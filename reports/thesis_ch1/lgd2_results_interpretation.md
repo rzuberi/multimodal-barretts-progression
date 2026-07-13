@@ -27,4 +27,18 @@
 - Foundation-combo and clinical-augmentation rows remain excluded unless manual-review status changes.
 - LGD2+ interpretability status: ABMIL histology interpretation is complete for all eight selected cases; probability-level fusion case interpretation is complete for the first three case packs; CNV region/gene interpretation and model-internal fusion attribution remain missing.
 - Model comparison is based on saved out-of-fold predictions; no model training was run here.
+
+## Paired patient-level comparison (added value of histopathology)
+
+- Paired shared-index bootstrap deltas are in `lgd2_paired_model_differences_all_samples.csv/.md` and the early-prediction equivalent.
+- Adding histopathology to CNV improved internal out-of-fold patient-level discrimination for next-biopsy LGD2+ progression in the matched cohort: early-fusion UNI2 minus CNV-only has a delta AUPRC 95% CI excluding zero, and late-fusion UNI2 (mean) minus CNV-only also excludes zero.
+- Image-only UNI2 minus CNV-only crosses zero for delta AUPRC, so image-only superiority over CNV is not established on this internal cohort.
+- Model-selected 'best' contrasts are optimistic; where a delta CI crosses zero, no superiority is claimed.
+
+## Supporting evidence and limitations
+
+- Modality ablation (image/CNV shuffling) is in `lgd2_modality_ablation_comparison.csv/.md`; image shuffling degrades performance, supporting a histology contribution. This is supporting evidence, not causal proof.
+- Endpoint is LGD2+ neoplastic progression (`NextBiopsyProgression_LGD2plus`), NOT cancer/OAC prediction: it includes LGD and HGD and the cohort has a single current-grade OAC row.
+- Timing/operating-point caveats: see `lgd2_timing_and_operating_point_limitations.md` (at-event excluded, not strict known-lead-time; fixed operating points are post-hoc).
+- These are internal cross-validated estimates; no external validation.
 - See `lgd2_table_generation_warnings.md` for table-generation warnings.

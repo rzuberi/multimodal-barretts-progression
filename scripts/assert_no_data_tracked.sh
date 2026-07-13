@@ -38,6 +38,9 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_case_pack_histology_panel_inventory\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_case_pack_cnv_input_status\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_case_pack_cnv_top_windows\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_modality_ablation_comparison\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_paired_model_differences_all_samples\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only\.csv$' \
     || true
 )"
 
