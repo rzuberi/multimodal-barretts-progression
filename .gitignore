@@ -42,6 +42,10 @@ figures/generated/
 !docs/final_results_manifest.csv
 !src/barrett/data/
 !src/barrett/data/*.py
+!src/barrett/models/
+!src/barrett/models/*.py
+!src/barrett/training/
+!src/barrett/training/*.py
 !reports/
 !reports/thesis_ch1/
 !reports/thesis_ch1/*.md
@@ -81,6 +85,13 @@ figures/generated/
 !reports/thesis_ch1/lgd2_final_split_audit.csv
 !reports/thesis_ch1/lgd2_final_rerun_readiness.csv
 !reports/thesis_ch1/lgd2_final_pre_event_cohort_flow.csv
+!reports/thesis_ch1/lgd2_final_feature_mapping_audit.csv
+!reports/thesis_ch1/lgd2_final_oof_completeness.csv
+!reports/thesis_ch1/lgd2_final_pre_event_patient_metrics.csv
+!reports/thesis_ch1/lgd2_final_pre_event_model_comparison.csv
+!reports/thesis_ch1/lgd2_final_pre_event_paired_differences.csv
+!reports/thesis_ch1/lgd2_final_pre_event_cross_fitted_operating_points.csv
+!reports/thesis_ch1/lgd2_final_training_smoke_audit.csv
 !reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only.csv
 !README.md
 !PROJECT_STATE.md

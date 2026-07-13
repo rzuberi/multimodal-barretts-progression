@@ -17,7 +17,7 @@ def _row(**over):
         model_name="cnv",
         patient_id="P1",
         row_key="rk1",
-        outer_fold=0,
+        outer_fold=1,
         y_true=0,
         y_prob=0.1,
         seed=1,
@@ -28,7 +28,7 @@ def _row(**over):
 
 def _valid_frame(folds=5):
     rows = []
-    for f in range(folds):
+    for f in range(1, folds + 1):
         rows.append(_row(outer_fold=f, row_key=f"rk{f}", patient_id=f"P{f}", y_true=f % 2, y_prob=0.3))
     return pd.DataFrame(rows)
 
@@ -53,6 +53,11 @@ def test_incomplete_folds_fail():
     df = _valid_frame(folds=3)
     problems = validate_predictions(df, expected_folds=5)
     assert any("missing outer folds" in p for p in problems)
+
+
+def test_single_fold_can_be_validated_explicitly():
+    df = _valid_frame(folds=1)
+    assert validate_predictions(df, expected_fold_values=[1]) == []
 
 
 def test_missing_patient_id_fails():
