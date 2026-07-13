@@ -2,7 +2,7 @@
 
 ## Outcome
 
-`COMPLETE`. The strict pre-event five-fold rerun, leakage-safe late fusion, OOF validation, patient-level metrics, paired comparisons, and final case reselection all completed.
+`COMPLETE`. The strict pre-event five-fold rerun, leakage-safe late fusion, supplementary co-attention rerun, OOF validation, patient-level metrics, paired comparisons, and final case reselection all completed.
 
 ## Repository state
 
@@ -11,6 +11,7 @@
 - Base-run commit: `98ba86820b3a3a33cd61f1f6724f20da38e9c8da`; pushed to `origin/main` under `rzuberi` before training.
 - Late-alignment fix commit: `8d12c49`; pushed before corrected late-fusion regeneration.
 - Final documentation/report state: validated on `main` and pushed to `origin/main` after this report update; use repository `HEAD` for the immutable commit ID.
+- Co-attention implementation/training commit: `0e736d48`; pushed before co-attention training.
 - No raw cohort data, feature tensors, prediction dumps, checkpoints, or Slurm logs are being written into Git.
 
 ## Frozen analysis
@@ -55,6 +56,11 @@ Registry: `configs/chapter1_lgd2_final_models.yaml`.
 - Late mean: prespecified arithmetic mean of matching CNV/image probabilities.
 - Late stack-logit: logistic meta-model trained from patient-disjoint inner-OOF base predictions with equal patient weighting; meta-predictions used for threshold selection are themselves inner-cross-fitted.
 
+Supplementary co-attention registry: `configs/chapter1_lgd2_final_coattention.yaml`.
+
+- Co-attention: CNV-conditioned query attention over UNI2 tiles plus a CNV branch (`coattn_abmil_cnv`). Learning rates `1e-4` and `3e-4` were selected independently within each outer fold using pooled inner-validation patient predictions.
+- Co-attention was requested after the primary model results were reviewed. It uses the same leakage controls and cohort but is labelled supplementary post-hoc rather than prespecified primary evidence.
+
 ## Leakage controls implemented
 
 - The migrated neural fit API accepts train and optional validation inputs only; no outer-test loader is accepted.
@@ -87,12 +93,15 @@ Registry: `configs/chapter1_lgd2_final_models.yaml`.
 
 The smoke gate reported 4/4 PASS before full submission.
 
+Supplementary co-attention fold-1 smoke job `55147064` passed in 63 seconds. The expanded artifact smoke gate then reported 5/5 PASS.
+
 ## Final Slurm jobs
 
 - CNV-only: jobs `55144170`-`55144174`; all PASS; 20-31 seconds per fold.
 - Image-only: jobs `55144175`-`55144179`; all PASS; 32-41 seconds per fold.
 - Early fusion: jobs `55144180`-`55144184`; all PASS; 34-44 seconds per fold.
 - Intermediate fusion: jobs `55144185`-`55144189`; all PASS; 54-86 seconds per fold.
+- Co-attention fusion: jobs `55147064`, `55147145`, `55147146`, `55147147`, and `55147149`; all PASS; 56-68 seconds per fold.
 - Launch manifest: `analysis/chapter1_lgd2_final_pre_event_20260713_final/training_final_nested_cv_v1/launch_manifest_full_20260713_161453.json`.
 
 ## Fold completion matrix
@@ -103,6 +112,7 @@ The smoke gate reported 4/4 PASS before full submission.
 | Image-only | PASS | PASS | PASS | PASS | PASS |
 | Early fusion | PASS | PASS | PASS | PASS | PASS |
 | Intermediate fusion | PASS | PASS | PASS | PASS | PASS |
+| Co-attention fusion | PASS | PASS | PASS | PASS | PASS |
 | Late mean | PASS | PASS | PASS | PASS | PASS |
 | Late stack-logit | PASS | PASS | PASS | PASS | PASS |
 
@@ -112,6 +122,7 @@ The smoke gate reported 4/4 PASS before full submission.
 - Image used fixed `uni2_abmil_fixed`. Thresholds: 0.610, 0.609, 0.622, 0.691, 0.772.
 - Early fusion used fixed `early_mean_mlp_fixed`. Thresholds: 0.781, 0.516, 0.771, 0.785, 0.681.
 - Intermediate selected `intermediate_lr1e4` independently in all five folds. Thresholds: 0.808, 0.862, 0.529, 0.621, 0.676.
+- Co-attention selected `coattention_lr1e4` in fold 1 and `coattention_lr3e4` in folds 2-5. Thresholds: 0.706, 0.692, 0.829, 0.864, 0.674.
 - Late mean thresholds: 0.450, 0.424, 0.432, 0.444, 0.477.
 - Late stack-logit thresholds: 0.336, 0.281, 0.311, 0.264, 0.297.
 - No threshold selection used its matching outer-test labels; no fold required a threshold fallback.
@@ -131,11 +142,11 @@ The smoke gate reported 4/4 PASS before full submission.
 ## Validation
 
 - Feature-view gate: PASS at 707/707 for both modalities.
-- Targeted and full toy suite: 138 tests passing in the `erin` environment.
-- Migrated ABMIL, early-fusion, and intermediate-fusion modules produce identical outputs to legacy definitions after loading identical state dictionaries.
-- All six OOF files pass `scripts/19_validate_lgd2_training_artifacts.py`.
+- Targeted and full toy suite: 140 tests passing in the `erin` environment.
+- Migrated ABMIL, early-fusion, intermediate-fusion, and co-attention modules produce identical outputs to legacy definitions after loading identical state dictionaries.
+- All seven OOF files pass the final artifact collection contract.
 - OOF completeness: 707 unique rows, 150 patients, five folds for every family; one patient occurs in exactly one outer fold.
-- OOF hashes: CNV `9e1c9a9f5ef6...`; image `1ee345ea6e89...`; early `707c6e603080...`; intermediate `058d6914c221...`; corrected late mean `964d624f7efe...`; corrected late stack-logit `6ecd41b7853e...`.
+- OOF hashes: CNV `9e1c9a9f5ef6...`; image `1ee345ea6e89...`; early `707c6e603080...`; intermediate `058d6914c221...`; co-attention `19d954331ae5...`; corrected late mean `964d624f7efe...`; corrected late stack-logit `6ecd41b7853e...`.
 - Data guard: PASS after staging final lightweight reports.
 
 ## Failures and deviations
@@ -143,6 +154,7 @@ The smoke gate reported 4/4 PASS before full submission.
 - Image smoke job `55143478` used an incompatible CUDA build and failed before a valid fold artifact. It was preserved externally and not reused.
 - Image smoke job `55144080` was cancelled after detecting repeated NPZ decompression. A process-local immutable feature cache removed redundant I/O without changing model inputs.
 - The first late-fusion derivation assigned merged probabilities without explicit `row_key` reindexing. A direct value-equality check detected the mismatch before final reporting. Invalid late outputs were moved to `failed_attempts/late_alignment_bug_20260713/`, keyed alignment and a regression test were added, and all late outputs/metrics were regenerated.
+- Co-attention folds 2-5 record a dirty worktree because the fold-1 smoke audit updated tracked lightweight report files after the training commit. Their executable code and configuration remained exactly at commit `0e736d48`; no source/config changes occurred between folds.
 
 ## Final patient-level results
 
@@ -152,6 +164,7 @@ The smoke gate reported 4/4 PASS before full submission.
 | Early fusion | 0.590 | 0.738 | 0.213 | 0.58 | 0.85 | 29 | 15 |
 | Intermediate fusion | 0.567 | 0.741 | 0.224 | 0.48 | 0.84 | 24 | 16 |
 | Image-only | 0.557 | 0.731 | 0.245 | 0.60 | 0.72 | 30 | 28 |
+| Co-attention | 0.548 | 0.739 | 0.230 | 0.52 | 0.80 | 26 | 20 |
 | CNV-only | 0.538 | 0.663 | 0.216 | 0.28 | 0.90 | 14 | 10 |
 | Late stack-logit | 0.530 | 0.737 | 0.202 | 0.60 | 0.75 | 30 | 25 |
 
@@ -165,9 +178,11 @@ Paired late mean minus CNV-only:
 
 Early fusion minus CNV-only AUPRC was +0.051 (95% CI -0.053 to 0.167). Intermediate fusion minus CNV-only AUPRC was +0.029 (95% CI -0.084 to 0.157).
 
+Supplementary post-hoc co-attention minus CNV-only AUPRC was +0.010 (95% CI -0.103 to 0.136). Against image-only, its AUPRC difference was -0.009 (95% CI -0.131 to 0.099). Co-attention therefore did not improve the primary metric over the simpler fusion models.
+
 ## Scientific conclusion
 
-Adding histopathology improved multimodal point estimates over CNV-only, with late mean strongest. Paired AUC and Brier intervals favor late mean, but the prespecified primary AUPRC interval includes zero. The defensible conclusion is a likely multimodal benefit that is not statistically conclusive on the primary metric in this internal cohort. The endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
+Adding histopathology improved multimodal point estimates over CNV-only, with late mean strongest. Paired AUC and Brier intervals favor late mean, but the prespecified primary AUPRC interval includes zero. Supplementary co-attention did not outperform late mean, early fusion, or intermediate fusion by AUPRC. The defensible conclusion is a likely multimodal benefit that is not statistically conclusive on the primary metric in this internal cohort. The endpoint is future next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
 
 Eight final interpretation cases were reselected from the strict OOF predictions. Final-checkpoint attention and CNV region/gene regeneration remains a subsequent interpretation task, not a missing model-comparison result.
 

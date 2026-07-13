@@ -3,8 +3,8 @@
 ## Missing / Not Yet Done
 
 - External cohort validation is missing; current evidence is internal five-fold patient-disjoint nested CV.
-- Final-model LGD2+ CNV gene/window interpretation and final-model histology attention regeneration are still needed. Existing eight-case histology figures came from the developmental models.
-- Final interpretation cases must be reselected from the strict pre-event OOF predictions before thesis figures are frozen.
+- Final-model LGD2+ CNV gene/window interpretation and final-model histology/co-attention regeneration are still needed. Existing eight-case histology figures came from the developmental models.
+- Eight interpretation cases have been reselected from strict pre-event OOF predictions; their final-checkpoint outputs still need regeneration before thesis figures are frozen.
 - A clean final tile/magnification sensitivity table remains missing.
 - The primary paired AUPRC improvement for the best multimodal model is not conclusive: its 95% interval includes zero.
 - The endpoint is next-biopsy LGD2+ neoplastic progression, not OAC-only cancer progression.
@@ -12,13 +12,14 @@
 
 ## Final Candidate Result
 
-The strict pre-event rerun is complete on 707 matched rows and 150 patients using identical folds for CNV-only, UNI2 ABMIL, early fusion, intermediate fusion, late mean, and late stack-logit.
+The strict pre-event rerun is complete on 707 matched rows and 150 patients using identical folds for CNV-only, UNI2 ABMIL, early fusion, intermediate fusion, late mean, and late stack-logit. Co-attention was subsequently retrained under the same contract as a supplementary post-hoc architecture comparison.
 
 - Best AUPRC: late mean `0.630`; CNV-only `0.538`.
 - Best AUC: late mean `0.774`; CNV-only `0.663`.
 - Late mean minus CNV AUPRC: `+0.091` (95% paired bootstrap CI `-0.036` to `0.219`).
 - Late mean minus CNV AUC: `+0.111` (95% CI `0.002` to `0.219`).
 - Late mean minus CNV Brier: `-0.032` (95% CI `-0.062` to `-0.004`; lower is better).
+- Co-attention AUPRC: `0.548`; its paired difference from CNV was `+0.010` (95% CI `-0.103` to `0.136`).
 
 Thus histopathology adds useful signal in point estimates and secondary metrics, but the prespecified primary AUPRC comparison remains uncertain.
 
