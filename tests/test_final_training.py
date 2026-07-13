@@ -11,7 +11,7 @@ import pandas as pd
 import pytest
 import torch
 
-from barrett.models import AttentionMIL, EarlyFusionMLP, IntermediateABMILCNV
+from barrett.models import AttentionMIL, CoAttentionABMILCNV, EarlyFusionMLP, IntermediateABMILCNV
 from barrett.training.inner_cv import make_inner_assignments, split_inner
 from barrett.training.loops import fit_neural
 
@@ -86,6 +86,7 @@ def test_neural_cnv_preprocessing_uses_training_rows_only() -> None:
         (AttentionMIL, "image_mil.models", "AttentionMIL", {"in_dim": 4, "hidden_dim": 6, "attn_dim": 3, "dropout": 0.0}, False),
         (EarlyFusionMLP, "image_mil.multimodal", "EarlyFusionMLP", {"image_dim": 4, "cnv_dim": 2, "hidden_dim": 8, "dropout": 0.0}, True),
         (IntermediateABMILCNV, "image_mil.multimodal", "IntermediateABMILCNV", {"image_dim": 4, "cnv_dim": 2, "img_hidden": 6, "cnv_hidden": 3, "attn_dim": 3, "fusion_hidden": 5, "dropout": 0.0}, True),
+        (CoAttentionABMILCNV, "image_mil.multimodal", "CoAttnABMILCNV", {"image_dim": 4, "cnv_dim": 2, "img_hidden": 6, "cnv_hidden": 3, "attn_dim": 3, "fusion_hidden": 5, "dropout": 0.0}, True),
     ],
 )
 def test_migrated_models_match_legacy_weights(
@@ -115,3 +116,22 @@ def test_migrated_models_match_legacy_weights(
             expected = old(bags)
             actual = new(bags)
     torch.testing.assert_close(actual, expected)
+
+
+def test_coattention_training_uses_training_only_cnv_scaling() -> None:
+    store = MemoryStore()
+    fit = fit_neural(
+        "coattention_fusion",
+        _frame([1, 2, 3, 4]),
+        _frame([5, 6], "V"),
+        store,
+        {
+            "img_hidden": 6, "cnv_hidden": 3, "attn_dim": 3, "fusion_hidden": 5,
+            "dropout": 0.0, "batch_size": 2, "max_epochs": 1, "patience": 1,
+        },
+        torch.device("cpu"),
+        seed=4,
+    )
+    np.testing.assert_allclose(fit.cnv_mean, np.array([1.5, 4.0], dtype=np.float32))
+    assert fit.validation_predictions is not None
+    assert len(fit.validation_predictions) == 2

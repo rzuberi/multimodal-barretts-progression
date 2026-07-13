@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Audit the four required fold-1 final-model smoke runs."""
+"""Audit the required fold-1 final-model smoke runs."""
 
 from __future__ import annotations
 
@@ -18,7 +18,9 @@ from barrett.training.artifacts import validate_fold_directory  # noqa: E402
 from barrett.evaluation.tables import markdown_table  # noqa: E402
 
 
-FAMILIES = ("cnv_only", "image_only", "early_fusion", "intermediate_fusion")
+FAMILIES = (
+    "cnv_only", "image_only", "early_fusion", "intermediate_fusion", "coattention_fusion",
+)
 
 
 def main() -> int:
@@ -75,7 +77,7 @@ def main() -> int:
         "# LGD2+ Final Training Smoke Audit", "",
         f"Gate status: **{'PASS' if passed == len(FAMILIES) else 'INCOMPLETE'}** ({passed}/{len(FAMILIES)} families).",
         "", markdown_table(table, list(table.columns)), "",
-        "Folds 2-5 must not be launched until all four families pass.",
+        "Folds 2-5 must not be launched until every requested family passes.",
     ]
     (reports / "lgd2_final_training_smoke_audit.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     warnings = table.loc[table["status"].ne("PASS"), ["model_family", "problems"]]

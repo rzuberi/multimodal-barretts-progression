@@ -9,7 +9,6 @@ Old model code was inspected only enough to identify source locations and coupli
 | late fusion | `scripts/run_late_fusion_cv.py`; `scripts/run_late_fusion_matrix.py`; `scripts/run_foundation_combo_fusion_matrix.py` | saved OOF predictions, pandas/numpy, cohort joins | Maybe later | Extract lightweight score-fusion logic after patient-level reporting code is stable. |
 | early fusion | `image_mil/multimodal.py`; `scripts/run_mil_multimodal_cv.py` | PyTorch, CNV vectors, MIL bags, time covariates | Not yet | Split `EarlyFusionMLP` from dataloaders, CLI args, Slurm/campaign assumptions. |
 | intermediate fusion | `image_mil/multimodal.py`; `scripts/run_mil_multimodal_cv.py` | PyTorch, attention MIL, CNV branch | Not yet | Extract `IntermediateABMILCNV` and minimal config dataclass; avoid importing training script globals. |
-| co-attention | `image_mil/multimodal.py`; `scripts/run_mil_multimodal_cv.py` | PyTorch, cross-modal attention, MIL bags | Not yet | Extract `CoAttnABMILCNV`, document tensor contracts, add toy shape tests before use. |
+| co-attention | `image_mil/multimodal.py`; `scripts/run_mil_multimodal_cv.py` | PyTorch, cross-modal attention, MIL bags | Migrated | Clean `CoAttentionABMILCNV` now lives in `src/barrett/models/coattention.py` with legacy-weight equivalence and training-only preprocessing tests. |
 
 Recommendation: keep this repo evaluation-first until Chapter 1 tables are locked. Migrate model definitions only when a concrete rerun or interpretability task requires them.
-

@@ -13,7 +13,7 @@ from sklearn.metrics import average_precision_score
 from torch import nn
 from torch.utils.data import DataLoader
 
-from barrett.models import AttentionMIL, EarlyFusionMLP, IntermediateABMILCNV
+from barrett.models import AttentionMIL, CoAttentionABMILCNV, EarlyFusionMLP, IntermediateABMILCNV
 from barrett.training.data import CanonicalFeatureStore, FinalDataset, collate_final
 
 
@@ -49,6 +49,16 @@ def build_model(family: str, image_dim: int, cnv_dim: int, config: dict) -> nn.M
         )
     if family == "intermediate_fusion":
         return IntermediateABMILCNV(
+            image_dim=image_dim,
+            cnv_dim=cnv_dim,
+            img_hidden=int(config.get("img_hidden", 256)),
+            cnv_hidden=int(config.get("cnv_hidden", 128)),
+            attn_dim=int(config.get("attn_dim", 128)),
+            fusion_hidden=int(config.get("fusion_hidden", 256)),
+            dropout=float(config.get("dropout", 0.2)),
+        )
+    if family == "coattention_fusion":
+        return CoAttentionABMILCNV(
             image_dim=image_dim,
             cnv_dim=cnv_dim,
             img_hidden=int(config.get("img_hidden", 256)),
@@ -123,7 +133,7 @@ def fit_neural(
     set_seed(seed)
     batch_size = int(config.get("batch_size", 8))
     cnv_median = cnv_mean = cnv_std = None
-    if family in {"early_fusion", "intermediate_fusion"}:
+    if family in {"early_fusion", "intermediate_fusion", "coattention_fusion"}:
         x = store.cnv_array(train["sample_id"].astype(str).tolist())
         cnv_median = np.nanmedian(x, axis=0).astype(np.float32)
         cnv_median[~np.isfinite(cnv_median)] = 0.0

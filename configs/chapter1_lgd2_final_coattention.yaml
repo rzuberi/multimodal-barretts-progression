@@ -1,0 +1,45 @@
+registry_version: "chapter1_lgd2_final_coattention_v1"
+endpoint: "NextBiopsyProgression_LGD2plus"
+feature_views:
+  cnv: "feature_views/cnv"
+  uni2_index: "feature_views/uni2/uni2_index.csv"
+inner_cv:
+  n_folds: 3
+  seed: 20260713
+selection:
+  aggregation: "patient_max"
+  rank_order: ["auprc_desc", "roc_auc_desc", "brier_asc", "configuration_id"]
+threshold:
+  criterion: "target_specificity"
+  target: 0.90
+calibration:
+  method: "platt"
+families:
+  coattention_fusion:
+    role: "SUPPLEMENTARY_NESTED_SELECTED"
+    model_name: "coattn_abmil_cnv"
+    feature_model: "uni2"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - configuration_id: "coattention_lr1e4"
+        img_hidden: 256
+        cnv_hidden: 128
+        attn_dim: 128
+        fusion_hidden: 256
+        dropout: 0.2
+        lr: 0.0001
+        weight_decay: 0.01
+        batch_size: 8
+        max_epochs: 20
+        patience: 5
+      - configuration_id: "coattention_lr3e4"
+        img_hidden: 256
+        cnv_hidden: 128
+        attn_dim: 128
+        fusion_hidden: 256
+        dropout: 0.2
+        lr: 0.0003
+        weight_decay: 0.01
+        batch_size: 8
+        max_epochs: 20
+        patience: 5
