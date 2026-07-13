@@ -75,6 +75,9 @@ figures/generated/
 !reports/thesis_ch1/lgd2_case_pack_histology_panel_inventory.csv
 !reports/thesis_ch1/lgd2_case_pack_cnv_input_status.csv
 !reports/thesis_ch1/lgd2_case_pack_cnv_top_windows.csv
+!reports/thesis_ch1/lgd2_modality_ablation_comparison.csv
+!reports/thesis_ch1/lgd2_paired_model_differences_all_samples.csv
+!reports/thesis_ch1/lgd2_paired_model_differences_early_prediction_only.csv
 !README.md
 !PROJECT_STATE.md
 !docs/**/*.yaml

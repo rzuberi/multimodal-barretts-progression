@@ -1,0 +1,13 @@
+model,condition,endpoint,aggregation,n_samples,n_patients,n_positive_patients,auprc,roc_auc,brier_score
+coattn_abmil_cnv,baseline,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.7898192067154409,0.8885454545454545,0.15941387524004544
+coattn_abmil_cnv,shuffle_image,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.6850472653480807,0.7490909090909091,0.2322584368163023
+coattn_abmil_cnv,shuffle_cnv,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.8370451707827795,0.884,0.18519116455746887
+coattn_abmil_cnv,shuffle_both,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.4528863642313084,0.5645454545454546,0.2689925864881645
+early_mean_mlp,baseline,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.8453280126927237,0.906,0.13986792127676026
+early_mean_mlp,shuffle_image,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.7905043683261787,0.8607272727272727,0.1948776215553776
+early_mean_mlp,shuffle_cnv,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.8251073572136647,0.8749090909090909,0.18634071218214227
+early_mean_mlp,shuffle_both,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.44893265751670036,0.5761818181818181,0.26866687616028095
+early_mean_mlp_timev1,baseline,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.7675713671127519,0.8450909090909091,0.16174889682881152
+early_mean_mlp_timev1,shuffle_image,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.7142759299944046,0.806,0.1934505052869306
+early_mean_mlp_timev1,shuffle_cnv,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.5946116450469391,0.7507272727272727,0.20775441907195125
+early_mean_mlp_timev1,shuffle_both,NextBiopsyProgression_LGD2plus,patient_max,903,155,55,0.557289059280897,0.7216363636363636,0.2170970775275876

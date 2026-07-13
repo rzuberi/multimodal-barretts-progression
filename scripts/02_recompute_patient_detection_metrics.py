@@ -22,13 +22,22 @@ from barrett.evaluation.io import (
     MODEL_GROUP_COLS,
     WarningRow,
     group_columns,
+    fold_integrity_reason,
     join_master,
+    late_fusion_method_reason,
     load_manifest,
     load_master,
     load_predictions,
+    master_agreement_reason,
     model_label,
     resolve_files,
 )
+
+# Locked canonical LGD2+ cohort expectations (fail-closed integrity gates).
+LOCKED_COUNTS = {
+    "all_samples": {"patients": 155, "positive": 55, "negative": 100, "sample_rows": 903},
+    "early_prediction_only": {"patients": 150, "positive": 50, "negative": 100},
+}
 from barrett.evaluation.metrics import METRIC_ORDER, compute_metrics
 from barrett.labels.endpoints import LGD2_CLINICAL_DEFINITION, LGD2_ENDPOINT
 
@@ -211,22 +220,27 @@ def main() -> int:
             warnings.append(WarningRow(result_id, "SKIP", "Prediction files loaded no rows."))
             continue
         # Late-fusion files embed cnv_only/img_only/mean/stack_logit; keep only the
-        # fusion methods this manifest row declares (mean; stack_logit). The unimodal
-        # baselines have their own canonical manifest rows, so excluding them here
-        # prevents duplicate metric rows.
+        # fusion methods this manifest row declares (mean; stack_logit). Fail closed:
+        # duplicate rows, a missing declared method, or methods with different sample
+        # sets skip the whole result rather than emitting metrics from invalid rows.
         if str(manifest_row["fusion_type"]) == "late_fusion" and "fusion_method" in pred.columns:
             allowed = {m.strip() for m in str(manifest_row["model_name"]).split(";") if m.strip()}
             pred = pred[pred["fusion_method"].isin(allowed)].copy()
             if pred.empty:
                 warnings.append(WarningRow(result_id, "SKIP", f"No rows for late-fusion methods {sorted(allowed)}."))
                 continue
-            dup = pred.duplicated(subset=["fusion_method", "sample_id"]).sum()
-            if dup:
-                warnings.append(WarningRow(result_id, "WARN", f"{int(dup)} duplicate (fusion_method, sample_id) rows."))
+            reason = late_fusion_method_reason(pred, allowed)
+            if reason:
+                warnings.append(WarningRow(result_id, "SKIP", f"{reason}; skipped."))
+                continue
         pred, join_key = join_master(pred, master)
         if pred["patient_id"].isna().any():
             n_missing = int(pred["patient_id"].isna().sum())
             warnings.append(WarningRow(result_id, "SKIP", f"{n_missing} rows lack patient_id after join; skipped."))
+            continue
+        reason = master_agreement_reason(pred)  # fail closed on master label/patient conflict
+        if reason:
+            warnings.append(WarningRow(result_id, "SKIP", f"{reason}; skipped."))
             continue
         if pred["y_true"].isna().any():
             n_missing = int(pred["y_true"].isna().sum())
@@ -235,11 +249,10 @@ def main() -> int:
         if pred.empty:
             warnings.append(WarningRow(result_id, "SKIP", "No labelled prediction rows after cleaning."))
             continue
-        if pred["fold"].notna().any():
-            fold_counts = pred.groupby("patient_id")["fold"].nunique(dropna=True)
-            leaked = int((fold_counts > 1).sum())
-            if leaked:
-                warnings.append(WarningRow(result_id, "WARN", f"{leaked} patients appear in multiple folds."))
+        reason = fold_integrity_reason(pred, expected_folds=5)  # fail closed on leakage / fold count
+        if reason:
+            warnings.append(WarningRow(result_id, "SKIP", f"{reason}; skipped."))
+            continue
         group_cols = group_columns(pred)
         grouped = pred.groupby(group_cols, dropna=False) if group_cols else [((), pred)]
         for group_key, model_df in grouped:
@@ -264,6 +277,22 @@ def main() -> int:
                         continue
                     metrics = compute_metrics(agg_df["y_true"], agg_df["y_prob"])
                     add_patient_counts(metrics, agg_df)
+                    # Fail closed on locked canonical cohort counts (drop the invalid row).
+                    exp = LOCKED_COUNTS.get(analysis_set, {})
+                    bad = None
+                    if aggregation == "patient_max":
+                        if metrics["n_patients"] != exp["patients"]:
+                            bad = f"n_patients {metrics['n_patients']} != {exp['patients']}"
+                        elif metrics["n_positive_patients"] != exp["positive"]:
+                            bad = f"positives {metrics['n_positive_patients']} != {exp['positive']}"
+                        elif metrics["n_negative_patients"] != exp["negative"]:
+                            bad = f"negatives {metrics['n_negative_patients']} != {exp['negative']}"
+                    elif aggregation == "sample" and "sample_rows" in exp and metrics.get("n_units") is not None \
+                            and int(metrics["n_units"]) != exp["sample_rows"]:
+                        bad = f"sample rows {int(metrics['n_units'])} != {exp['sample_rows']}"
+                    if bad:
+                        warnings.append(WarningRow(result_id, "SKIP", f"{model_key} {analysis_set} {aggregation}: {bad}; row dropped."))
+                        continue
                     if aggregation.startswith("patient_"):
                         metrics.update(bootstrap_cis(agg_df[["y_true", "y_prob"]], args.bootstrap, args.seed))
                     else:

@@ -226,6 +226,51 @@ def group_columns(df: pd.DataFrame) -> list[str]:
     return [c for c in MODEL_GROUP_COLS if c in df.columns]
 
 
+def late_fusion_method_reason(pred: pd.DataFrame, allowed: set[str]) -> str | None:
+    """Return a fail-closed reason if late-fusion rows are invalid, else None."""
+    dkeys = [k for k in ["condition", "rep", "fold", "fusion_method", "sample_id"] if k in pred.columns]
+    dup = int(pred.duplicated(subset=dkeys).sum())
+    if dup:
+        return f"{dup} duplicate {tuple(dkeys)} late-fusion rows"
+    present = set(pred["fusion_method"].unique())
+    if present != set(allowed):
+        return f"declared methods {sorted(allowed)} != present {sorted(present)}"
+    sample_sets = {m: frozenset(pred.loc[pred["fusion_method"].eq(m), "sample_id"]) for m in allowed}
+    if len(set(sample_sets.values())) != 1:
+        return "late-fusion methods have different sample sets"
+    return None
+
+
+def master_agreement_reason(pred: pd.DataFrame) -> str | None:
+    """Return a fail-closed reason if predictions disagree with the master, else None."""
+    if "label_master" in pred.columns:
+        both = pred.dropna(subset=["y_true", "label_master"])
+        disagree = int((pd.to_numeric(both["y_true"], errors="coerce").astype("Int64")
+                        != pd.to_numeric(both["label_master"], errors="coerce").astype("Int64")).sum())
+        if disagree:
+            return f"{disagree} rows: y_true disagrees with master label"
+    if "patient_id_master" in pred.columns:
+        m = pred.dropna(subset=["patient_id", "patient_id_master"])
+        pdis = int((normalize_key(m["patient_id"]) != normalize_key(m["patient_id_master"])).sum())
+        if pdis:
+            return f"{pdis} rows: prediction patient_id disagrees with master"
+    return None
+
+
+def fold_integrity_reason(pred: pd.DataFrame, expected_folds: int = 5) -> str | None:
+    """Return a fail-closed reason for fold leakage or wrong fold count, else None."""
+    if not pred["fold"].notna().any():
+        return None
+    fold_counts = pred.groupby("patient_id")["fold"].nunique(dropna=True)
+    leaked = int((fold_counts > 1).sum())
+    if leaked:
+        return f"{leaked} patients appear in multiple folds"
+    n_folds = int(pred["fold"].nunique(dropna=True))
+    if n_folds != expected_folds:
+        return f"expected {expected_folds} folds, found {n_folds}"
+    return None
+
+
 def model_label(row: pd.Series, fallback: str) -> str:
     pieces = []
     for col in MODEL_GROUP_COLS:

@@ -4,11 +4,11 @@
 Reads saved out-of-fold predictions (campaign schema) and writes standardized
 late-fusion predictions to an EXTERNAL output directory. Does not train models.
 
-Example:
+Example (write to a NEW external run dir, never the canonical results):
   python scripts/14_run_lgd2_late_fusion.py \
     --cnv-glob "$ROOT/.../cnv/.../predictions_*_fold*.csv" \
     --image-glob "$ROOT/.../uni2/.../predictions_all_samples_abmil_*_fold*.csv" \
-    --output-dir "$ROOT/data/lgd2_late_fusion_20260713/uni2"
+    --output-dir "$ROOT/data/lgd2_late_fusion_reproduction_$(date +%Y%m%d)/uni2"
 """
 
 from __future__ import annotations
@@ -29,8 +29,11 @@ def main() -> int:
     p.add_argument("--image-glob", action="append", required=True, help="Image OOF prediction glob(s). Repeatable.")
     p.add_argument("--output-dir", required=True, help="External output dir (must be outside the clean repo).")
     p.add_argument("--seed", type=int, default=20260304)
+    p.add_argument("--overwrite", action="store_true",
+                   help="Replace an existing cv_predictions_late_fusion.csv (do NOT use on canonical results).")
     args = p.parse_args()
-    dest = run_late_fusion(args.cnv_glob, args.image_glob, Path(args.output_dir), seed=args.seed)
+    dest = run_late_fusion(args.cnv_glob, args.image_glob, Path(args.output_dir),
+                           seed=args.seed, overwrite=args.overwrite)
     print(f"Wrote {dest}")
     return 0
 
