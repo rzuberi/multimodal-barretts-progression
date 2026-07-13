@@ -10,7 +10,7 @@ import pytest
 
 from barrett.evaluation.output_contract import REQUIRED_PREDICTION_COLUMNS
 from barrett.training.artifacts import REQUIRED_FOLD_FILES, reject_repo_output, validate_fold_directory
-from barrett.training.late_fusion import _cross_fitted_stack
+from barrett.training.late_fusion import _align_outer_to_template, _cross_fitted_stack
 
 
 def _prediction(sample_id: str, patient_id: str, fold: int, label: int, probability: float) -> dict:
@@ -92,3 +92,14 @@ def test_late_stacker_generates_cross_fitted_inner_predictions() -> None:
 def test_external_output_guard_rejects_repo_descendant(tmp_path) -> None:
     with pytest.raises(ValueError, match="outside Git"):
         reject_repo_output(tmp_path / "output", tmp_path)
+
+
+def test_late_outer_probabilities_are_key_aligned_to_template() -> None:
+    merged = pd.DataFrame({
+        "row_key": ["S2", "S1"], "cnv_prob": [0.8, 0.2],
+        "image_prob": [0.6, 0.4],
+    })
+    template = pd.DataFrame({"row_key": ["S1", "S2"]})
+    aligned = _align_outer_to_template(merged, template)
+    assert aligned["row_key"].tolist() == ["S1", "S2"]
+    np.testing.assert_allclose(aligned["cnv_prob"], [0.2, 0.8])

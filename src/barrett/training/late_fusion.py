@@ -54,6 +54,22 @@ def _merge_outer(cnv_dir: Path, image_dir: Path) -> tuple[pd.DataFrame, pd.DataF
     return merged.drop(columns="_merge"), cnv
 
 
+def _align_outer_to_template(merged: pd.DataFrame, template: pd.DataFrame) -> pd.DataFrame:
+    """Return merged base scores in the exact row order of the output template."""
+    if merged["row_key"].duplicated().any() or template["row_key"].duplicated().any():
+        raise ValueError("duplicate outer row_key before late-fusion alignment")
+    merged_keys = set(merged["row_key"].astype(str))
+    template_keys = set(template["row_key"].astype(str))
+    if merged_keys != template_keys:
+        raise ValueError("late-fusion merged/template row-key sets differ")
+    indexed = merged.assign(row_key=merged["row_key"].astype(str)).set_index("row_key")
+    order = template["row_key"].astype(str).tolist()
+    aligned = indexed.loc[order].reset_index()
+    if aligned["row_key"].tolist() != order:
+        raise ValueError("late-fusion row-key alignment failed")
+    return aligned
+
+
 def _weights(frame: pd.DataFrame) -> np.ndarray:
     counts = frame.groupby("patient_id")["sample_id"].transform("count").to_numpy(dtype=float)
     return 1.0 / counts
@@ -182,6 +198,7 @@ def derive_late_fold(output_root: str | Path, registry_path: str | Path, fold: i
     image_dir = output_root / "image_only" / f"fold{fold}"
     inner = _merge_inner(cnv_dir, image_dir)
     outer, template = _merge_outer(cnv_dir, image_dir)
+    outer = _align_outer_to_template(outer, template)
 
     inner_mean = inner.copy()
     inner_mean["y_prob"] = 0.5 * (inner_mean["cnv_prob"] + inner_mean["image_prob"])
