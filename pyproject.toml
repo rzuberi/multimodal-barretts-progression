@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "barrett"
+version = "0.1.0"
+description = "Multimodal (histopathology + CNV) prediction of Barrett's oesophagus progression — thesis Chapter 1."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "R. Zuberi" }]
+
+# Runtime dependencies. Exact pins used for the frozen results live in
+# requirements.txt (frozen from the cluster `erin` env); the ranges here keep
+# the package installable in a clean environment.
+dependencies = [
+    "numpy>=1.26,<2.0",
+    "pandas>=2.2,<2.3",
+    "scipy>=1.15,<1.16",
+    "scikit-learn>=1.5,<1.6",
+    "joblib>=1.5",
+    "pyyaml>=6.0",
+    "pillow>=10",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "h5py>=3.8",
+]
+
+[project.optional-dependencies]
+# Heavy modelling stack (GPU). Installed via conda on the cluster; kept
+# optional so table/figure regeneration works without a torch install.
+torch = [
+    "torch==2.0.1",
+    "torchvision==0.15.2",
+    "timm>=1.0",
+]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

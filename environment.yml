@@ -1,0 +1,35 @@
+# Conda environment for the Barrett's Chapter 1 pipeline.
+# Mirrors the cluster `erin` environment (Python 3.10.19).
+#
+# Create with:
+#   conda env create -f environment.yml
+#   conda activate barretts-ch1
+#   pip install -e .
+#
+# On the cluster the existing env is used directly:
+#   conda activate erin   # /home/zuberi01/miniforge3/envs/erin
+#
+# GPU note: torch/torchvision below are the versions in `erin`. For a fresh
+# GPU install, prefer the official pytorch channel selector for your CUDA
+# version rather than the pins here.
+name: barretts-ch1
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.4
+  - pandas=2.2.3
+  - scipy=1.15.3
+  - scikit-learn=1.5.2
+  - joblib=1.5.3
+  - pyyaml=6.0.3
+  - pillow=12.1.0
+  - matplotlib=3.10.8
+  - seaborn=0.13.2
+  - h5py=3.8.0
+  - pytest
+  - pip:
+      - torch==2.0.1
+      - torchvision==0.15.2
+      - timm==1.0.3

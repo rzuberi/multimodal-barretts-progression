@@ -117,3 +117,7 @@ __pycache__/
 .ruff_cache/
 .env
 .env.*
+
+# editable-install metadata
+*.egg-info/
+build/

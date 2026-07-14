@@ -114,13 +114,27 @@ Small generated summaries are tracked under `reports/thesis_ch1/`; raw predictio
 
 ## Next scripts that should consume this manifest
 
+Existing scripts (verified present):
+
 - `scripts/02_recompute_patient_detection_metrics.py`
 - `scripts/03_make_cohort_table.py`
 - `scripts/04_make_main_results_table.py`
-- `scripts/05_make_early_prediction_table.py`
-- `scripts/06_make_interpretability_summary.py`
+- `scripts/05_select_lgd2_interpretation_cases.py`
+- `scripts/06_make_lgd2_modality_case_summary.py`
 - `scripts/27_collect_lgd2_final_oof.py`
 - `scripts/28_make_lgd2_final_pre_event_results.py`
 - `scripts/30_select_lgd2_final_interpretation_cases.py`
+- `scripts/make_chapter1_figures.py` — regenerates the Chapter 1 figure set from the
+  allowlisted `reports/thesis_ch1/*.csv` summaries (no external data required).
+
+Planned but NOT yet written (tracked as gaps):
+
+- `scripts/05_make_early_prediction_table.py` — early-prediction-only results table.
+  The underlying data already exists at
+  `reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv`; only the
+  table-assembly wrapper is missing.
+- `scripts/06_make_interpretability_summary.py` — LGD2+ CNV gene/window + histology
+  attention summary. **Blocked** on the CNV interpretability run (see
+  `docs/incomplete_results_gaps.md`); no persisted final CNV estimator yet.
 
 These scripts should read `docs/final_results_manifest.csv`, resolve external paths under `$BARRETTS_EXPERIMENT_ROOT`, and write any generated outputs outside Git unless they are small documentation summaries.
