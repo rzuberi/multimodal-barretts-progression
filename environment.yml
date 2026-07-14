@@ -1,5 +1,11 @@
-# Conda environment for the Barrett's Chapter 1 pipeline.
+# ANALYSIS environment for the Barrett's Chapter 1 pipeline.
 # Mirrors the cluster `erin` environment (Python 3.10.19).
+#
+# TWO-ENV SPLIT: this env is for analysis, table assembly, and figure
+# regeneration from summary CSVs. The frozen MODEL checkpoints were produced by
+# a different env (`virchow2`, scikit-learn 1.7.2) — to re-load/re-train/re-run
+# inference on them, use environment-training.yml instead. Loading the pickled
+# pipelines here (scikit-learn 1.5.2) raises version-mismatch warnings.
 #
 # Create with:
 #   conda env create -f environment.yml

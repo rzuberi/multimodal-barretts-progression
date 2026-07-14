@@ -35,7 +35,7 @@ These do not currently exist for the locked LGD2+ endpoint.
 | result_id | missing item | available support | next action |
 |---|---|---|---|
 | `lgd2_histology_interpretability` | LGD2+ attention maps, top patches, clinician-facing histology figures. | LGD3+ support exists under `analysis/clinician_figures_nextbiopsyprogression_batch10/` and `analysis/explainability/`. | Regenerate for LGD2+ selected image/multimodal models. |
-| `lgd2_cnv_interpretability` | LGD2+ CNV top windows, gene maps, coefficients/importances. | LGD3+ support exists under `analysis/cnv_explainability/`. | Regenerate for LGD2+ selected CNV and multimodal models. |
+| `lgd2_cnv_interpretability` | LGD2+ CNV top windows, gene maps, coefficients/importances. | **RESOLVED for feature importance:** each `cnv_only` outer fold exported `cnv_feature_importance.csv`; aggregated by `scripts/07_aggregate_cnv_importance.py` → `lgd2_cnv_feature_importance_aggregated.csv` (Fig 1.5). Window→gene map + multimodal-model importance still outstanding. | Add window→gene annotation; extend to multimodal models if needed. |
 | `lgd2_fusion_help_hurt_fail` | LGD2+ true-positive, false-positive, false-negative, image-vs-CNV rescue/hurt/fail cases. | LGD3+ case-analysis support exists, but not primary endpoint. | Build case table from LGD2+ patient-level predictions after recomputation. |
 
 ## Final-candidate rows with remaining work

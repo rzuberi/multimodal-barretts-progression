@@ -104,7 +104,7 @@ Small generated summaries are tracked under `reports/thesis_ch1/`; raw predictio
 | item | status | note |
 |---|---|---|
 | LGD2+ histology attention/top-patch outputs | `SUPPLEMENTARY` | ABMIL interpretation complete for all eight selected cases (external outputs, `pathology` env); selected-case, not cohort-wide. |
-| LGD2+ CNV top genes/windows | `MISSING` | Blocked: no persisted estimator/exported LGD2+ importance, no LGD2+ window-to-gene map. LGD3+ legacy is a different endpoint. |
+| LGD2+ CNV top genes/windows | `AVAILABLE` | Each `cnv_only` outer fold in the frozen release exported `cnv_feature_importance.csv`; `scripts/07_aggregate_cnv_importance.py` aggregates them to `reports/thesis_ch1/lgd2_cnv_feature_importance_aggregated.csv` (Fig 1.5). Window→gene map still a refinement. |
 | LGD2+ fusion help/hurt/fail cases | `SUPPLEMENTARY` | Probability-level case interpretation complete for the first three packs; model-internal attribution still missing. |
 | LGD2+ late fusion (mean; stack_logit) | `FINAL_CANDIDATE` | Patient-level metrics + paired deltas recomputed for uni2/virchow2/gigapath; rows `lgd2_late_fusion_*`. |
 | LGD2+ modality ablation (shuffle image/CNV) | `SUPPLEMENTARY` | Patient-level baseline-minus-shuffle deltas packaged; supporting evidence, not causal proof. |
@@ -134,7 +134,10 @@ Planned but NOT yet written (tracked as gaps):
   `reports/thesis_ch1/lgd2_patient_level_metrics_early_prediction_only.csv`; only the
   table-assembly wrapper is missing.
 - `scripts/06_make_interpretability_summary.py` — LGD2+ CNV gene/window + histology
-  attention summary. **Blocked** on the CNV interpretability run (see
-  `docs/incomplete_results_gaps.md`); no persisted final CNV estimator yet.
+  attention summary. CNV importance is now **available**
+  (`scripts/07_aggregate_cnv_importance.py` →
+  `lgd2_cnv_feature_importance_aggregated.csv`, Fig 1.5). This wrapper would combine
+  it with histology attention maps; the histology-map half still needs a
+  final-checkpoint cluster run (see `docs/incomplete_results_gaps.md`).
 
 These scripts should read `docs/final_results_manifest.csv`, resolve external paths under `$BARRETTS_EXPERIMENT_ROOT`, and write any generated outputs outside Git unless they are small documentation summaries.

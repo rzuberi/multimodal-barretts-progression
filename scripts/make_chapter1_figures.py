@@ -188,6 +188,43 @@ def fig_operating_points(comp: pd.DataFrame, out: Path) -> Path:
     return out
 
 
+# Known oesophageal-adenocarcinoma / Barrett's copy-number loci, for highlighting.
+CNV_DRIVER_LOCI = {"chr17p", "chr20p", "chr9p", "chr7p"}
+
+
+def fig_cnv_importance(imp: pd.DataFrame, out: Path, n: int = 20) -> Path:
+    """Top-n cross-validated CNV feature importances (cnv_only RF).
+
+    Reads the aggregate table produced by scripts/07_aggregate_cnv_importance.py
+    (feature name + mean/std impurity importance across the 5 outer folds). No
+    patient data.
+    """
+    top = imp.sort_values("importance_mean", ascending=False).head(n).iloc[::-1]
+    colors = [FOCAL if f in CNV_DRIVER_LOCI else OTHER for f in top["feature"]]
+    fig, ax = plt.subplots(figsize=(7.2, 6.8))
+    y = np.arange(len(top))
+    ax.barh(y, top["importance_mean"], xerr=top["importance_std"], color=colors,
+            error_kw=dict(ecolor="#5a5a5a", elinewidth=1.0, capsize=2.5), height=0.72, zorder=3)
+    ax.set_yticks(y)
+    ax.set_yticklabels(top["feature"])
+    ax.set_xlabel("Mean impurity importance across 5 folds (\u00b1 SD)")
+    ax.set_xlim(0, top["importance_mean"].max() + top["importance_std"].max() + 0.001)
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(facecolor=FOCAL, label="Known OAC/Barrett's locus"),
+                       Patch(facecolor=OTHER, label="Other genomic feature")],
+              loc="lower center", bbox_to_anchor=(0.5, 1.01), ncol=2, frameon=False, fontsize=7.5)
+    ax.set_title("CNV feature importance for LGD2+ progression (cnv_only RF)",
+                 fontsize=9, weight="bold", pad=24)
+    fig.text(0.5, -0.02,
+             "Importances are compressed by the PCA(64) step upstream of the forest; "
+             "relative ranking is more informative than absolute magnitude.",
+             ha="center", va="top", fontsize=6.5, color="#5a5a5a", style="italic")
+    fig.tight_layout()
+    fig.savefig(out, bbox_inches="tight")
+    plt.close(fig)
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--reports-dir", default="reports/thesis_ch1",
@@ -204,6 +241,13 @@ def main() -> None:
         fig_cohort_flow(flow, R / "fig_cohort_flow.png"),
         fig_operating_points(comp, R / "fig_operating_points.png"),
     ]
+    # CNV importance figure: only if the aggregate table has been produced
+    # (scripts/07_aggregate_cnv_importance.py, run on the cluster).
+    cnv_imp = R / "lgd2_cnv_feature_importance_aggregated.csv"
+    if cnv_imp.exists():
+        made.append(fig_cnv_importance(pd.read_csv(cnv_imp), R / "fig_cnv_feature_importance.png"))
+    else:
+        print(f"[skip] {cnv_imp} not found - run scripts/07_aggregate_cnv_importance.py on the cluster")
     for p in made:
         print(f"wrote {p}")
 
