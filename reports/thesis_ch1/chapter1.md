@@ -135,13 +135,34 @@ and report.
 
 ## 1.6 Interpretability
 
-**[TODO — needs cluster run]** This section is the main scientific gap.
-1. **CNV gene/window importance for LGD2+** — currently *blocked*: no persisted
-   final CNV estimator, no exported LGD2+ feature importance, no window→gene map
-   (`docs/incomplete_results_gaps.md`). Requires a compute run on the cluster.
-2. **Histology attention maps** regenerated from the *final* checkpoints for the 8
-   reselected pre-event OOF cases (existing figures came from developmental models).
-3. **Fusion help/hurt/fail case table** from final patient-level OOF predictions.
+**1. CNV gene/window importance for LGD2+.** The final `cnv_only` estimator is a
+scikit-learn pipeline (median imputation → standardisation → PCA to 64 components
+→ random forest, 500 trees, `cnv_rf_conservative` configuration) over 632
+genome-windowed CNV features. Each of the five patient-disjoint outer folds
+exported per-feature impurity importances; `scripts/07_aggregate_cnv_importance.py`
+aggregates them into a cross-validated ranking
+(`lgd2_cnv_feature_importance_aggregated.csv`).
+
+![Figure 1.5 — Cross-validated CNV feature importance (cnv_only random forest).](fig_cnv_feature_importance.png)
+
+**Figure 1.5.** Top-20 CNV features by mean impurity importance across the five
+outer folds (error bars = SD across folds). The highest-ranked features are
+chromosome-arm–level gains/losses at **20p, 11q, 7p, 17p and 12q**, all present in
+the top ranks of every fold (`n_folds = 5`); 17p and 7p coincide with the *TP53*
+and *EGFR* loci, and 20p/20q gains are recurrent in oesophageal adenocarcinoma.
+Two caveats temper this: (i) the importance spread is narrow — the top feature
+(0.0135) is only ~1.15× the 20th (0.0118) — because the PCA step upstream of the
+forest distributes correlated arm-level signal across components, so *relative
+ranking and fold-to-fold stability are more informative than absolute magnitude*;
+and (ii) impurity importance is a model-internal attribution, not a causal claim.
+A window→gene annotation mapping is a natural next refinement.
+
+**2. Histology attention maps** — regenerate from the *final* checkpoints for the 8
+reselected pre-event OOF cases (existing figures came from developmental models).
+*Still pending a cluster run.*
+
+**3. Fusion help/hurt/fail case table** from final patient-level OOF predictions.
+*Still pending.*
 
 ## 1.7 Limitations
 
@@ -151,7 +172,9 @@ and report.
 - Single-cohort, single-centre; **no external validation** — stated as a boundary,
   not a claim.
 - Small positive class (50 progressor patients) limits power; CIs are wide.
-- CNV interpretability is not yet available (Section 1.6).
+- CNV importance is model-internal (impurity-based) and compressed by upstream
+  PCA; it is descriptive, not causal (Section 1.6). Histology attention maps and
+  the fusion case table remain pending a final-checkpoint cluster run.
 
 ## 1.8 Summary
 
@@ -172,6 +195,7 @@ clinical trade-off is a substantial sensitivity gain at modest specificity cost.
 | Fig 1.2 / Table 1.1 | `lgd2_final_pre_event_model_comparison.csv` | `scripts/make_chapter1_figures.py` |
 | Fig 1.3 forest | `lgd2_final_pre_event_paired_differences.csv` | `scripts/make_chapter1_figures.py` |
 | Fig 1.4 operating pts | `lgd2_final_pre_event_model_comparison.csv` | `scripts/make_chapter1_figures.py` |
+| Fig 1.5 CNV importance | `lgd2_cnv_feature_importance_aggregated.csv` | (cluster) `scripts/07_aggregate_cnv_importance.py` → `scripts/make_chapter1_figures.py` |
 | Advanced fusion | `lgd2_advanced_fusion_model_comparison.csv` | (cluster) `scripts/28_...` |
 | Early-prediction | `lgd2_patient_level_metrics_early_prediction_only.csv` | **script TODO** |
 

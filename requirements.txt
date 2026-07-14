@@ -1,7 +1,11 @@
-# Pinned runtime dependencies for the Barrett's Chapter 1 pipeline.
+# ANALYSIS dependencies for the Barrett's Chapter 1 pipeline.
 # Frozen from the cluster `erin` conda environment (Python 3.10.19), which is
 # the environment the README reproduce commands use. Regenerate with:
 #   /home/zuberi01/miniforge3/envs/erin/bin/python -m pip freeze
+#
+# NOTE: the frozen model checkpoints were trained under the `virchow2` env
+# (scikit-learn 1.7.2) — see environment-training.yml. Use that env to load or
+# re-run the pickled models; use these pins for analysis/figures.
 #
 # GPU builds of torch/torchvision are installed via conda on the cluster
 # (see environment.yml); the versions below match that environment.

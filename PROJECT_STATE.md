@@ -39,7 +39,15 @@ These paths are references to the cluster experiment folder and are not reposito
 
 ## Remaining Gaps
 
-- LGD2+ CNV top-windows/genes interpretation is BLOCKED: no persisted CNV estimator or exported LGD2+ feature-importance, and no LGD2+ window-to-gene map. LGD3+ legacy outputs are a different endpoint and not valid primary evidence. Unblocking requires a compute run (not lightweight); see `reports/thesis_ch1/lgd2_cnv_interpretation_input_audit.md`.
+- LGD2+ CNV feature-importance interpretation is now AVAILABLE. The July 13 final
+  release persisted a `cnv_only` estimator per outer fold (scikit-learn Pipeline:
+  impute → scale → PCA(64) → RandomForest), and each fold exported
+  `cnv_feature_importance.csv`. `scripts/07_aggregate_cnv_importance.py` aggregates
+  the five folds into `reports/thesis_ch1/lgd2_cnv_feature_importance_aggregated.csv`
+  (Chapter 1, Fig 1.5). The earlier "BLOCKED / no persisted estimator" note predated
+  that run. Remaining CNV-interpretation refinements: a window→gene annotation map and
+  (optionally) importances for the multimodal models. LGD3+ legacy outputs remain a
+  different endpoint and not valid primary evidence.
 - Model-internal fusion attribution (beyond probability comparisons) is missing.
 - Composite clinician-facing multimodal case figures are missing.
 - Clean final tile/magnification LGD2+ comparison table is not yet packaged.

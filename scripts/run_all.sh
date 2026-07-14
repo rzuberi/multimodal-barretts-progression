@@ -40,6 +40,8 @@ run_tables() {
   "$PY" scripts/02_recompute_patient_detection_metrics.py
   echo ">> [cluster] selecting interpretation cases"
   "$PY" scripts/30_select_lgd2_final_interpretation_cases.py
+  echo ">> [cluster] aggregating CNV feature importance across folds"
+  "$PY" scripts/07_aggregate_cnv_importance.py
   echo "NOTE: scripts/05_make_early_prediction_table.py and"
   echo "      scripts/06_make_interpretability_summary.py are not yet written"
   echo "      (see docs/final_results_manifest.md 'Planned but NOT yet written')."
