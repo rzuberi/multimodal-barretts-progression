@@ -59,6 +59,8 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_advanced_fusion_model_comparison\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_advanced_fusion_paired_differences\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_importance_aggregated\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_gene_annotation\.csv$' \
+    | grep -v '^reports/thesis_ch1/lgd2_cnv_arm_gene_summary\.csv$' \
     || true
 )"
 
