@@ -111,6 +111,14 @@ matches the data contract for pipeline inspection without real data.
   figures embedded by relative filename, results pre-drafted from the locked numbers.
 - Fixed broken script pointers in `docs/final_results_manifest.md`.
 
+**Commit `b2a8c57`** — CNV window→gene annotation (Task 3 complete):
+- `scripts/03_annotate_cnv_genes.py` — queries Ensembl REST API for all 632 CNV
+  features (arm-level tiled, window direct). Output: gene annotation CSV.
+- `reports/thesis_ch1/lgd2_cnv_feature_gene_annotation.csv` — 632 features ×
+  {n_protein_coding_genes, cancer_genes, top_cancer_genes}. 77-gene OAC priority set.
+- `reports/thesis_ch1/lgd2_cnv_arm_gene_summary.csv` — top-25 arm features (chapter table).
+- `scripts/assert_no_data_tracked.sh` — allowlist extended for two new CSVs.
+
 **Commit `6cc83bf`** — CNV feature-importance interpretability (the item that was
 mislabelled "blocked"):
 - `scripts/07_aggregate_cnv_importance.py` — reads the five `cnv_only/foldN/cnv_feature_importance.csv`
@@ -167,12 +175,14 @@ work is aggregation/figure/table generation, not new model training.
    classify each case as fusion-helps / fusion-hurts / fusion-fails. Emit a small
    allowlisted CSV + a chapter table.
 
-3. **Window→gene annotation map** — the CNV features are arm-level
-   (e.g. `chr17p`) or 5 Mb windows (e.g. `chr11:50000001-55000000`). Map them to
-   named genes to make Fig 1.5 interpretable at the gene level. This is
-   **lightweight and can be done in the external sandbox** using a genome
-   annotation (Ensembl REST / UCSC); no patient data involved. Feed the mapping
-   into the chapter's CNV paragraph.
+3. ~~**Window→gene annotation map**~~ **DONE (commit `b2a8c57`)**
+   All 632 features (44 arm-level, 587 5 Mb windows, `cx`) annotated against
+   Ensembl GRCh38 protein-coding genes. 101 features carry ≥1 cancer gene from
+   a 77-gene OAC/Barrett priority set. Key loci match known OAC biology:
+   17p→TP53, 7p→EGFR, 12q→CDK4/MDM2/KMT2D, 18q→SMAD4/BCL2/GATA6, 20p→CDC25B/PCNA/FOXA2.
+   Outputs: `reports/thesis_ch1/lgd2_cnv_feature_gene_annotation.csv` (all 632 features),
+   `reports/thesis_ch1/lgd2_cnv_arm_gene_summary.csv` (top-25 arm summary),
+   `scripts/03_annotate_cnv_genes.py` (reproducible script, external sandbox, ~20 min).
 
 4. **Two wrapper scripts** flagged in `docs/final_results_manifest.md`:
    - `scripts/05_make_early_prediction_table.py` — the data already exists at
