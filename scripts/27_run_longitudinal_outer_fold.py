@@ -90,6 +90,24 @@ def histories_for_patients(all_histories, patient_ids) -> list:
     return [h for h in all_histories if h.patient_id in keep]
 
 
+def _jsonable_threshold(threshold) -> dict:
+    """Serialize a ThresholdChoice (or bare float) to JSON-safe plain types.
+
+    Fields can be numpy scalars, which json.dumps cannot encode; coerce each
+    to a native float/str/bool/None.
+    """
+    def _coerce(value):
+        if value is None or isinstance(value, (bool, str)):
+            return value
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return str(value)
+
+    source = vars(threshold) if hasattr(threshold, "__dict__") else {"threshold": threshold}
+    return {key: _coerce(val) for key, val in source.items()}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--release-root", required=True)
@@ -222,7 +240,7 @@ def main() -> int:
         "n_outer_test_landmarks": len(test_histories),
         "n_outer_train_patients": int(outer_train["patient_id"].nunique()),
         "n_outer_test_patients": int(outer_test["patient_id"].nunique()),
-        "validation_threshold": getattr(threshold, "__dict__", {"threshold": float(threshold)}),
+        "validation_threshold": _jsonable_threshold(threshold),
         "git_commit": git_commit,
         "manifest_sha256": sha256_file(release / "training_manifest_v2.csv"),
         "device": str(device),
