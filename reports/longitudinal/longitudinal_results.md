@@ -29,15 +29,23 @@ final epochs 4–14 — early stopping kept the from-scratch temporal model shal
 
 ## Paired deltas (longitudinal − baseline), 95% bootstrap CI (2000 resamples)
 
+All 12 rows (4 baselines × 3 metrics). For AUPRC/ROC AUC a positive Δ favours
+the longitudinal model; for Brier a negative Δ favours it (lower is better).
+
 | Baseline | Metric | Δ | 95% CI | CI excludes 0 |
 |---|---|---|---|---|
 | CNV only | AUPRC | +0.037 | (−0.092, +0.164) | no |
 | CNV only | ROC AUC | +0.054 | (−0.058, +0.168) | no |
 | CNV only | Brier | +0.009 | (−0.041, +0.063) | no |
+| H&E (image) only | AUPRC | +0.018 | (−0.102, +0.108) | no |
+| H&E (image) only | ROC AUC | −0.014 | (−0.094, +0.063) | no |
+| H&E (image) only | Brier | −0.020 | (−0.061, +0.022) | no |
 | Late-mean | AUPRC | −0.054 | (−0.154, +0.038) | no |
 | Late-mean | ROC AUC | −0.057 | (−0.129, +0.014) | no |
 | Late-mean | Brier | +0.041 | (+0.007, +0.078) | **yes (late-mean better)** |
 | Intermediate fusion | AUPRC | +0.008 | (−0.091, +0.095) | no |
+| Intermediate fusion | ROC AUC | −0.025 | (−0.086, +0.039) | no |
+| Intermediate fusion | Brier | +0.001 | (−0.032, +0.033) | no |
 
 ## Interpretation
 
