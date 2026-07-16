@@ -2,16 +2,19 @@
 """Paired evaluation: landmarking longitudinal model vs frozen single-timepoint baselines.
 
 Pools the longitudinal out-of-fold (OOF) predictions written by
-``27_run_longitudinal_outer_fold.py`` across all five outer folds, joins them to
-the frozen Chapter 1 baseline OOF tables on ``sample_id`` (identical rows and
-folds), aggregates to patient level with patient-max (the baseline protocol), and
-computes paired bootstrap confidence intervals for the metric deltas
-(longitudinal minus baseline) on AUPRC, ROC AUC and Brier.
+``27_run_longitudinal_outer_fold.py`` across all five outer folds. Each landmark
+is one biopsy row, so the longitudinal OOF covers the same biopsy ``sample_id``
+set as the frozen Chapter 1 baseline OOF tables. Both the longitudinal OOF and
+each baseline OOF are first aggregated to patient level with patient-max (the
+baseline evaluation protocol), then the two patient-level tables are joined on
+``patient_id`` and paired bootstrap confidence intervals are computed for the
+metric deltas (longitudinal minus baseline) on AUPRC, ROC AUC and Brier.
 
-The longitudinal model predicts the SAME endpoint on the SAME rows as the
-baselines, so "does adding history help?" is a paired test: the bootstrap
-resamples patients and recomputes both models' metrics on each resample, so the
-CI reflects the paired difference rather than two independent estimates.
+The longitudinal model predicts the SAME endpoint over the SAME biopsy rows as
+the baselines and both are reduced to the SAME patients, so "does adding history
+help?" is a paired test: the bootstrap resamples patients and recomputes both
+models' patient-level metrics on each resample, so the CI reflects the paired
+difference rather than two independent estimates.
 
 Outputs (written under --output-dir, small CSVs safe to commit via the guard
 allowlist):
