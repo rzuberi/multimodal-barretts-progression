@@ -20,6 +20,8 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_modality_case_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_interpretation_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_wsi_case_manifest\.csv$' \
+    | grep -v '^reports/longitudinal/longitudinal_vs_baselines_patient_metrics\.csv$' \
+    | grep -v '^reports/longitudinal/longitudinal_paired_deltas\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_interpretation_summary\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_dry_run_cases\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_histology_dry_run_execution_status\.csv$' \
