@@ -108,11 +108,15 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--reports-dir", default=str(REPO_ROOT / "multitask_moe" / "reports"))
     ap.add_argument("--bootstrap", type=int, default=2000)
+    ap.add_argument("--tasks", default=",".join(TASKS),
+                    help="comma list of tasks to score (default the built-in three; add "
+                         "next_biopsy_highrisk / at_risk_3y_censored etc. once collected)")
     args = ap.parse_args()
     reports_dir = Path(args.reports_dir)
+    tasks = [t for t in args.tasks.split(",") if t]
 
     all_metrics = []
-    for task in TASKS:
+    for task in tasks:
         for backbone in BACKBONES:
             m, _ = _process(task, backbone, reports_dir, args.bootstrap)
             if m is not None:
@@ -130,7 +134,7 @@ def main() -> int:
     grid_families = ["image_only", "cnv_only", "early_fusion", "intermediate_fusion",
                      "coattention_fusion", "moe", "late_mean", "late_stack_logit"]
     grid = []
-    for task in TASKS:
+    for task in tasks:
         row = {"task": task}
         sub = combined[combined["task"] == task]
         for fam in grid_families:
