@@ -55,7 +55,15 @@ def registry_for(backbone: str) -> Path:
     return REPO_ROOT / "multitask_moe" / "configs" / name
 
 
-def healthy_nodes(partition: str) -> list[str]:
+def healthy_nodes(partition: str, exclude: set[str] | None = None) -> list[str]:
+    """Nodes in `partition` not in a bad SLURM state and not in `exclude`.
+
+    `exclude` covers nodes that SLURM still reports as healthy but that are
+    faulty in practice — e.g. a GPU throwing `cudaErrorECCUncorrectable` while
+    the scheduler shows the node `idle`. Such nodes silently kill any unit that
+    lands on them; passing them here keeps the race-to-claim from routing to them.
+    """
+    exclude = exclude or set()
     out = subprocess.run(["sinfo", "-h", "-p", partition, "-N", "-o", "%N|%t"],
                          capture_output=True, text=True).stdout
     nodes = []
@@ -65,6 +73,8 @@ def healthy_nodes(partition: str) -> list[str]:
         node, state = line.split("|", 1)
         state = state.strip().lower()
         if any(bad in state for bad in _BAD_STATE):
+            continue
+        if node in exclude:
             continue
         if node not in nodes:
             nodes.append(node)
@@ -77,9 +87,15 @@ def job_exists(job_name: str) -> bool:
     return bool(out.strip())
 
 
-def iter_units():
-    """Yield dicts describing each work-unit."""
-    for task in TASKS:
+def iter_units(tasks=None):
+    """Yield dicts describing each work-unit.
+
+    ``tasks`` defaults to the built-in three-task set but accepts any task whose
+    per-task release has been built under OUTPUT_BASE/<task>/release (e.g. the
+    4th deck task next_biopsy_highrisk, or extra at-risk horizons). This keeps
+    the orchestrator reusable for new tasks without editing the module-level list.
+    """
+    for task in (tasks or TASKS):
         release = OUTPUT_BASE / task / "release"
         for fold in FOLDS:
             # CNV is backbone-independent -> single 'shared' bucket, CPU lane.
@@ -142,7 +158,10 @@ def main() -> int:
     ap.add_argument("--folds", default=",".join(str(f) for f in FOLDS))
     ap.add_argument("--lanes", default="gpu,cpu")
     ap.add_argument("--max-nodes-per-unit", type=int, default=0, help="0 = all healthy nodes")
+    ap.add_argument("--exclude-nodes", default="",
+                    help="comma list of nodes to avoid (faulty GPUs SLURM still shows healthy)")
     args = ap.parse_args()
+    exclude_nodes = {n for n in args.exclude_nodes.split(",") if n}
 
     want_tasks = set(args.tasks.split(","))
     want_backbones = set(args.backbones.split(",")) | {"shared"}
@@ -158,7 +177,7 @@ def main() -> int:
 
     node_cache: dict[str, list[str]] = {}
     n_units = n_jobs = n_skipped_done = n_skipped_queued = 0
-    for u in iter_units():
+    for u in iter_units(sorted(want_tasks)):
         if u["task"] not in want_tasks or u["fold"] not in want_folds or u["lane"] not in want_lanes:
             continue
         if u["backbone"] not in want_backbones:
@@ -178,7 +197,7 @@ def main() -> int:
         nodes: list[str] = []
         for part in lane["partitions"]:
             if part not in node_cache:
-                node_cache[part] = healthy_nodes(part)
+                node_cache[part] = healthy_nodes(part, exclude_nodes)
             nodes += [(part, n) for n in node_cache[part]]
         cap = args.max_nodes_per_unit or lane.get("max_nodes") or 0
         if cap and cap > 0:
