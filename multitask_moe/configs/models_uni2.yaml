@@ -1,0 +1,66 @@
+registry_version: "multitask_moe_models_uni2_v1"
+endpoint: "PARAMETERIZED_BY_MANIFEST"   # y_progressor is bound at manifest-build time
+feature_views:
+  cnv: "feature_views/cnv"
+  image_index: "feature_views/uni2/uni2_index.csv"
+  uni2_index: "feature_views/uni2/uni2_index.csv"   # back-compat alias
+inner_cv:
+  n_folds: 3
+  seed: 20260721
+selection:
+  aggregation: "patient_max"
+  rank_order: ["auprc_desc", "roc_auc_desc", "brier_asc", "configuration_id"]
+threshold:
+  criterion: "target_specificity"
+  target: 0.90
+calibration:
+  method: "platt"
+families:
+  cnv_only:
+    role: "PRIMARY_NESTED_SELECTED"
+    model_name: "cnv_random_forest"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - {configuration_id: "cnv_rf_devbest", pca_dim: 64, n_estimators: 500, max_depth: 10, min_samples_leaf: 2, max_features: 0.5}
+      - {configuration_id: "cnv_rf_conservative", pca_dim: 64, n_estimators: 500, max_depth: 20, min_samples_leaf: 2, max_features: "sqrt"}
+      - {configuration_id: "cnv_rf_unrestricted", pca_dim: 64, n_estimators: 500, max_depth: null, min_samples_leaf: 2, max_features: 0.5}
+  image_only:
+    role: "PRIMARY_FIXED"
+    model_name: "abmil"
+    feature_model: "uni2"
+    candidates:
+      - {configuration_id: "uni2_abmil_fixed", hidden_dim: 256, attn_dim: 128, dropout: 0.1, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  early_fusion:
+    role: "PRIMARY_FIXED"
+    model_name: "early_mean_mlp"
+    feature_model: "uni2"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - {configuration_id: "early_mean_mlp_fixed", hidden_dim: 512, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  intermediate_fusion:
+    role: "PRIMARY_NESTED_SELECTED"
+    model_name: "intermediate_abmil_cnv"
+    feature_model: "uni2"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - {configuration_id: "intermediate_lr1e4", img_hidden: 256, cnv_hidden: 128, attn_dim: 128, fusion_hidden: 256, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+      - {configuration_id: "intermediate_lr3e4", img_hidden: 256, cnv_hidden: 128, attn_dim: 128, fusion_hidden: 256, dropout: 0.2, lr: 0.0003, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  coattention_fusion:
+    role: "PRIMARY_NESTED_SELECTED"
+    model_name: "coattn_abmil_cnv"
+    feature_model: "uni2"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - {configuration_id: "coattn_lr1e4", img_hidden: 256, cnv_hidden: 128, attn_dim: 128, fusion_hidden: 256, dropout: 0.2, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+  moe:
+    role: "MULTITASK_END_TO_END"
+    model_name: "mixture_of_experts"
+    feature_model: "uni2"
+    cnv_representation: "windows_armdiff_plus_arms_plus_cx"
+    candidates:
+      - {configuration_id: "moe_small_lb05", img_hidden: 128, cnv_hidden: 64, attn_dim: 128, fusion_hidden: 128, gate_hidden: 32, dropout: 0.3, gate_temperature: 1.0, load_balance_lambda: 0.05, lr: 0.0001, weight_decay: 0.01, batch_size: 8, max_epochs: 20, patience: 5}
+      - {configuration_id: "moe_small_lb10", img_hidden: 128, cnv_hidden: 64, attn_dim: 128, fusion_hidden: 128, gate_hidden: 32, dropout: 0.4, gate_temperature: 1.0, load_balance_lambda: 0.10, lr: 0.0001, weight_decay: 0.02, batch_size: 8, max_epochs: 20, patience: 5}
+  late_fusion:
+    role: "PRIMARY_DERIVED"
+    base_models: ["cnv_only", "image_only"]
+    methods: ["mean", "stack_logit"]

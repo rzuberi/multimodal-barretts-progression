@@ -1,0 +1,39 @@
+# Task definitions for the multitask/MoE campaign.
+# Each task binds a binary label column into the manifest's generic `y_progressor`
+# and defines the eligible cohort. Consumed by scripts/build_task_cohort.py.
+#
+# Row-level label balances (from derived_master 959 rows / 160 patients) recorded
+# for reference; the eligible cohort after feature-availability + censoring will
+# be smaller.
+tasks:
+  ever_progress:
+    label_column: "Progressor_label"
+    source: "derived_master"
+    positive_meaning: "patient ever progresses (any future biopsy HGD/IMC/OAC or two consecutive LGD)"
+    eligibility: "has_image_and_cnv_features"
+    censoring: "none"
+    ref_balance: {rows_0: 539, rows_1: 420, patients_positive: 57, patients_total: 160}
+
+  at_risk_3y:
+    label_column: "AtRisk_3y"
+    source: "derived_master"
+    positive_meaning: "biopsy is within 3 years before a progression event"
+    eligibility: "has_image_and_cnv_features AND (event_within_3y OR followup_ge_3y)"
+    censoring: "require_3y_followup_or_event"   # drop under-followed non-progressors
+    followup_days_column: "DaysFromCurrentToEvent"   # validated in build_task_cohort.py
+    ref_balance: {rows_0: 435, rows_1: 524, patients_positive: 87, patients_total: 160}
+
+  next_biopsy_progression:
+    label_column: "NextBiopsyProgression_LGD2plus"
+    source: "frozen_pre_event"
+    positive_meaning: "next biopsy is a progression event (HGD/IMC/OAC or 2nd consecutive LGD)"
+    eligibility: "strict_pre_event_eligible"
+    # Reuse the frozen 707-row / 150-patient cohort + splits verbatim; only add the
+    # GigaPath backbone and the MoE family on top of the existing Chapter-1 set.
+    reuse_release: "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training/analysis/chapter1_lgd2_final_pre_event_20260713_final"
+    ref_balance: {rows: 707, patients: 150, patients_positive: 50}
+
+derived_master: "/mnt/scratche/slow/fmlab/zuberi01/phd/barretts_retraining/barretts_training/data/derived_nextbiopsy_20260302_150952/derived_master.csv"
+splits:
+  n_folds: 5
+  seed: 20260721
