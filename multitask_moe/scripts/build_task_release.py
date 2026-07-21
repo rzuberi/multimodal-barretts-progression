@@ -55,6 +55,16 @@ def main() -> int:
                     help="symlink the frozen release verbatim (next_biopsy_progression)")
     ap.add_argument("--censor-underfollowed", action="store_true",
                     help="at_risk: drop non-progressor negatives with <3y follow-up")
+    ap.add_argument("--derive-at-risk", action="store_true",
+                    help="derive an HONEST at-risk label from event timing + observed follow-up "
+                         "instead of reading --label-column. A biopsy is positive if a progression "
+                         "event occurs within the horizon; negative only if confirmed event-free "
+                         "THROUGH the horizon (progressor whose event is beyond it, or non-progressor "
+                         "followed >= horizon); otherwise censored (dropped). This is the only way to "
+                         "get a two-class at-risk cohort, because the precomputed AtRisk_Ny columns "
+                         "make every negative an under-followed biopsy.")
+    ap.add_argument("--horizon-years", type=float, default=3.0,
+                    help="at-risk horizon in years for --derive-at-risk (default 3.0)")
     args = ap.parse_args()
 
     out_release = Path(args.out_release).resolve()
@@ -72,10 +82,34 @@ def main() -> int:
     progressor = co.set_index("SampleID")["Progressor_label"] if "Progressor_label" in co else None
 
     mm["canonical_row_key"] = mm["canonical_row_key"].astype(str)
-    mm["y"] = pd.to_numeric(mm["canonical_row_key"].map(label_by_sample), errors="coerce")
 
     n_total = len(mm)
     audit = {"task": args.task, "label_column": args.label_column, "n_matched_rows": n_total}
+
+    if args.derive_at_risk:
+        # Honest at-risk label from event timing + observed follow-up (see --help).
+        win_days = args.horizon_years * 365.25
+        dce = pd.to_numeric(mm["canonical_row_key"].map(
+            co.set_index("SampleID")["DaysFromCurrentToEvent"]), errors="coerce")
+        prog = pd.to_numeric(mm["canonical_row_key"].map(
+            co.set_index("SampleID")["Progressor_label"]), errors="coerce")
+        # follow-up (days) to the patient's last biopsy, as an observed-follow-up proxy
+        fu_days = pd.to_numeric(mm["canonical_row_key"].map(
+            co.set_index("SampleID")["MonthsBeforeLastBiopsy"]), errors="coerce") * 30.437
+        y = pd.Series(pd.NA, index=mm.index, dtype="Float64")
+        # positive: progression event within the horizon
+        y[(prog == 1) & (dce <= win_days)] = 1.0
+        # negative: confirmed event-free THROUGH the horizon
+        #   (a) progressor whose event is beyond the horizon -> observed event-free within it
+        #   (b) non-progressor observed at least `horizon` -> confirmed event-free
+        y[((prog == 1) & (dce > win_days)) | ((prog == 0) & (fu_days >= win_days))] = 0.0
+        # everything else (non-progressor with < horizon follow-up) stays NA -> censored
+        mm["y"] = pd.to_numeric(y, errors="coerce")
+        audit["derived_at_risk"] = True
+        audit["horizon_years"] = args.horizon_years
+        audit["n_censored_underfollowed"] = int(mm["y"].isna().sum())
+    else:
+        mm["y"] = pd.to_numeric(mm["canonical_row_key"].map(label_by_sample), errors="coerce")
 
     eligible = mm["y"].notna()
     n_nan = int((~eligible).sum())
