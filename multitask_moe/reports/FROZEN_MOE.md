@@ -24,8 +24,10 @@ trained model — it is deliberately kept out of the primary `all_metrics.csv`.
 ## Finding
 
 The frozen-expert MoE **beats the end-to-end MoE on all five tasks** (AUPRC), and
-matches or exceeds late-mean on four of five — winning outright on
-next_biopsy_highrisk (0.577 vs 0.524) and at_risk_3y_censored (0.662 vs 0.592).
+matches or exceeds late-mean on three of five — winning outright on
+next_biopsy_progression (0.629 vs 0.625), next_biopsy_highrisk (0.577 vs 0.524) and
+at_risk_3y_censored (0.662 vs 0.592); it trails late-mean narrowly on ever_progress
+(0.544 vs 0.552) and at_risk_3y (0.883 vs 0.898).
 So the end-to-end MoE's mid-pack AUPRC is the cost of jointly learning experts at
 this sample size, not a failure of gated routing: freeze the experts and let the
 gate learn only the weighting, and a MoE performs at the level of the best late

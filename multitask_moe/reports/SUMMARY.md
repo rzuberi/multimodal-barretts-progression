@@ -44,7 +44,7 @@ paired contrasts against the other rows.)
    over-parameterised at ~150 patients. Its value here is interpretability, not accuracy.
    The frozen-expert MoE (`FROZEN_MOE.md`) isolates the cause: routing among the *frozen*
    trained experts beats the end-to-end MoE on all five tasks and matches/exceeds late-mean
-   on four — so the mid-pack result is the cost of jointly *learning* experts at this n,
+   on three — so the mid-pack result is the cost of jointly *learning* experts at this n,
    not a weakness of gated routing.
 4. **MoE routing is interpretable.** The gate routes the majority (59–69%) of biopsies to
    the multimodal expert and higher-risk biopsies preferentially there (at_risk_3y:
