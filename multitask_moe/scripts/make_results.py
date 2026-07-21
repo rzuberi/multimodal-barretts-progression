@@ -124,7 +124,11 @@ def main() -> int:
     combined.to_csv(reports_dir / "all_metrics.csv", index=False)
 
     # Cross-task grid (best backbone per family), ROC AUC (spec@sens90) — deck style.
-    grid_families = ["image_only", "cnv_only", "moe", "late_mean", "intermediate_fusion"]
+    # Show the FULL family set (no gaps) so the best model per task is always visible;
+    # the deck's 5-family subset hid early_fusion/coattention/late_stack, one of which
+    # (early_fusion) is the best model on ever_progress.
+    grid_families = ["image_only", "cnv_only", "early_fusion", "intermediate_fusion",
+                     "coattention_fusion", "moe", "late_mean", "late_stack_logit"]
     grid = []
     for task in TASKS:
         row = {"task": task}
@@ -136,11 +140,17 @@ def main() -> int:
                 row[fam] = f"{best['roc_auc']:.2f} ({best['spec_at_sens90']:.2f})"
             else:
                 row[fam] = "NA"
+        # Best family per task ranked by AUPRC (the primary metric; breaks ROC ties,
+        # e.g. ever_progress where early_fusion and late_mean are tied on ROC at 0.82).
+        best_ap = sub.sort_values("auprc", ascending=False).iloc[0]
+        row["best_by_auprc"] = f"{best_ap['model_family']} ({best_ap['auprc']:.3f})"
         grid.append(row)
     grid_df = pd.DataFrame(grid)
     grid_df.to_csv(reports_dir / "cross_task_grid.csv", index=False)
     lines = ["# Cross-task detection grid — ROC AUC (spec@sens90)", "",
-             "Patient-level, nested 5-fold CV. Best backbone per family shown.", "",
+             "Patient-level, nested 5-fold CV. Best backbone per family shown. "
+             "Cells: ROC AUC (specificity@90%-sensitivity).",
+             "Final column: best family per task ranked by AUPRC (the primary metric; breaks ROC ties).", "",
              "| " + " | ".join(grid_df.columns) + " |",
              "| " + " | ".join(["---"] * len(grid_df.columns)) + " |"]
     for r in grid_df.itertuples(index=False, name=None):
