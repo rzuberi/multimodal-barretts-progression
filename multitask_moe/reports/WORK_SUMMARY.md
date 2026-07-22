@@ -125,9 +125,11 @@ Both scored under the identical nested-CV protocol and collected with derived la
   positive = progression event within the horizon; negative = confirmed event-free THROUGH
   the horizon (a progressor whose event is beyond it, or a non-progressor followed ≥ the
   horizon); everything else (under-followed, no event yet) censored out. Honest 3-year
-  cohort: **77 patients, 25 positive, 404 biopsies censored.** Best model drops from ROC
-  **0.89 (optimistic) to 0.78** (intermediate_fusion, AUPRC 0.682) — quantifying how much
-  the deck's `at_risk_3y` was inflated by easy under-followed negatives. Fusion still leads
+  cohort: **77 patients, 25 positive, 404 biopsies censored.** The best model drops from
+  ROC **0.886 (optimistic at_risk_3y, late_mean) to 0.735** (censored best model,
+  intermediate_fusion / gigapath, AUPRC 0.682) — a **~0.15 ROC gap** quantifying how much
+  the deck's `at_risk_3y` was inflated by easy under-followed negatives. (Like-for-like,
+  late_mean itself falls from ROC 0.886 to 0.781 on the censored cohort.) Fusion still leads
   (late_mean vs cnv_only ΔAUPRC +0.126) but CIs cross zero at this smaller n. **Use the
   censored numbers.** The `--horizon-years` flag also makes the 1y/2y/4y/5y horizons a
   one-command build + campaign each.
@@ -171,9 +173,9 @@ the frozen-expert MoE comparison in `FROZEN_MOE.md` / `frozen_moe_comparison.csv
    *fusion variant* is task-dependent: late-mean on at_risk_3y and next_biopsy_progression,
    early_fusion on ever_progress and next_biopsy_highrisk, intermediate_fusion on the
    honest censored at-risk-3y.
-2. **The optimistic at_risk_3y (ROC 0.89) is inflated** by under-followed negatives; the
-   honest censored version is **ROC 0.78**. This ~0.11 gap is the single most important
-   correction in the update.
+2. **The optimistic at_risk_3y (best ROC 0.886) is inflated** by under-followed negatives;
+   the honest censored version's best model is **ROC 0.735** (~0.15 lower). This is the
+   single most important correction in the update.
 3. **The end-to-end MoE is not the way to get gated routing at this n** — a cheap
    frozen-expert router beats it everywhere and matches the best late fusion. The
    end-to-end MoE's value is its interpretable routing report, not accuracy.
