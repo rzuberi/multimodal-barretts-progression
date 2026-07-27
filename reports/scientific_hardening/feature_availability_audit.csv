@@ -1,0 +1,18 @@
+feature,description,availability_class,usable_flag,rationale
+CurrentGradeInt,Collapsed worst grade at index (0/1/2),Available at prediction time,SAFE,Known at the visit; worst-grade collapse is routine practice. 707/707 populated.
+CurrentGradeNorm,Normalised index grade label (NDBE/ID/LGD),Available at prediction time,SAFE,Categorical form of index grade. 707/707.
+LGDStreakSoFar,Consecutive LGD count up to & incl current,Derived from past+current only,SAFE,No future info. Range 0-1 in this cohort (post-event rows excluded). 707/707.
+MaxPathologySoFar,Worst grade among current+prior biopsies (0-2),Derived from past+current only,SAFE,Cumulative-to-date max; no future info. 707/707. USE THIS (not max_pathology).
+BiopsyIndex,Order of current biopsy in the patient's series (1..8),Derived from past+current only,SAFE,= number of prior surveillance biopsies +1. 707/707.
+DaysSincePreviousBiopsy,Days since the patient's previous biopsy,Derived from past+current only,SAFE,Backward-looking. 411/707 populated (296 nulls = first biopsies -> add is-first flag + impute).
+IsFirstBiopsy,Whether current is the patient's first recorded biopsy,Derived from past+current only,SAFE,Determinable at the visit. 707/707.
+max_pathology,Worst grade (0-5) — scope unclear (may be global),Ambiguous,AMBIGUOUS,"Range 0-5 exceeds MaxPathologySoFar's 0-2, suggesting it may include future/global grades. DO NOT USE until provenance resolved; prefer MaxPathologySoFar."
+BiopsiesTotalForPatient,Total biopsies the patient EVER has,Derived using future information,LEAKY,Counts future biopsies. DO NOT USE.
+IsLastBiopsy,Whether current biopsy is the patient's last recorded,Derived using future information,LEAKY,Depends on future biopsy existence. DO NOT USE.
+MonthsBeforeLastBiopsy,Months from current to the patient's last biopsy,Derived using future information,LEAKY,Future-anchored. DO NOT USE.
+DaysFromFirstBiopsyToEvent,Days from first biopsy to the event,Derived using future information,LEAKY,Outcome-anchored. DO NOT USE.
+DaysFromCurrentToEvent,Days from current biopsy to the event,Derived using future information,LEAKY,Outcome timing. DO NOT USE.
+EventDate / EventType,Event date/type,Derived using future information,LEAKY,Outcome. DO NOT USE.
+NextBiopsyLabel,Grade of the next biopsy,Derived using future information,LEAKY (=OUTCOME),This is the label. Never a feature.
+NextBiopsyDate,Date of the next biopsy,Derived using future information,LEAKY,"Eligibility only, never a feature."
+DaysToNextBiopsy,Days to the next biopsy,Derived using future information,LEAKY,"Eligibility only, never a feature."
