@@ -63,6 +63,12 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_importance_aggregated\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_gene_annotation\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_arm_gene_summary\.csv$' \
+    | grep -v '^reports/scientific_hardening/feature_availability_audit\.csv$' \
+    | grep -v '^reports/scientific_hardening/calibration_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_baseline_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_multimodal_comparisons\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_operating_points\.csv$' \
+    | grep -v '^reports/scientific_hardening/decision_curve_results\.csv$' \
     || true
 )"
 
