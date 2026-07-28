@@ -279,3 +279,25 @@ index_grade  correct_nonprogressor  correct_progressor  fusion_harm_false_positi
 **Deliverables:** `killcoyne_multimodal_overlap_summary.md`, `killcoyne_lopo_feasibility.md`, `killcoyne_protocol_comparison.md`, `killcoyne_multimodal_overlap_counts.csv`, `killcoyne_multimodal_overlap_summary.json`.
 
 **Phase 5 gate: complete — do not launch a multimodal LOPO GPU campaign; the overlap is a subset, not an external cohort.**
+
+---
+
+## Phase 6 — Limited Virchow2 encoder sensitivity  ✅ COMPLETE (negative result)
+
+**Gate:** all 707 Virchow2 embeddings verified (feat_dim 2560, tile counts 64–256, 0 bad, frozen splits reused, leakage-safe). late_mean derivation reproduces the frozen UNI2 anchor exactly (0.6296/0.7742/0.1842).
+
+Ran the primary LGD2+ task with Virchow2 for image_only, intermediate_fusion, and derived late_mean (cnv_only reused, backbone-independent). Same ABMIL/protocol/splits; patient-level, paired bootstrap 2000.
+
+| model | n_pat | n_pos | auprc | roc | brier | auprc_lo | auprc_hi | roc_lo | roc_hi |
+|---|---|---|---|---|---|---|---|---|---|
+| cnv_only(shared) | 150 | 50 | 0.5385 | 0.663 | 0.216 | 0.41 | 0.6742 | 0.5711 | 0.7581 |
+| uni2_image_only | 150 | 50 | 0.557 | 0.7312 | 0.2453 | 0.4326 | 0.7125 | 0.6421 | 0.8155 |
+| virchow2_image_only | 150 | 50 | 0.4823 | 0.6658 | 0.2499 | 0.3685 | 0.6409 | 0.5741 | 0.7574 |
+| uni2_late_mean | 150 | 50 | 0.6296 | 0.7742 | 0.1842 | 0.4969 | 0.7697 | 0.6938 | 0.8466 |
+| virchow2_late_mean | 150 | 50 | 0.5582 | 0.7106 | 0.1951 | 0.4308 | 0.7035 | 0.6207 | 0.7946 |
+| uni2_intermediate_fusion | 150 | 50 | 0.5675 | 0.7414 | 0.2242 | 0.4362 | 0.7051 | 0.6567 | 0.8153 |
+| virchow2_intermediate_fusion | 150 | 50 | 0.488 | 0.6614 | 0.2737 | 0.3688 | 0.6337 | 0.5696 | 0.7506 |
+
+**Verdict:** Virchow2 is slightly WORSE than UNI2 on every family and metric (image_only ΔAUPRC −0.075/ΔROC −0.065; late_mean −0.071/−0.064; intermediate −0.079/−0.080; ROC deltas significant). Calibration also worse (Virchow2 image/intermediate slopes 0.32–0.35). **Per the pre-specified rule, Virchow2 is NOT expanded to other endpoints; UNI2 remains the reported backbone.** Clean negative encoder-sensitivity result — the multimodal finding is not specific to one foundation model, and a larger/newer encoder does not help at n=150. See `VIRCHOW2_SENSITIVITY_REPORT.md`.
+
+**Phase 6 gate: complete.**

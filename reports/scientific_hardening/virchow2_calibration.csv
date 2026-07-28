@@ -1,0 +1,5 @@
+model,cal_slope,cal_intercept,ece
+virchow2_image_only,0.351,-0.686,0.1884
+virchow2_late_mean,1.037,-0.005,0.0729
+virchow2_intermediate_fusion,0.317,-0.82,0.2115
+uni2_late_mean,1.582,0.033,0.0751
