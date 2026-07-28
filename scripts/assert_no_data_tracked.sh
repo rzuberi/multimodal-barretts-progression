@@ -74,6 +74,9 @@ tracked="$(
     | grep -v '^reports/scientific_hardening/endpoint_sensitivity\.csv$' \
     | grep -v '^reports/scientific_hardening/temporal_sensitivity\.csv$' \
     | grep -v '^reports/scientific_hardening/aggregation_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/virchow2_primary_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/virchow2_paired_comparisons\.csv$' \
+    | grep -v '^reports/scientific_hardening/virchow2_calibration\.csv$' \
     | grep -v '^reports/scientific_hardening/fold_stability\.csv$' \
     | grep -v '^reports/scientific_hardening/patient_influence_summary\.csv$' \
     | grep -v '^reports/scientific_hardening/error_analysis_summary\.csv$' \
