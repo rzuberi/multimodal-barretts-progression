@@ -1,0 +1,6 @@
+analysis,label,method,n_pat,n_pos,cnv_only_auprc,image_only_auprc,late_mean_auprc,clinical_auprc,latemean_vs_cnv_dAUPRC,ci_lo,ci_hi,crosses0
+patient_max,NextBiopsyProgression_LGD2plus,max,150,50,0.5385,0.557,0.6296,0.4952,0.0912,-0.0307,0.2192,True
+patient_mean,NextBiopsyProgression_LGD2plus,mean,150,50,0.6306,0.6278,0.7006,0.6834,0.07,-0.08,0.2285,True
+most_recent,NextBiopsyProgression_LGD2plus,recent,150,49,0.5484,0.5783,0.6593,0.5985,0.1109,-0.0432,0.2616,True
+first_eligible,NextBiopsyProgression_LGD2plus,first,150,16,0.1732,0.2363,0.2265,0.3219,0.0532,-0.0898,0.2294,True
+biopsy_then_patient_max,NextBiopsyProgression_LGD2plus,biopsy_then_max,150,50,0.5385,0.557,0.6296,0.4952,0.0912,-0.0307,0.2192,True

@@ -1,0 +1,2 @@
+killcoyne_discovery_psids,overlap_psids_any_local,overlap_psids_eligible_multimodal,local_patients_any,local_eligible_patients_with_killcoyne_psid,subset_of_150,eligible_overlap_rows,rows_with_CNVpath,rows_with_ImagePath,lgd2_pos_rows,lgd2_pos_patients,index_grade_dist,biopsies_per_patient_median,biopsies_per_patient_max,uni2_embeddings_for_overlap,gigapath_embeddings_for_overlap,virchow2_embeddings_for_overlap
+345,329,242,77,69,True,454,454,454,54,27,"{'NDBE': 333, 'LGD': 69, 'ID': 52}",6.0,19,454,454,454
