@@ -1,0 +1,2 @@
+n_patients,n_pos,modality_agree_frac,fusion_acc_when_agree,fusion_acc_when_disagree,n_disagree,best_unimodal_acc_when_disagree,strong_unimodal_signal_lost_by_fusion,progressor_missed_median_days_to_event,progressor_caught_median_days_to_event,n_progressors_missed,n_progressors_caught,false_positive_index_grade_dist
+150,50,0.707,0.764,0.568,44,1.0,3,729.0,547.5,32,18,"{'NDBE': 7, 'LGD': 3, 'ID': 2}"
