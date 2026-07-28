@@ -1,0 +1,4 @@
+comparison,d_auprc,auprc_ci,auprc_crosses0,d_roc,roc_ci,d_brier,brier_ci
+virchow2_image_only - uni2_image_only,-0.0748,"[-0.1702,0.0234]",True,-0.0654,"[-0.1309,-0.0037]",0.0046,"[-0.0281,0.0365]"
+virchow2_late_mean - uni2_late_mean,-0.0714,"[-0.1422,0.0042]",True,-0.0636,"[-0.123,-0.0058]",0.0109,"[-0.0032,0.0255]"
+virchow2_intermediate_fusion - uni2_intermediate_fusion,-0.0794,"[-0.1632,0.0086]",True,-0.08,"[-0.1549,-0.004]",0.0495,"[0.0134,0.0835]"
