@@ -4,6 +4,7 @@
 - **Output root:** `analysis/chapter1_scientific_hardening_20260727/` (cluster; row-level/sensitive outputs stay here, outside Git).
 - **Evaluation invariant:** leakage-safe, patient-disjoint 5-fold reusing the frozen `patient_splits.csv`/`row_to_fold.csv`; patient-level metrics after patient-max; paired patient-level CIs.
 - **Scope note:** external validation is explicitly deferred (no digitised external cohort on cluster).
+- **Progress:** Phases 0–5 COMPLETE (committed `c2dfdd0`, pushed). Phase 6 (limited Virchow2 GPU sensitivity, primary endpoint only) not started — gated on user review.
 
 Tags: **[V]** verified from code/data this session · **[I]** inferred · **[U]** unknown.
 
