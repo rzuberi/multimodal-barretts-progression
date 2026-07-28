@@ -63,6 +63,24 @@ tracked="$(
     | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_importance_aggregated\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_feature_gene_annotation\.csv$' \
     | grep -v '^reports/thesis_ch1/lgd2_cnv_arm_gene_summary\.csv$' \
+    | grep -v '^reports/scientific_hardening/feature_availability_audit\.csv$' \
+    | grep -v '^reports/scientific_hardening/calibration_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_baseline_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_multimodal_comparisons\.csv$' \
+    | grep -v '^reports/scientific_hardening/clinical_operating_points\.csv$' \
+    | grep -v '^reports/scientific_hardening/decision_curve_results\.csv$' \
+    | grep -v '^reports/scientific_hardening/matching_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/grade_provenance_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/endpoint_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/temporal_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/aggregation_sensitivity\.csv$' \
+    | grep -v '^reports/scientific_hardening/fold_stability\.csv$' \
+    | grep -v '^reports/scientific_hardening/patient_influence_summary\.csv$' \
+    | grep -v '^reports/scientific_hardening/error_analysis_summary\.csv$' \
+    | grep -v '^reports/scientific_hardening/error_by_index_grade\.csv$' \
+    | grep -v '^reports/scientific_hardening/modality_disagreement_analysis\.csv$' \
+    | grep -v '^reports/scientific_hardening/killcoyne_multimodal_overlap_counts\.csv$' \
+    | grep -v '^reports/scientific_hardening/killcoyne_multimodal_overlap_summary\.json$' \
     || true
 )"
 

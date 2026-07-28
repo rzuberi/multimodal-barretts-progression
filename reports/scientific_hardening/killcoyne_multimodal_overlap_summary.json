@@ -1,0 +1,23 @@
+{
+ "killcoyne_discovery_psids": 345,
+ "overlap_psids_any_local": 329,
+ "overlap_psids_eligible_multimodal": 242,
+ "local_patients_any": 77,
+ "local_eligible_patients_with_killcoyne_psid": 69,
+ "subset_of_150": true,
+ "eligible_overlap_rows": 454,
+ "rows_with_CNVpath": 454,
+ "rows_with_ImagePath": 454,
+ "lgd2_pos_rows": 54,
+ "lgd2_pos_patients": 27,
+ "index_grade_dist": {
+  "NDBE": 333,
+  "LGD": 69,
+  "ID": 52
+ },
+ "biopsies_per_patient_median": 6.0,
+ "biopsies_per_patient_max": 19,
+ "uni2_embeddings_for_overlap": 454,
+ "gigapath_embeddings_for_overlap": 454,
+ "virchow2_embeddings_for_overlap": 454
+}
