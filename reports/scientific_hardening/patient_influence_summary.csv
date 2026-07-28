@@ -1,0 +1,2 @@
+base_dAUPRC,n_patients,top5_abs_influence,max_single_patient_influence,sum_top5_over_base,n_positive_influencers,n_negative
+0.0912,150,"[-0.023, -0.0216, -0.0161, 0.0147, -0.0131]",0.023,0.971,82,65

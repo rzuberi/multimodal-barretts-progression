@@ -1,0 +1,4 @@
+analysis,label,method,n_rows,prevalence,cnv_only_auprc,cnv_only_roc,n_pat,n_pos,image_only_auprc,image_only_roc,late_mean_auprc,late_mean_roc,clinical_auprc,clinical_roc,latemean_vs_cnv_dAUPRC,ci_lo,ci_hi,crosses0,latemean_vs_image_dAUPRC
+LGD2plus_primary,NextBiopsyProgression_LGD2plus,max,707,0.1513,0.5385,0.663,150,50,0.557,0.7312,0.6296,0.7742,0.4952,0.7201,0.0912,-0.0307,0.2192,True,0.0726
+LGD3plus_rescored,NextBiopsyProgression_LGD3plus,max,707,0.1132,0.5,0.6759,150,36,0.456,0.7463,0.549,0.7819,0.2975,0.6034,0.049,-0.087,0.1963,True,0.0929
+highrisk_ge3_rescored,NextBiopsyHighRisk_ge3,max,707,0.1132,0.5,0.6759,150,36,0.456,0.7463,0.549,0.7819,0.2975,0.6034,0.049,-0.087,0.1963,True,0.0929
