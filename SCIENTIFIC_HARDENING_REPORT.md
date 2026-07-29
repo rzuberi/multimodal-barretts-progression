@@ -307,3 +307,9 @@ Ran the primary LGD2+ task with Virchow2 for image_only, intermediate_fusion, an
 ## Phase 6 extension - Multi-encoder investigation  (COMPLETE, negative result)
 
 Tested three pathology foundation encoders (UNI2, GigaPath, Virchow2) individually and combined (mean-ensemble + fold-pure logistic stacking), primary LGD2+ endpoint. GigaPath is the best single image encoder (AUPRC 0.609 > UNI2 0.557 > Virchow2 0.482), and the learned stacker down-weights Virchow2 - so encoders do carry different signal. But **no combination beats the reported UNI2 late-mean (0.630)**: the 3-encoder learned stack overfits (0.535, significantly worse than headline, delta -0.095 CI [-0.172,-0.009]); GigaPath late-mean ties (0.624, delta -0.006 crosses 0); cnv+mean(uni2,giga) gives the best point estimate (0.635) but within noise. UNI2 remains the reported backbone; GigaPath an acceptable tie. See MULTI_ENCODER_INVESTIGATION.md.
+
+---
+
+## Exploratory - Image label-noise / tissue-sampling investigation  (COMPLETE)
+
+Asked whether low image scores on progressor patients are model error or benign-slide sampling. Image score rises with the imaged biopsy's own grade (NDBE 0.34 / ID 0.50 / LGD 0.52 - the model reads the slide). Of 70 image-missed positives, 51% have a **benign** current biopsy and 63% of all positives have current grade below the patient max: the lesion is elsewhere, so a low score is correct for the sampled tissue. Attention on 5 such cases lands on real epithelium, not artefacts - **the pattern is tissue sampling + patient-level labelling, not artefact error.** CNV scores these image-unwinnable cases above baseline (0.212 vs 0.172), a structural argument for multimodal fusion. See IMAGE_LABEL_NOISE_INVESTIGATION.md.

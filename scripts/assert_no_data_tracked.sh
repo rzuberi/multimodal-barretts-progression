@@ -76,6 +76,8 @@ tracked="$(
     | grep -v '^reports/scientific_hardening/aggregation_sensitivity\.csv$' \
     | grep -v '^reports/scientific_hardening/virchow2_primary_metrics\.csv$' \
     | grep -v '^reports/scientific_hardening/multiencoder_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/label_noise_aggregate\.csv$' \
+    | grep -v '^reports/scientific_hardening/label_noise_image_by_grade\.csv$' \
     | grep -v '^reports/scientific_hardening/multiencoder_paired\.csv$' \
     | grep -v '^reports/scientific_hardening/multiencoder_stacker_weights\.csv$' \
     | grep -v '^reports/scientific_hardening/gigapath_latemean_metrics\.csv$' \

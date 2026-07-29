@@ -1,0 +1,5 @@
+group,n,benign_current_frac,current_below_max_frac,note
+all_positive_rows,107,,0.63,"median current grade 1, median patient max 3"
+image_missed_positive,70,0.51,0.67,51% imaged biopsy benign(NDBE); median current 0
+image_caught_positive,37,0.46,,46% imaged biopsy benign
+image_missed_benign_current,36,1.0,1.0,CNV mean 0.212 vs neg baseline 0.172 — genomic signal present
