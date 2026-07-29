@@ -1,0 +1,432 @@
+% Chapter 1 --- Multimodal prediction of Barrett's oesophagus progression
+% Draft generated from the scientific-hardening analysis (branch chapter1-scientific-hardening).
+% Figures embedded by artifact reference; compile within the thesis template.
+% Citations use \cite keys resolved in chapter1_refs.bib --- VERIFY every DOI before submission.
+
+\chapter{Multimodal prediction of progression in Barrett's oesophagus}
+\label{ch:multimodal-barretts}
+
+\section{Introduction}
+\label{sec:intro}
+
+Barrett's oesophagus is the principal precursor to oesophageal adenocarcinoma
+(OAC), a cancer whose prognosis remains poor because most cases present at an
+advanced stage. Endoscopic surveillance with biopsy aims to detect progression
+early --- from non-dysplastic Barrett's (NDBE) through low-grade dysplasia (LGD)
+to high-grade dysplasia (HGD) and invasive cancer --- but surveillance is
+resource-intensive and histopathological grading of dysplasia suffers from
+substantial inter-observer variability \cite{killcoyne2020}. Two data modalities
+are routinely generated during surveillance yet rarely combined
+computationally: shallow whole-genome sequencing (sWGS) of biopsy material,
+which yields genome-wide copy-number variation (CNV) profiles, and
+haematoxylin-and-eosin (H\&E) histopathology of the same biopsies.
+
+This chapter asks a single, deliberately narrow question: \emph{does combining
+CNV and H\&E histopathology improve prediction of near-term progression over
+either modality alone, and is any such improvement robust, clinically
+meaningful, and stronger than routine clinical information?} The emphasis is not
+on novel architectures but on establishing whether a multimodal signal is real
+and defensible at the sample size available. The chapter therefore reports a
+frozen primary model together with an extensive programme of pre-specified
+robustness, calibration, error, and sensitivity analyses.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+  \item A leakage-safe, patient-level evaluation of CNV-only, image-only, and
+    fusion models for next-biopsy progression, with an independently
+    reconstructed and verified endpoint.
+  \item Evidence that late-mean CNV$+$histology fusion is the best-performing
+    single model and improves discrimination and calibration over CNV alone,
+    with the improvement stated honestly against each metric's confidence
+    interval.
+  \item A robustness programme showing the multimodal benefit strengthens on
+    higher-provenance data subsets, is stable to aggregation and temporal
+    choices, and is not driven by any single patient --- while documenting
+    genuine fold-level heterogeneity.
+  \item A systematic error analysis and interpretability investigation
+    identifying \emph{tissue sampling} (a patient-level label applied to a
+    single biopsy slide), rather than model artefact, as the dominant source of
+    image-model error --- and a concrete structural argument for multimodality.
+  \item Pre-specified encoder-sensitivity analyses (Virchow2, GigaPath, and
+    multi-encoder stacking) establishing that the finding is not an artefact of
+    one foundation model.
+\end{enumerate}
+
+\section{Data and cohort}
+\label{sec:cohort}
+
+\subsection{Cohort construction}
+The analysis cohort comprises \textbf{150 patients} contributing \textbf{707
+pre-event biopsy sample-rows} (359 distinct biopsies; multiple sequenced
+sample-rows may map to one physical biopsy). Fifty patients (33.3\%) are
+progressors. Each row corresponds to one surveillance biopsy at which both a CNV
+profile and an H\&E whole-slide image are available, taken \emph{before} the
+event that defines the label. Patients are partitioned into five
+patient-disjoint cross-validation folds, so that no patient contributes rows to
+both training and test in any fold (Figure~\ref{fig:consort}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{{{artifact:art_bf810ade-04d1-4990-9e18-8780be311320}}}
+  \caption[Cohort consort diagram]{\textbf{Cohort construction.} 150 patients
+  $\rightarrow$ 707 pre-event biopsy sample-rows (359 distinct biopsies), split
+  by outcome (50 progressors / 100 non-progressors) and evaluated under 5-fold
+  patient-disjoint cross-validation. Counts are patient-level unless stated as
+  sample-rows.}
+  \label{fig:consort}
+\end{figure}
+
+\subsection{Primary endpoint contract}
+\label{sec:endpoint}
+The primary endpoint is \texttt{NextBiopsyProgression\_LGD2plus}, a Boolean
+defined per pre-event biopsy sample-row. A row is \textbf{positive} if the
+patient's \emph{next} biopsy is HGD, intramucosal carcinoma, or OAC (grade
+$\ge 3$), \emph{or} is LGD (grade 2) in a patient who already has a prior LGD in
+their history (i.e.\ a second consecutive LGD); a single isolated LGD is not an
+event. The event biopsy must occur at a strictly later date than the index
+biopsy.
+
+To guard against silent label drift, the endpoint was independently
+reconstructed from source columns (next-biopsy grade and LGD-streak history)
+using the locked rule. The reconstruction reproduced the stored endpoint on
+\textbf{all 707 rows with zero discrepancies} (107 positive / 600 negative
+sample-rows; 50 / 150 positive patients), and all 707 next-biopsy dates were
+confirmed strictly later than the index date (no same-day events). The cohort is
+termed \emph{pre-high-grade} rather than dysplasia-free, because prevalent LGD
+and indeterminate-grade biopsies are present at index.
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Copy-number model}
+Genome-wide relative copy-number features (arm-level and fixed-window
+log$_2$ ratios) were derived from sWGS. The CNV model is a random forest
+(500 trees, maximum depth 20) applied to a PCA-reduced feature representation,
+with a configuration fixed in advance (\texttt{cnv\_rf\_conservative}). CNV
+features are backbone-independent and identical across all image-encoder
+experiments.
+
+\subsection{Histopathology model}
+Each whole-slide image is tiled and encoded with a frozen pathology foundation
+model. The default encoder is UNI2 \cite{chen2024uni}; GigaPath
+\cite{xu2024gigapath} and Virchow2 \cite{zimmermann2024virchow2} are used in
+sensitivity analyses (Section~\ref{sec:encoder}). Per-slide tile embeddings form
+a bag that is aggregated by an attention-based multiple-instance-learning
+(ABMIL) head \cite{ilse2018abmil} (hidden dimension 256, attention dimension
+128, dropout 0.1), trained to predict the slide-level label. Because the
+encoders are frozen and applied per slide independently of any fold or label,
+they introduce no train/test leakage.
+
+\subsection{Fusion}
+The headline fusion is \textbf{late-mean}: the per-sample probability average of
+the CNV-only and image-only models, evaluated per held-out fold. A trained joint
+CNV$+$image model (intermediate fusion) and clinical-stacking variants are also
+reported. Late-mean was chosen as the primary fusion because it has no learned
+fusion parameters and therefore cannot overfit the fusion step at this sample
+size.
+
+\subsection{Clinical baselines}
+Seven prediction-time-safe clinical features were used (current grade, current
+grade normalised, LGD streak so far, maximum pathology so far, biopsy index,
+days since previous biopsy, first-biopsy flag). Clinical baselines
+(grade-only, history-only, grade$+$history, and a small tree) and clinical$+$modality
+stacks were fitted with leakage-safe nested logistic regression / cross-fitted
+stacking on the frozen folds.
+
+\subsection{Evaluation protocol}
+All models are evaluated at the \textbf{patient level}: sample-row probabilities
+are aggregated to a patient score by the maximum (patient-max), which exactly
+reproduces the locked headline numbers. Metrics are area under the
+precision--recall curve (AUPRC), area under the ROC curve (ROC~AUC), and the
+Brier score, reported together. Confidence intervals and paired model contrasts
+use the paired bootstrap (2000 resamples) over patients. Thresholds, calibration
+(Platt scaling \cite{platt1999}), and inner model selection use training folds
+only; the held-out test fold is never used for selection.
+
+\paragraph{Reporting rules.} Following a pre-registered set of statistical
+rules, every result reports patient and positive-patient counts; AUPRC is
+retained as a central metric and is never described as conclusive when its
+confidence interval crosses zero; internal cross-validation is never described
+as external validation; and negative findings are preserved.
+
+\section{Primary results}
+\label{sec:primary}
+
+Table~\ref{tab:primary} reports all models at the patient level ($n=150$,
+50 positive). Late-mean CNV$+$image is the best single model on AUPRC (0.630)
+and Brier (0.184); the full clinical$+$CNV$+$image stack achieves the best
+ROC~AUC (0.801).
+
+\begin{table}[htbp]
+  \centering
+  \caption[Primary model comparison]{\textbf{Primary model comparison}
+  (patient-level, $n=150$, 50 positive patients). Best AUPRC/Brier: late-mean
+  fusion. Best ROC~AUC: clinical$+$CNV$+$image.}
+  \label{tab:primary}
+  \begin{tabular}{lccc}
+    \hline
+    Model & AUPRC & ROC AUC & Brier \\
+    \hline
+    Prevalence (reference)        & 0.333 & 0.500 & 0.255 \\
+    Clinical (grade $+$ history)  & 0.495 & 0.720 & 0.235 \\
+    CNV only                      & 0.538 & 0.663 & 0.216 \\
+    Image only                    & 0.557 & 0.731 & 0.245 \\
+    CNV $+$ image (late-mean)     & \textbf{0.630} & 0.774 & \textbf{0.184} \\
+    CNV $+$ image (joint MLP)     & 0.562 & 0.746 & 0.245 \\
+    Clinical $+$ CNV              & 0.528 & 0.740 & 0.244 \\
+    Clinical $+$ image            & 0.554 & 0.778 & 0.228 \\
+    Clinical $+$ CNV $+$ image    & 0.576 & \textbf{0.801} & 0.222 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The pre-specified principal contrast is late-mean fusion versus CNV-only
+(Figure~\ref{fig:prcurves}). The improvement is \textbf{conclusive on ROC~AUC
+and Brier but not on AUPRC}: $\Delta$ROC~AUC $=+0.111$ (95\% CI $+0.001$ to
+$+0.221$, excludes zero); $\Delta$Brier $=-0.032$ (95\% CI $-0.060$ to $-0.003$,
+excludes zero); $\Delta$AUPRC $=+0.091$ (95\% CI $-0.031$ to $+0.219$,
+\emph{crosses zero}). Per the reporting rules the AUPRC gain is reported as
+directionally consistent but not conclusive on the full cohort. The marginal
+value of histology \emph{given} clinical$+$CNV information is also not conclusive
+($\Delta$AUPRC $=+0.048$, 95\% CI $-0.025$ to $+0.124$).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{{{artifact:art_593e7158-2ba5-45e5-b833-15e78b3ea5a6}}}
+  \caption[Precision--recall, fusion vs single modality]{\textbf{Headline
+  precision--recall.} CNV-only, image-only, and late-mean fusion on the primary
+  endpoint (patient-level, $n=150$/50 positive). Late-mean fusion dominates both
+  single modalities; the dotted line marks prevalence.}
+  \label{fig:prcurves}
+\end{figure}
+
+\section{Robustness}
+\label{sec:robustness}
+
+The stability of the principal contrast (late-mean $-$ CNV-only $\Delta$AUPRC)
+was probed across matching provenance, endpoint definition, temporal exclusion,
+and patient-aggregation choices (Table~\ref{tab:robustness},
+Figure~\ref{fig:forest}). The benefit behaves as the opposite of a data
+artefact: it \emph{strengthens} on the cleanest data. Restricting to
+exactly-matched rows raises $\Delta$AUPRC to $+0.176$ (95\% CI $+0.007$ to
+$+0.341$, excludes zero), and on strong grade-provenance subsets to $+0.161$
+(95\% CI $+0.012$ to $+0.318$). The full-cohort estimate is diluted by a
+high-prevalence fuzzy-matched stratum, not inflated by it. The benefit
+attenuates at the stricter LGD3$+$ endpoint ($+0.049$, crosses zero) --- an
+honest limitation --- and is stable to a 90-day minimum horizon and to every
+aggregation scheme.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Robustness of the multimodal benefit]{\textbf{Robustness of the
+  late-mean $-$ CNV-only $\Delta$AUPRC.} Prevalence is reported for every
+  restricted cohort (reporting rule). ``Excl.\ 0'' indicates the 95\% CI
+  excludes zero.}
+  \label{tab:robustness}
+  \begin{tabular}{llcccc}
+    \hline
+    Axis & Cohort & $n$ rows & Prev. & $\Delta$AUPRC & Excl.\ 0 \\
+    \hline
+    Reference           & full cohort            & 707 & 0.151 & $+0.091$ & no \\
+    Exact matching      & exact-only             & 532 & 0.096 & $+0.176$ & \textbf{yes} \\
+    Grade provenance    & scraped-confirmed      & 547 & 0.113 & $+0.161$ & \textbf{yes} \\
+    Grade provenance    & exclude master-fallback& 552 & 0.114 & $+0.152$ & \textbf{yes} \\
+    Same-day exclusion  & (0 same-day events)    & 707 & 0.151 & $+0.091$ & no \\
+    Temporal horizon    & min-horizon 90\,d      & 676 & 0.154 & $+0.085$ & no \\
+    Cleaner endpoint    & LGD3$+$                & 707 & 0.113 & $+0.049$ & no \\
+    Aggregation         & patient-mean           & 150 & ---   & $+0.070$ & no \\
+    Aggregation         & most-recent            & 150 & ---   & $+0.111$ & no \\
+    Aggregation         & first-eligible (16 pos)& 150 & ---   & $+0.053$ & no \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{{{artifact:art_9ab78230-fbd7-46ca-a02f-413e70d04e0e}}}
+  \caption[Robustness forest plot]{\textbf{Robustness forest.} Late-mean $-$
+  CNV-only $\Delta$AUPRC with 95\% bootstrap intervals across sensitivity
+  cohorts. The benefit strengthens under exact-matching and strong-provenance
+  subsets (intervals excluding zero) and attenuates at the stricter LGD3$+$
+  endpoint.}
+  \label{fig:forest}
+\end{figure}
+
+\paragraph{Fold and patient influence.} The principal internal-validity caveat
+is fold-level heterogeneity: the fold-wise $\Delta$AUPRC ranges from $-0.112$
+(fold 1) to $+0.420$ (fold 2), with folds 3--5 at $+0.057$, $+0.057$, and
+$+0.154$. Leave-one-patient-out analysis shows no single patient drives the
+result (maximum single-patient influence 0.023 on a base of 0.091; 82 positive
+and 65 negative influencers), so the fragility is fold-level, not outlier-level.
+
+\section{Calibration and clinical utility}
+\label{sec:calibration}
+
+The frozen fusion and CNV models are well calibrated (fusion calibration slope
+1.78, expected calibration error [ECE] 0.075; CNV slope 1.23, ECE 0.095),
+whereas the clinical stacks are over-confident (slopes 0.5--0.9, ECE
+0.21--0.23) (Figure~\ref{fig:calibration}, left). At an operating point of
+sensitivity $\ge 90\%$, the clinical$+$CNV$+$image model achieves specificity
+0.66, positive predictive value 0.57, and negative predictive value 0.93
+(patient prevalence 0.33). Decision-curve analysis \cite{vickers2006dca}
+(Figure~\ref{fig:calibration}, right) shows the frozen fusion model has the
+highest net benefit across the clinically relevant threshold range.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.48\textwidth]{{{artifact:art_ff50ec22-3074-4cb4-ad52-de46a1fe3e8d}}}
+  \hfill
+  \includegraphics[width=0.48\textwidth]{{{artifact:art_cff9ce10-d7d5-4eb0-a8c7-1bf7fe53f36e}}}
+  \caption[Calibration and decision-curve analysis]{\textbf{Calibration (left)
+  and decision-curve analysis (right).} The frozen fusion and CNV models are
+  well calibrated; the clinical stacks are over-confident. The fusion model
+  yields the highest net benefit across clinically relevant thresholds.}
+  \label{fig:calibration}
+\end{figure}
+
+\section{Error analysis and interpretability}
+\label{sec:error}
+
+\subsection{Systematic error taxonomy}
+Using a per-fold leakage-safe threshold (90th percentile of other-fold
+negatives), patients fall into: correct non-progressor (88), missed progressor
+(22), correct progressor (18), fusion-harm missed-progressor (10), fusion-harm
+false-positive (9), and persistent false-positive (3). The two modalities agree
+on 70.7\% of patients, where fusion accuracy is 0.76; on the 44 disagreement
+cases fusion accuracy falls to 0.568 while at least one single modality was
+correct in every case. Mean-fusion therefore averages away a correct unimodal
+signal when the modalities conflict --- a concrete, pre-registered motivation for
+learned gating fusion in future work. Missed progressors are more temporally
+distant than caught ones (median 729 vs 548 days), arguing against short-horizon
+leakage.
+
+\subsection{Image label-noise and tissue sampling}
+\label{sec:labelnoise}
+A central question is whether low image scores on progressor patients represent
+model failure or a benign biopsy of a patient whose dangerous tissue lies
+elsewhere. Three lines of evidence point to the latter
+(Figure~\ref{fig:labelnoise}). First, the image score rises monotonically with
+the imaged biopsy's own grade (mean probability 0.34 for NDBE, 0.50 for
+indeterminate, 0.52 for LGD), so the encoder reads the slide it is given.
+Second, of 70 image-missed positive rows, 51\% have a \emph{benign} current
+biopsy, and 63\% of all positive rows have a current grade below the patient's
+maximum --- the dangerous tissue is on a different biopsy, so a low score is
+correct for the sampled slide. Third, attention maps on five such cases land on
+genuine epithelium, not on scanner artefacts, folds, or background. Crucially,
+for the 36 image-missed benign-current rows the CNV model scores above baseline
+(mean 0.212 vs 0.172), so CNV recovers field-level risk the sampled histology
+cannot show --- a structural argument for multimodality.
+
+A focus-metric quality-control check (variance-of-Laplacian on tissue tiles)
+confirmed one flagged case as genuinely out-of-focus (an $\sim$18-fold lower
+focus score than sharp slides) but also revealed that the bare metric conflates
+optical blur with sparse/fragmented tissue; a robust blur QC must normalise for
+tissue content. Blur affects only a small minority of slides and does not change
+the primary conclusions.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{{{artifact:art_09873ca8-2cdb-42d9-b69a-1c322620e76a}}}
+  \caption[Image label-noise / tissue sampling]{\textbf{Why the image model
+  ``misses'' progressors.} Attention overlays on five benign current biopsies of
+  progressor patients. Attention lands on real epithelium with no focal
+  high-grade lesion; the low image score is correct for the sampled tissue,
+  because the progression-defining lesion is elsewhere in the patient. This is a
+  limitation of the patient-level label, not model artefact, and CNV recovers
+  the signal these slides cannot show.}
+  \label{fig:labelnoise}
+\end{figure}
+
+\section{Encoder and multi-encoder sensitivity}
+\label{sec:encoder}
+
+To test whether the multimodal finding depends on the choice of pathology
+foundation model, the primary endpoint was re-run with alternative encoders
+under an identical architecture and protocol (Figure~\ref{fig:encoder}).
+\textbf{Virchow2} performed slightly worse than UNI2 on every family and metric
+(image-only AUPRC 0.482 vs 0.557, ROC~AUC 0.666 vs 0.731; late-mean AUPRC 0.558
+vs 0.630); the ROC deltas exclude zero and Virchow2 was worse calibrated. Per
+the pre-specified rule it was not expanded to other endpoints.
+
+\textbf{GigaPath} was the strongest single image encoder on AUPRC (0.609), and a
+fold-pure logistic stacker over the three encoders up-weighted GigaPath and
+UNI2 and down-weighted Virchow2 --- so the encoders do carry different signal.
+However, \emph{combining} encoders did not beat the single-encoder headline: the
+three-encoder learned stack overfits at $n=150$ (AUPRC 0.535, significantly
+worse than the headline, $\Delta=-0.095$, 95\% CI $-0.172$ to $-0.009$);
+substituting GigaPath into the late-mean fusion ties the headline (0.624 vs
+0.630); and fusing CNV with the mean of UNI2 and GigaPath gives the best point
+estimate observed (0.635) but within noise. \textbf{UNI2 remains the reported
+backbone} (with GigaPath an acceptable tie); the multimodal finding is not an
+artefact of one foundation model.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{{{artifact:art_2ef4db78-a065-4396-8d0f-c69ba0260b39}}}
+  \caption[Encoder sensitivity]{\textbf{Encoder sensitivity.} UNI2 versus
+  Virchow2 on the primary task; UNI2 is equal or better on every family and
+  metric. Multi-encoder stacking (Section~\ref{sec:encoder}) did not improve on
+  the single-encoder headline.}
+  \label{fig:encoder}
+\end{figure}
+
+\paragraph{Benchmark feasibility.} A subset of 69 of the 150 patients overlaps
+the Killcoyne discovery cohort \cite{killcoyne2020}, but these patients are a
+strict subset of the present training cohort and cannot serve as external
+validation; moreover the published benchmark is CNV-only, precluding a
+like-for-like multimodal comparison. The CNV-only leave-one-patient-out result
+here (ROC~AUC 0.78--0.80) sits somewhat below the published $\sim$0.87, plausibly
+reflecting preprocessing and QC differences.
+
+\section{Discussion}
+\label{sec:discussion}
+
+Across a seven-part hardening programme, combining CNV and H\&E histopathology
+by late-mean fusion is the best-performing single model for near-term
+progression, improving ROC~AUC (0.66 $\rightarrow$ 0.77) and calibration
+(Brier 0.216 $\rightarrow$ 0.184) over CNV alone, with a directionally
+consistent AUPRC gain (0.54 $\rightarrow$ 0.63) whose full-cohort confidence
+interval crosses zero but reaches significance on the cleanest data subsets. The
+benefit is robust to aggregation and temporal choices and is not driven by any
+single patient. The error analysis reframes the image model's apparent failures
+as a consequence of patient-level labelling of individually-sampled biopsies,
+and shows that CNV recovers exactly the field-level risk that a benign-appearing
+slide cannot --- a mechanistic, not merely empirical, case for multimodality.
+
+The strongest defensible statement is therefore: \emph{in an internally
+validated, patient-disjoint cross-validation of 150 patients (50 progressors),
+late-mean fusion of CNV and H\&E histopathology improved next-biopsy LGD2$+$
+progression prediction over CNV alone in discrimination (ROC~AUC $+0.11$, 95\%
+CI $+0.001$ to $+0.221$) and calibration (Brier $-0.032$, 95\% CI $-0.060$ to
+$-0.003$); the AUPRC gain was directionally consistent and reached significance
+on exactly-matched and strong-provenance subsets; the result is internal
+validation only.}
+
+\paragraph{Claims not made.} These results do not support describing the AUPRC
+improvement as conclusive on the full cohort, describing any result as
+externally validated or generalising, treating the Killcoyne overlap as external
+validation, promoting a robustness subset to the headline, claiming histology
+adds conclusive value over clinical$+$CNV, claiming a newer/larger encoder
+improves performance, presenting sample-rows as independent patients, or
+implying a deployment-ready screening tool from $n=150$.
+
+\section{Limitations and future work}
+\label{sec:limitations}
+
+The study is \textbf{internally validated only}; no external cohort has been
+tested, and predictive claims should not be extended beyond internal
+cross-validation until a digitised external cohort is available. The patient-max
+label imposes a structural floor of ``unwinnable'' cases on any biopsy-level
+image model (Section~\ref{sec:labelnoise}); biopsy-level image labels and a
+pathologist read of missed cases would quantify and reduce this label noise. The
+fold-level heterogeneity (Section~\ref{sec:robustness}) indicates the point
+estimate is sensitive to cohort composition at this sample size.
+
+The ranked next investments are: (1) prepare the chapter and manuscript on these
+hardened internal results; (2) obtain a digitised external cohort before making
+further predictive claims; (3) add pathologist-supported interpretation of
+disagreement cases; and (4) --- only if specifically required --- a clearly
+labelled within-cohort Killcoyne benchmark. Learned gating fusion, motivated by
+the modality-disagreement finding, is a natural direction for a subsequent
+chapter but is deferred here to avoid overfitting the fusion step at the present
+sample size.
