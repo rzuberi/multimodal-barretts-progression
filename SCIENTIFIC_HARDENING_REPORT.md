@@ -301,3 +301,9 @@ Ran the primary LGD2+ task with Virchow2 for image_only, intermediate_fusion, an
 **Verdict:** Virchow2 is slightly WORSE than UNI2 on every family and metric (image_only ΔAUPRC −0.075/ΔROC −0.065; late_mean −0.071/−0.064; intermediate −0.079/−0.080; ROC deltas significant). Calibration also worse (Virchow2 image/intermediate slopes 0.32–0.35). **Per the pre-specified rule, Virchow2 is NOT expanded to other endpoints; UNI2 remains the reported backbone.** Clean negative encoder-sensitivity result — the multimodal finding is not specific to one foundation model, and a larger/newer encoder does not help at n=150. See `VIRCHOW2_SENSITIVITY_REPORT.md`.
 
 **Phase 6 gate: complete.**
+
+---
+
+## Phase 6 extension - Multi-encoder investigation  (COMPLETE, negative result)
+
+Tested three pathology foundation encoders (UNI2, GigaPath, Virchow2) individually and combined (mean-ensemble + fold-pure logistic stacking), primary LGD2+ endpoint. GigaPath is the best single image encoder (AUPRC 0.609 > UNI2 0.557 > Virchow2 0.482), and the learned stacker down-weights Virchow2 - so encoders do carry different signal. But **no combination beats the reported UNI2 late-mean (0.630)**: the 3-encoder learned stack overfits (0.535, significantly worse than headline, delta -0.095 CI [-0.172,-0.009]); GigaPath late-mean ties (0.624, delta -0.006 crosses 0); cnv+mean(uni2,giga) gives the best point estimate (0.635) but within noise. UNI2 remains the reported backbone; GigaPath an acceptable tie. See MULTI_ENCODER_INVESTIGATION.md.

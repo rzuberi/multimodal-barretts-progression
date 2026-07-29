@@ -1,0 +1,5 @@
+comparison,d_auprc,auprc_ci,auprc_crosses0,d_roc,roc_ci,roc_crosses0
+img_stack3 - uni2_image,-0.0219,"[-0.1213,0.069]",True,-0.0064,"[-0.0648,0.0473]",True
+img_stack3 - uni2_late_mean(headline),-0.0945,"[-0.1721,-0.0092]",False,-0.0494,"[-0.1063,0.0045]",True
+img_stack3+cnv - uni2_late_mean(headline),-0.0777,"[-0.1496,0.0011]",True,-0.0364,"[-0.0929,0.0174]",True
+img_mean3 - uni2_image,0.0036,"[-0.0756,0.0788]",True,-0.0062,"[-0.0467,0.0322]",True

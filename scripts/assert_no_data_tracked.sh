@@ -75,6 +75,11 @@ tracked="$(
     | grep -v '^reports/scientific_hardening/temporal_sensitivity\.csv$' \
     | grep -v '^reports/scientific_hardening/aggregation_sensitivity\.csv$' \
     | grep -v '^reports/scientific_hardening/virchow2_primary_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/multiencoder_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/multiencoder_paired\.csv$' \
+    | grep -v '^reports/scientific_hardening/multiencoder_stacker_weights\.csv$' \
+    | grep -v '^reports/scientific_hardening/gigapath_latemean_metrics\.csv$' \
+    | grep -v '^reports/scientific_hardening/gigapath_latemean_paired\.csv$' \
     | grep -v '^reports/scientific_hardening/virchow2_paired_comparisons\.csv$' \
     | grep -v '^reports/scientific_hardening/virchow2_calibration\.csv$' \
     | grep -v '^reports/scientific_hardening/fold_stability\.csv$' \
