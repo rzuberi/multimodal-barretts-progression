@@ -3,6 +3,12 @@
 % Figures embedded by artifact reference; compile within the thesis template.
 % Citations use \cite keys resolved in chapter1_refs.bib --- VERIFY every DOI before submission.
 
+% FIGURES: place the 6 PNG artifacts in a ./figures/ subdirectory next to this .tex.
+% Filenames used below (download from the artifact store):
+%   fig1_consort.png, fig_pr_fusion_vs_single.png, fig_robustness_forest.png,
+%   fig_calibration_curves.png, fig_decision_curves.png,
+%   fig_label_noise_attention.png, fig_encoder_sensitivity.png
+
 \chapter{Multimodal prediction of progression in Barrett's oesophagus}
 \label{ch:multimodal-barretts}
 
@@ -67,7 +73,7 @@ both training and test in any fold (Figure~\ref{fig:consort}).
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.85\textwidth]{{{artifact:art_bf810ade-04d1-4990-9e18-8780be311320}}}
+  \includegraphics[width=0.85\textwidth]{figures/fig1_consort.png}
   \caption[Cohort consort diagram]{\textbf{Cohort construction.} 150 patients
   $\rightarrow$ 707 pre-event biopsy sample-rows (359 distinct biopsies), split
   by outcome (50 progressors / 100 non-progressors) and evaluated under 5-fold
@@ -192,7 +198,7 @@ value of histology \emph{given} clinical$+$CNV information is also not conclusiv
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{{{artifact:art_593e7158-2ba5-45e5-b833-15e78b3ea5a6}}}
+  \includegraphics[width=0.8\textwidth]{figures/fig_pr_fusion_vs_single.png}
   \caption[Precision--recall, fusion vs single modality]{\textbf{Headline
   precision--recall.} CNV-only, image-only, and late-mean fusion on the primary
   endpoint (patient-level, $n=150$/50 positive). Late-mean fusion dominates both
@@ -243,7 +249,7 @@ aggregation scheme.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.85\textwidth]{{{artifact:art_9ab78230-fbd7-46ca-a02f-413e70d04e0e}}}
+  \includegraphics[width=0.85\textwidth]{figures/fig_robustness_forest.png}
   \caption[Robustness forest plot]{\textbf{Robustness forest.} Late-mean $-$
   CNV-only $\Delta$AUPRC with 95\% bootstrap intervals across sensitivity
   cohorts. The benefit strengthens under exact-matching and strong-provenance
@@ -274,9 +280,9 @@ highest net benefit across the clinically relevant threshold range.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.48\textwidth]{{{artifact:art_ff50ec22-3074-4cb4-ad52-de46a1fe3e8d}}}
+  \includegraphics[width=0.48\textwidth]{figures/fig_calibration_curves.png}
   \hfill
-  \includegraphics[width=0.48\textwidth]{{{artifact:art_cff9ce10-d7d5-4eb0-a8c7-1bf7fe53f36e}}}
+  \includegraphics[width=0.48\textwidth]{figures/fig_decision_curves.png}
   \caption[Calibration and decision-curve analysis]{\textbf{Calibration (left)
   and decision-curve analysis (right).} The frozen fusion and CNV models are
   well calibrated; the clinical stacks are over-confident. The fusion model
@@ -326,7 +332,7 @@ the primary conclusions.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{{{artifact:art_09873ca8-2cdb-42d9-b69a-1c322620e76a}}}
+  \includegraphics[width=\textwidth]{figures/fig_label_noise_attention.png}
   \caption[Image label-noise / tissue sampling]{\textbf{Why the image model
   ``misses'' progressors.} Attention overlays on five benign current biopsies of
   progressor patients. Attention lands on real epithelium with no focal
@@ -362,7 +368,7 @@ artefact of one foundation model.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.7\textwidth]{{{artifact:art_2ef4db78-a065-4396-8d0f-c69ba0260b39}}}
+  \includegraphics[width=0.7\textwidth]{figures/fig_encoder_sensitivity.png}
   \caption[Encoder sensitivity]{\textbf{Encoder sensitivity.} UNI2 versus
   Virchow2 on the primary task; UNI2 is equal or better on every family and
   metric. Multi-encoder stacking (Section~\ref{sec:encoder}) did not improve on
