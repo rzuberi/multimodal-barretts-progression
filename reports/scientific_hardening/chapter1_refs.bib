@@ -1,12 +1,14 @@
-% Chapter 1 bibliography. Background/related-work entries retrieved via OpenAlex,
-% DOIs verified at retrieval. killcoyne2020: OpenAlex indexed the bioRxiv preprint
-% (10.1101/2020.02.27.967612) --- replace with published Nature Medicine 2020
-% (10.1038/s41591-020-0997-y) after confirming. Author lists shortened to 'and others';
-% expand from DOIs before submission. Non-OpenAlex entries (platt1999, vickers2006dca)
-% carry a VERIFY note.
+% Chapter 1 bibliography. Entries retrieved via OpenAlex; DOIs and author lists
+% verified against OpenAlex records at retrieval (author lists may still need a final
+% proofread against the primary source, and journal abbreviations normalised to your
+% thesis style).
+% killcoyne2020: only the bioRxiv preprint (10.1101/2020.02.27.967612) is indexed in
+%   OpenAlex; the published Nature Medicine 2020 version was NOT resolvable there --
+%   locate and substitute the journal DOI before submission (do not trust a guessed DOI).
+% platt1999: pre-DOI book chapter (no DOI expected).
 
 @article{killcoyne2020,
-  author  = {Killcoyne, Sarah and others},
+  author  = {Killcoyne, Sarah and Gregson, Eleanor and Wedge, David C. and Woodcock, Dan J. and Eldridge, Matthew and Rue, Rachel de la and Miremadi, Ahmad and Abbas, Sujath and Blasko, Adrienn and Januszewicz, Władysław and Jenkins, Aikaterini Varanou and Gerstung, Moritz and Fitzgerald, Rebecca C.},
   title   = {Genomic copy number predicts oesophageal cancer years before transformation},
   journal = {bioRxiv preprint (VERIFY: published Nature Medicine 2020, 10.1038/s41591-020-0997-y)},
   year    = {2020},
@@ -14,26 +16,31 @@
 }
 
 @article{chen2024uni,
-  author  = {Chen, Richard J. and others},
+  author  = {Chen, Richard J. and Ding, Tong and Lu, Ming Y. and Williamson, Drew F. K. and Jaume, Guillaume and Song, Andrew H. and Chen, Bowen and Zhang, Andrew and Shao, Daniel and Shaban, Muhammad and Williams, Mane and Oldenburg, Lukas and Weishaupt, Luca L. and Wang, Judy J. and Vaidya, Anurag and Le, Long P. and Gerber, Georg K. and Sahai, Sharifa and Williams, W. Roger and Mahmood, Faisal},
   title   = {Towards a general-purpose foundation model for computational pathology},
   journal = {Nature Medicine},
+  volume  = {30},
+  pages   = {850--862},
   year    = {2024},
   doi     = {10.1038/s41591-024-02857-3}
 }
 
 @article{xu2024gigapath,
-  author  = {Xu, Hanwen and others},
+  author  = {Xu, Hanwen and Usuyama, Naoto and Bagga, Jaspreet and Zhang, Sheng and Rao, Rajesh C. and Naumann, Tristan and Wong, Cliff and Gero, Zelalem and González, Javier and 池谷, 裕二 and Xu, Yanbo and Wei, Mu and Wang, Wenhui and Ma, Shuming and Wei, Furu and Yang, Jianwei and Li, Chunyuan and Gao, Jianfeng and Rosemon, Jaylen and Bower, Tucker C. and Lee, Soohee and Weerasinghe, Roshanthi and Wright, Bill and Robicsek, Ari and Piening, Brian and Bifulco, Carlo and Wang, Sheng and Poon, Hoifung},
   title   = {A whole-slide foundation model for digital pathology from real-world data},
   journal = {Nature},
+  volume  = {630},
+  pages   = {181--188},
   year    = {2024},
   doi     = {10.1038/s41586-024-07441-w}
 }
 
 @misc{zimmermann2024virchow2,
-  author = {Zimmermann, Eric and others},
-  title  = {Virchow2: a foundation model for pathology},
-  year   = {2024},
-  note   = {PLACEHOLDER --- confirm exact title, authors, venue (preprint/journal) and DOI}
+  author  = {Zimmermann, Eric and Vorontsov, Eugene and Viret, Julian and Casson, Adam and Zelechowski, Michal and Shaikovski, George and Tenenholtz, Neil and Hall, James M. and David, Klimstra, and Razik, Yousfi, and Fuchs, Thomas J. and Fusi, Nicolò and Liu, Siqi and Severson, Kristen},
+  title   = {Virchow2: Scaling Self-Supervised Mixed Magnification Models in Pathology},
+  year    = {2024},
+  note    = {arXiv preprint},
+  doi     = {10.48550/arXiv.2408.00738}
 }
 
 @inproceedings{ilse2018abmil,
@@ -68,218 +75,272 @@
 % ---- Background/related-work references (OpenAlex-verified) ----
 
 @article{vorontsov2024virchow,
-  author  = {Vorontsov, Eugene and others},
+  author  = {Vorontsov, Eugene and Bozkurt, Alican and Casson, Adam and Shaikovski, George and Zelechowski, Michal and Severson, Kristen and Zimmermann, Eric and Hall, James M. and Tenenholtz, Neil and Fusi, Nicolò and Yang, Ellen and Mathieu, Philippe and Eck, Alexander van and Lee, Donghun and Viret, Julian and ROBERT, E.BETZ and Wang, Yi Kan and Kunz, Jeremy D. and Lee, Matthew C. H. and Bernhard, Jan and Godrich, Ran and Oakley, Gerard J. and Millar, Ewan K.A. and Hanna, Matthew G. and Wen, Hannah Y. and Retámero, Juan Antonio and Moye, William A. and Yousfi, Razik and Kanan, Christopher and Klimstra, David S. and Rothrock, Brandon and Liu, Siqi and Fuchs, Thomas J.},
   title   = {A foundation model for clinical-grade computational pathology and rare cancer detection},
   journal = {Nature Medicine},
+  volume  = {30},
+  pages   = {2924--2935},
   year    = {2024},
   doi     = {10.1038/s41591-024-03141-0}
 }
 
 @article{wang2022ctranspath,
-  author  = {Wang, Xiyue and others},
+  author  = {Wang, Xiyue and Yang, Sen and Zhang, Jun and Wang, Minghui and Zhang, Jing and Yang, Wei and Huang, Junzhou and Han, Xiao},
   title   = {Transformer-based unsupervised contrastive learning for histopathological image classification},
   journal = {Medical Image Analysis},
+  volume  = {81},
+  pages   = {102559--102559},
   year    = {2022},
   doi     = {10.1016/j.media.2022.102559}
 }
 
 @article{lu2021clam,
-  author  = {Lu, Ming Y. and others},
+  author  = {Lu, Ming Y. and Williamson, Drew F. K. and Chen, Tiffany and Chen, Richard J. and Barbieri, Matteo and Mahmood, Faisal},
   title   = {Data-efficient and weakly supervised computational pathology on whole-slide images},
   journal = {Nature Biomedical Engineering},
+  volume  = {5},
+  pages   = {555--570},
   year    = {2021},
   doi     = {10.1038/s41551-020-00682-w}
 }
 
 @article{campanella2019,
-  author  = {Campanella, Gabriele and others},
+  author  = {Campanella, Gabriele and Hanna, Matthew G. and Geneslaw, Luke and Miraflor, Allen P. and Silva, Vitor Werneck Krauss and Busam, Klaus J. and Brogi, Edi and Reuter, Victor E. and Klimstra, David S. and Fuchs, Thomas J.},
   title   = {Clinical-grade computational pathology using weakly supervised deep learning on whole slide images},
   journal = {Nature Medicine},
+  volume  = {25},
+  pages   = {1301--1309},
   year    = {2019},
   doi     = {10.1038/s41591-019-0508-1}
 }
 
 @article{chen2022porpoise,
-  author  = {Chen, Richard J. and others},
+  author  = {Chen, Richard J. and Lu, Ming Y. and Williamson, Drew F. K. and Chen, Tiffany and Lipková, Jana and Noor, Zahra and Shaban, Muhammad and Shady, Maha and Williams, Mane and Joo, Bumjin and Mahmood, Faisal},
   title   = {Pan-cancer integrative histology-genomic analysis via multimodal deep learning},
   journal = {Cancer Cell},
+  volume  = {40},
+  pages   = {865--878.e6},
   year    = {2022},
   doi     = {10.1016/j.ccell.2022.07.004}
 }
 
 @article{chen2020pathomic,
-  author  = {Chen, Richard J. and others},
+  author  = {Chen, Richard J. and Lu, Ming Y. and Wang, Jingwen and Williamson, Drew F. K. and Rodig, Scott J. and Lindeman, Neal I. and Mahmood, Faisal},
   title   = {Pathomic fusion: an integrated framework for fusing histopathology and genomic features for cancer diagnosis and prognosis},
   journal = {IEEE Transactions on Medical Imaging},
+  volume  = {41},
+  pages   = {757--770},
   year    = {2020},
   doi     = {10.1109/TMI.2020.3021387}
 }
 
 @article{lipkova2022multimodal,
-  author  = {Lipkova, Jana and others},
+  author  = {Lipková, Jana and Chen, Richard J. and Chen, Bowen and Lu, Ming Y. and Barbieri, Matteo and Shao, Daniel and Vaidya, Anurag and Chen, Chengkuan and Zhuang, Luoting and Williamson, Drew F. K. and Shaban, Muhammad and Chen, Tiffany and Mahmood, Faisal},
   title   = {Artificial intelligence for multimodal data integration in oncology},
   journal = {Cancer Cell},
+  volume  = {40},
+  pages   = {1095--1110},
   year    = {2022},
   doi     = {10.1016/j.ccell.2022.09.012}
 }
 
 @article{kather2019survival,
-  author  = {Kather, Jakob Nikolas and others},
+  author  = {Kather, Jakob Nikolas and Krisam, Johannes and Charoentong, Pornpimol and Luedde, Tom and Herpel, Esther and Weis, Cleo‐Aron and Gaiser, Timo and Marx, Alexander and Valous, Nektarios A. and Ferber, Dyke and Jansen, Lina and Reyes‐Aldasoro, Constantino Carlos and Zörnig, Inka and Jäger, Dirk and Brenner, Hermann and Chang‐Claude, Jenny and Hoffmeister, Michael and Halama, Niels},
   title   = {Predicting survival from colorectal cancer histology slides using deep learning: a retrospective multicenter study},
   journal = {PLOS Medicine},
+  volume  = {16},
+  pages   = {e1002730--e1002730},
   year    = {2019},
   doi     = {10.1371/journal.pmed.1002730}
 }
 
 @article{kather2019msi,
-  author  = {Kather, Jakob Nikolas and others},
+  author  = {Kather, Jakob Nikolas and Pearson, Alexander T. and Halama, Niels and Jäger, Dirk and Krause, Jeremias and Loosen, Sven H. and Marx, Alexander and Boor, Peter and Tacke, Frank and Neumann, Ulf P. and Grabsch, Heike I. and Yoshikawa, Takaki and Brenner, Hermann and Chang‐Claude, Jenny and Hoffmeister, Michael and Trautwein, Christian and Luedde, Tom},
   title   = {Deep learning can predict microsatellite instability directly from histology in gastrointestinal cancer},
   journal = {Nature Medicine},
+  volume  = {25},
+  pages   = {1054--1056},
   year    = {2019},
   doi     = {10.1038/s41591-019-0462-y}
 }
 
 @article{coudray2018lung,
-  author  = {Coudray, Nicolas and others},
+  author  = {Coudray, Nicolas and Ocampo, Paolo and Sakellaropoulos, Theodore and Narula, Navneet and Snuderl, Matija and Fenyö, David and Moreira, André L. and Razavian, Narges and Tsirigos, Aristotelis},
   title   = {Classification and mutation prediction from non-small cell lung cancer histopathology images using deep learning},
   journal = {Nature Medicine},
+  volume  = {24},
+  pages   = {1559--1567},
   year    = {2018},
   doi     = {10.1038/s41591-018-0177-5}
 }
 
 @article{bulten2020gleason,
-  author  = {Bulten, Wouter and others},
+  author  = {Bulten, Wouter and Pinckaers, Hans and Boven, Hester van and Vink, Robert and Bel, Thomas de and Ginneken, Bram van and Laak, Jeroen van der and Kaa, Christina Hulsbergen‐van de and Litjens, Geert},
   title   = {Automated deep-learning system for Gleason grading of prostate cancer using biopsies: a diagnostic study},
   journal = {The Lancet Oncology},
+  volume  = {21},
+  pages   = {233--241},
   year    = {2020},
   doi     = {10.1016/S1470-2045(19)30739-9}
 }
 
 @article{lagergren2017oac,
-  author  = {Lagergren, Jesper and others},
+  author  = {Lagergren, Jesper and Smyth, Elizabeth and Cunningham, David and Lagergren, Pernilla},
   title   = {Oesophageal cancer},
   journal = {The Lancet},
+  volume  = {390},
+  pages   = {2383--2396},
   year    = {2017},
   doi     = {10.1016/S0140-6736(17)31462-9}
 }
 
 @article{shaheen2022acg,
-  author  = {Shaheen, Nicholas J. and others},
+  author  = {Shaheen, Nicholas J. and Falk, Gary W. and Iyer, Prasad G. and Souza, Rhonda F. and Yadlapati, Rena and Sauer, Bryan G. and Wani, Sachin},
   title   = {Diagnosis and management of Barrett's esophagus: an updated ACG guideline},
   journal = {American Journal of Gastroenterology},
+  volume  = {117},
+  pages   = {559--587},
   year    = {2022},
   doi     = {10.14309/ajg.0000000000001680}
 }
 
 @article{weusten2023esge,
-  author  = {Weusten, Bas L. A. M. and others},
+  author  = {Weusten, Bas L. and Bisschops, Raf and Dinis‐Ribeiro, Mário and Pietro, Massimiliano di and Pech, Oliver and Spaander, Manon C.W. and Baldaque‐Silva, Francisco and Barret, Maximilien and Coron, Emmanuel and Fernández‐Esparrach, Glòria and Fitzgerald, Rebecca C. and Jansen, Marnix and Jovani, Manol and Sá, Inês Marques de and Rattan, Arti and Tan, Wei Keith and Verheij, Eva and Zellenrath, Pauline A. and Τriantafyllou, Κonstantinos and Pouw, Roos E.},
   title   = {Diagnosis and management of Barrett esophagus: European Society of Gastrointestinal Endoscopy guideline},
   journal = {Endoscopy},
+  volume  = {55},
+  pages   = {1124--1146},
   year    = {2023},
   doi     = {10.1055/a-2176-2440}
 }
 
 @article{redston2022tp53,
-  author  = {Redston, Mark and others},
+  author  = {Redston, Mark and Noffsinger, Amy and Kim, Anthony and Akarca, Fahire G. and Rara, Marianne and Stapleton, Diane and Nowden, Laurel and Lash, Richard H. and Bass, Adam J. and Stachler, Matthew D.},
   title   = {Abnormal TP53 predicts risk of progression in patients with Barrett's esophagus regardless of a diagnosis of dysplasia},
   journal = {Gastroenterology},
+  volume  = {162},
+  pages   = {468--481},
   year    = {2022},
   doi     = {10.1053/j.gastro.2021.10.038}
 }
 
 @article{frei2020tissuecypher,
-  author  = {Frei, Nicola F. and others},
+  author  = {Frei, Nicola and Khoshiwal, Amir M. and Konté, Kadère and Bossart, Emily A. and Stebbins, Katelyn and Zhang, Yi and Pouw, Roos E. and Kate, Fiebo J.W. ten and Seldenrijk, Kees A. and Meijer, Sybren L. and Critchley-Thorne, Rebecca J. and Bergman, Jacques},
   title   = {Tissue systems pathology test objectively risk stratifies Barrett's esophagus patients with low-grade dysplasia},
   journal = {American Journal of Gastroenterology},
+  volume  = {116},
+  pages   = {675--682},
   year    = {2020},
   doi     = {10.14309/ajg.0000000000001037}
 }
 
 @article{khoshiwal2023tissuecypher,
-  author  = {Khoshiwal, Amir M. and others},
+  author  = {Khoshiwal, Amir M. and Frei, Nicola and Pouw, Roos E. and Goldblum, John R. and Montgomery, Elizabeth and Davison, Jon M. and Singh, Jagjit and Szymanski, Jared and Perry, Anthony S. and Seldenrijk, Kees A. and Kate, Fiebo ten and Offerhaus, G. Johan A. and Drillenberg, Paul and Jansen, Casper and Leeuwis-Fedorovic, Natalja and Chetty, Runjan and Feakins, Roger and Jansen, Marnix and Chinyama, Catherine N. and Cooper, Edwin and Vaziri, Reza and Baretton, Gustavo and Tannapfel, Andrea and Vieth, Michael and Melcher, Bálint and Mesteri, Ildikó and Müller, Heiko and Wetzel, Philipp and Hertogh, Gert De and Hoorens, Anne and Verschuere, Stepanie and Tamsin, An and Wetzels, Kevin and Caillie, Marie-Astrid Van and Smolko, Christian and Arora, Meenakshi and Siegel, Jennifer J. and Duits, Lucas C. and Critchley-Thorne, Rebecca J. and Bergman, Jacques},
   title   = {The tissue systems pathology test outperforms pathology review in risk stratifying patients with Barrett's esophagus},
   journal = {Gastroenterology},
+  volume  = {165},
+  pages   = {1168--1179.e6},
   year    = {2023},
   doi     = {10.1053/j.gastro.2023.07.029}
 }
 
 @article{fitzgerald2020cytosponge,
-  author  = {Fitzgerald, Rebecca C. and others},
+  author  = {Fitzgerald, Rebecca C. and Pietro, Massimiliano di and O’Donovan, Maria and Maroni, Roberta and Muldrew, Beth and Debiram–Beecham, Irene and Gehrung, Marcel and Offman, Judith and Tripathi, Monika and Smith, Samuel G. and Aigret, Benoit and Walter, Fiona M and Rubin, Greg and Bagewadi, Abhay and Patrick, Abigail and Shenoy, Achuth and Redmond, Aisling M. and Muddu, Ajay and Northrop, Alex and Groves, Alice and Shiner, Alice and Heer, Amardeep and Takhar, Amrit and Bowles, Amy O. and Jarman, Andrea and Wong, Angela and Lucas, Angie and Gibbons, Anita and Dhar, Anjan and Curry, Anji and Lalonde, Anna and Swinburn, Anna and Turner, Anne I. and Lydon, Anne and Gunstone, Anthony and Lee, Arlene and Nambi, Arul and Ariyarathenam, Arun and Elden, Ashley and Wilson, Ashley and Donepudi, Balaji and Campbell, Barbara and Uszycka, Basia and Bowers, Ben and Coghill, Ben and Quadros, Bruno de and Cheah, Calvin and Bratten, Carla and Brown, Carly and Moorbey, Chantelle and Clisby, Charles and Gordon, Charles and Schramm, Chris and Castle, Chris D and Newark, Chris and Norris, Chrissie and A’Court, Christine and Graham, Claire and Fletcher, Clare and Grocott, Clare and Rees, Colin and Bakker, Corinne and Paschalides, Costas and Vickery, Craig and Schembri, D and Morris, Danielle and Hagan, Daryl and Cronk, David and Goddard, David H. and Graham, David and Phillips, Dean P. and Prabhu, Deeksha and Kejariwal, Deepak and Garg, Dhirendra and Lonsdale, Diane and Butterworth, Dianne and Clements, Donna and Bradman, Drew and Blake, D. W. and Mather, Elizabeth L. and O'Farrell, Ewan and Markowetz, Florian and Adams, Fran and Pesola, Francesca and Forbes, Gareth and Taylor, Gary and Collins, Glenn and Irvine, Gordon W. and Fourie, Gysbert and Doyle, H. and Barnes, Heather and Bowyer, Helen and Whiting, Helen and Beales, Ian and Binnian, Ian and Bremner, I. and Jennings, Ian and Troiceanu, Ilona and Modelell, Ines and Emmerson, Ingrid and Ortiz, Jacobo and Lilley, J and Harvey, Jacquelyn and Vicars, Jacqui and Takhar, Jagjit and Larcombe, James and Bornschein, Jan and Aldegather, Jehad and Johnson, Jenny and Ducker, Jill and Skinner, Jo and Dash, Joanne and Walsh, Joanne and Miralles, Jose and Ridgway, J P and INCE, J. and Kennedy, Julie and Hampson, Kat and Milne, Kate and Ellerby, Katherine and Priddis, Katherine and Rainsbury, Kathy and Powell, Kelly and Gunner, Kerry and Ragunath, Krish and Knox, Kyle and Baseley, Laura and White, Lauren and Lovat, Laurence and Berney, Lee and Crockett, Lindsay and Murray, Lisa and Westwood, Lisa and Chalkley, Lisa and Leggett, Loraine and Dale, Louise and Scovell, Louise and Brooks, Lucy and Saunders, Lucy and Owen, Lydia and Dilwershah, Maria and Baldry, Marie and Corcoran, Marie and Roy, Marie and Macedo, Mário Espiga de and Attah, Mark and Anson, M.A.W. and Rutter, Matt and Wallard, Matthew and Gaw, Matthew and Hunt, Matthew A. and Lea-Hagerty, Megan and Penacerrada, Melchizedek and Bianchi, Michele Leonardo and Baker-Moffatt, Michelle and Czajkowski, Michelle and Sleeth, Michelle and Brewer, N.T. and Wooding, Nick and Todd, N.W. and Millen, N. and Zolle, Olga and Whitehead, Orla and Ojechi, Patrick and Moore, Patrick and Banim, Paul and Spellar, Paula and Bhandari, Pradeep and Kant, Prashant and Nixon, Rachel and Russell, Rebecca A and Roberts, Rebekah and Skule, Rene and West, Richard and Fox, Robin and Beesley, Ruth and Gibbins, Ruth and Osborne, R.H. and Thiagarajan, Shivakumar and Bastiman, Sally and Warburton, Samantha and Pai, S and Leith-Russell, Sarah and Utting, Sarah and Watson, Sarah and Wytrykowski, Sarah and Singh, Satish S. and Malhotra, Shalini and Woods, Sharon and Conway, Shaun and Mateer, Sherrie and MacRae, Shona and Singh, Shruti and Fourie, S and Campbell, Siobhán and Parslow-Williams, Siobhan and Goel, Sonica and Dellar, Stephen and Jones, Stephen and Knight, S.A. and Mackay-Thomas, Stuart and Mukherjee, Stuti and Allen, Sue and Henry, Suzanne Bakken and Evans, Tara N. and Leighton, Theresa and Bray, Tim and Shackleton, Tom and Santosh, V. Krishna and Glover, Vicki and Chandraraj, V. and Elson, Will and Briggs, William M. and Barrón, Z.L. Zatarain and Khan, Zohrah and Sasieni, Peter},
   title   = {Cytosponge-trefoil factor 3 versus usual care to identify Barrett's oesophagus in a primary care setting: a multicentre, pragmatic, randomised controlled trial},
   journal = {The Lancet},
+  volume  = {396},
+  pages   = {333--344},
   year    = {2020},
   doi     = {10.1016/S0140-6736(20)31099-0}
 }
 
 % ---- Deep-search additions (OAC genomics, sWGS-CNV method, multimodal AI, prediction methodology) ----
 @article{frankell2019,
-  author  = {Frankell, Alexander M. and others},
+  author  = {Frankell, Alexander M. and Jammula, Sriganesh and Li, Xiaodun and Contino, Gianmarco and Killcoyne, Sarah and Abbas, Sujath and Perner, Juliane and Bower, Lawrence and Devonshire, Ginny and Ococks, E. and Grehan, Nicola and Mok, James and O’Donovan, Maria and MacRae, Shona and Eldridge, Matthew and Tavaré, Simon and Fitzgerald, Rebecca C.},
   title   = {The landscape of selection in 551 esophageal adenocarcinomas defines genomic biomarkers for the clinic},
   journal = {Nature Genetics},
+  volume  = {51},
+  pages   = {506--516},
   year    = {2019},
   doi     = {10.1038/s41588-018-0331-5}
 }
 
 @article{stachler2015,
-  author  = {Stachler, Matthew D. and others},
+  author  = {Stachler, Matthew D. and Taylor‐Weiner, Amaro and Peng, Shouyong and McKenna, Aaron and Agoston, Agoston T. and Odze, Robert D. and Davison, Jon M. and Nason, Katie S. and Loda, Massimo and Leshchiner, Ignaty and Stewart, Chip and Stojanov, Petar and Seepo, Sara and Lawrence, Michael S. and Ferrer-Torres, Daysha and Lin, Jules and Chang, Andrew C. and Gabriel, Stacey and Lander, Eric S. and Beer, David G. and Getz, Gad and Carter, Scott L. and Bass, Adam J.},
   title   = {Paired exome analysis of Barrett's esophagus and adenocarcinoma},
   journal = {Nature Genetics},
+  volume  = {47},
+  pages   = {1047--1055},
   year    = {2015},
   doi     = {10.1038/ng.3343}
 }
 
 @article{weaver2014,
-  author  = {Weaver, Jamie M. J. and others},
+  author  = {Weaver, Jamie and Ross-Innes, Caryn S. and Shannon, Nicholas B. and Lynch, Andy G. and Forshew, Tim and Barbera, Mariagnese and Murtaza, Muhammed and Ong, Chin‐Ann Johnny and Lao-Sirieix, Pierre and Dunning, Mark and Smith, Laura and Smith, Mike L. and Anderson, Charlotte and Carvalho, Benilton S. and O’Donovan, Maria and Underwood, Tim and May, Andrew P. and Grehan, Nicola and Hardwick, Richard and Davies, Jim and Oloumi, Arusha and Aparício, Samuel and Caldas, Carlos and Eldridge, Matthew and Edwards, Paul A. and Rosenfeld, Nitzan and Tavaré, Simon and Fitzgerald, Rebecca C.},
   title   = {Ordering of mutations in preinvasive disease stages of esophageal carcinogenesis},
   journal = {Nature Genetics},
+  volume  = {46},
+  pages   = {837--843},
   year    = {2014},
   doi     = {10.1038/ng.3013}
 }
 
 @article{gregson2016,
-  author  = {Gregson, Eleanor M. and Bornschein, Jan and Fitzgerald, Rebecca C.},
+  author  = {Gregson, Eleanor and Bornschein, Jan and Fitzgerald, Rebecca C.},
   title   = {Genetic progression of Barrett's oesophagus to oesophageal adenocarcinoma},
   journal = {British Journal of Cancer},
+  volume  = {115},
+  pages   = {403--410},
   year    = {2016},
   doi     = {10.1038/bjc.2016.219}
 }
 
 @article{scheinin2014qdnaseq,
-  author  = {Scheinin, Ilari and others},
+  author  = {Scheinin, Ilari and Sie, Daoud and Bengtsson, Henrik and Wiel, Mark A. van de and Olshen, Adam B. and Thuijl, Hinke F. van and Essen, Hendrik F. van and Eijk, Paul P. and Rustenburg, François and Meijer, Gerrit A. and Reijneveld, Jaap C. and Wesseling, Pieter and Pinkel, Daniel and Albertson, Donna G. and Ylstra, Bauke},
   title   = {DNA copy number analysis of fresh and formalin-fixed specimens by shallow whole-genome sequencing with identification and exclusion of problematic regions in the genome assembly},
   journal = {Genome Research},
+  volume  = {24},
+  pages   = {2022--2032},
   year    = {2014},
   doi     = {10.1101/gr.175141.114}
 }
 
 @article{acosta2022,
-  author  = {Acosta, Julian N. and others},
+  author  = {Acosta, Julián and Falcone, Guido J. and Rajpurkar, Pranav and Topol, Eric J.},
   title   = {Multimodal biomedical AI},
   journal = {Nature Medicine},
+  volume  = {28},
+  pages   = {1773--1784},
   year    = {2022},
   doi     = {10.1038/s41591-022-01981-2}
 }
 
 @article{steyaert2023,
-  author  = {Steyaert, Sandra and others},
+  author  = {Steyaert, Sandra and Pizurica, Marija and Nagaraj, Divya and Khandelwal, Priya and Hernandez‐Boussard, Tina and Gentles, Andrew J. and Gevaert, Olivier},
   title   = {Multimodal data fusion for cancer biomarker discovery with deep learning},
   journal = {Nature Machine Intelligence},
+  volume  = {5},
+  pages   = {351--362},
   year    = {2023},
   doi     = {10.1038/s42256-023-00633-5}
 }
 
 @article{collins2015tripod,
-  author  = {Collins, Gary S. and Reitsma, Johannes B. and Altman, Douglas G. and Moons, Karel G. M.},
+  author  = {Collins, Professor Gary S. and Reitsma, Johannes B. and Altman, Douglas G. and Moons, Karel G.M.},
   title   = {Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis (TRIPOD): the TRIPOD statement},
   journal = {BMJ},
+  volume  = {350},
+  pages   = {g7594--g7594},
   year    = {2015},
   doi     = {10.1136/bmj.g7594}
 }
 
 @article{vickers2016netbenefit,
-  author  = {Vickers, Andrew J. and Van Calster, Ben and Steyerberg, Ewout W.},
+  author  = {Vickers, Andrew J. and Calster, Ben Van and Steyerberg, Ewout W.},
   title   = {Net benefit approaches to the evaluation of prediction models, molecular markers, and diagnostic tests},
   journal = {BMJ},
+  volume  = {352},
+  pages   = {i6--i6},
   year    = {2016},
   doi     = {10.1136/bmj.i6}
 }
