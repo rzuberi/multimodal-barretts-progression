@@ -84,6 +84,24 @@ transformation \cite{killcoyne2020}. The present work builds on this
 copy-number signal and asks whether histopathology, read computationally, adds
 to it.
 
+\subsection{The genomic substrate of oesophageal carcinogenesis}
+The rationale for a copy-number predictor rests on the genomics of Barrett's
+progression. Oesophageal adenocarcinoma is among the most copy-number-driven and
+mutationally complex solid tumours: whole-genome and exome studies of paired
+Barrett's and adenocarcinoma samples show that progression is characterised less
+by a stereotyped sequence of point mutations than by escalating chromosomal
+instability and large-scale copy-number change \cite{stachler2015,weaver2014}.
+TP53 loss is an early and recurrent event, and the mutational and selective
+landscape of 551 adenocarcinomas has been mapped to define clinically relevant
+genomic biomarkers \cite{frankell2019}; reviews of this clonal-evolution
+trajectory frame copy-number burden as a readout of the genomic instability that
+precedes transformation \cite{gregson2016}. Shallow whole-genome sequencing
+(sWGS) makes this signal accessible at low cost: even at $\sim$0.1--1$\times$
+depth it yields robust genome-wide relative copy-number profiles via
+established binning-and-normalisation pipelines \cite{scheinin2014qdnaseq}, and
+it is this representation --- not point mutations --- that the copy-number model
+in this chapter uses.
+
 \subsection{Deep learning on histopathology}
 Computational pathology has moved from task-specific convolutional networks
 towards weakly supervised and foundation-model approaches. Early clinical-grade
@@ -133,6 +151,20 @@ surveillance cohort --- and whether it survives honest, leakage-controlled
 evaluation --- is far less established. That is the gap this chapter addresses
 for Barrett's oesophagus, where, to our knowledge, CNV and computational
 histopathology have not previously been combined for progression prediction.
+
+Broader syntheses of multimodal biomedical AI emphasise both the promise and the
+recurring pitfalls of the field: optimistic bias from selecting fusion
+architectures on the same data used to evaluate them, inflated performance from
+data leakage, and a shortage of honest external validation
+\cite{acosta2022,steyaert2023}. These concerns motivate the evaluation stance of
+this chapter. Rather than search for the best-performing fusion architecture, it
+fixes a small, pre-specified model set and subjects it to leakage-controlled,
+patient-level nested cross-validation, and it reports discrimination alongside
+\emph{calibration} and \emph{clinical net benefit} --- following prediction-model
+reporting standards \cite{collins2015tripod} and decision-curve methodology
+\cite{vickers2016netbenefit} --- rather than a single headline discrimination
+metric. The aim is a claim about multimodality that is defensible at this sample
+size, not merely a number that is large.
 
 
 \section{Data and cohort}
