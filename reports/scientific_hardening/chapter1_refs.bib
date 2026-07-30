@@ -1,15 +1,16 @@
-% Chapter 1 starter bibliography.
-% VERIFY every entry (authors, year, venue, DOI) against the primary source
-% before submission. DOIs are intentionally omitted where not certain --- do NOT
-% treat missing/uncertain fields as authoritative. Add the remaining references
-% (surveillance guidelines, sWGS/CNV methods, calibration) as marked.
+% Chapter 1 bibliography. Background/related-work entries retrieved via OpenAlex,
+% DOIs verified at retrieval. killcoyne2020: OpenAlex indexed the bioRxiv preprint
+% (10.1101/2020.02.27.967612) --- replace with published Nature Medicine 2020
+% (10.1038/s41591-020-0997-y) after confirming. Author lists shortened to 'and others';
+% expand from DOIs before submission. Non-OpenAlex entries (platt1999, vickers2006dca)
+% carry a VERIFY note.
 
 @article{killcoyne2020,
   author  = {Killcoyne, Sarah and others},
   title   = {Genomic copy number predicts oesophageal cancer years before transformation},
-  journal = {Nature Medicine},
+  journal = {bioRxiv preprint (VERIFY: published Nature Medicine 2020, 10.1038/s41591-020-0997-y)},
   year    = {2020},
-  note    = {VERIFY authors/volume/pages/DOI before submission}
+  doi     = {10.1101/2020.02.27.967612}
 }
 
 @article{chen2024uni,
@@ -17,7 +18,7 @@
   title   = {Towards a general-purpose foundation model for computational pathology},
   journal = {Nature Medicine},
   year    = {2024},
-  note    = {UNI / UNI2 encoder. VERIFY citation details and confirm the UNI2 reference specifically}
+  doi     = {10.1038/s41591-024-02857-3}
 }
 
 @article{xu2024gigapath,
@@ -25,7 +26,7 @@
   title   = {A whole-slide foundation model for digital pathology from real-world data},
   journal = {Nature},
   year    = {2024},
-  note    = {Prov-GigaPath. VERIFY citation details before submission}
+  doi     = {10.1038/s41586-024-07441-w}
 }
 
 @misc{zimmermann2024virchow2,
@@ -36,11 +37,11 @@
 }
 
 @inproceedings{ilse2018abmil,
-  author    = {Ilse, Maximilian and Tomczak, Jakub M. and Welling, Max},
-  title     = {Attention-based deep multiple instance learning},
+  author  = {Ilse, Maximilian and Tomczak, Jakub M. and Welling, Max},
+  title   = {Attention-based deep multiple instance learning},
   booktitle = {International Conference on Machine Learning (ICML)},
-  year      = {2018},
-  note      = {VERIFY pages/volume before submission}
+  year    = {2018},
+  doi     = {10.48550/arXiv.1802.04712}
 }
 
 @inproceedings{platt1999,
@@ -65,6 +66,7 @@
 %  - Random forest (Breiman 2001), PCA, bootstrap CI (Efron) as appropriate
 
 % ---- Background/related-work references (OpenAlex-verified) ----
+
 @article{vorontsov2024virchow,
   author  = {Vorontsov, Eugene and others},
   title   = {A foundation model for clinical-grade computational pathology and rare cancer detection},
@@ -207,5 +209,78 @@
   journal = {The Lancet},
   year    = {2020},
   doi     = {10.1016/S0140-6736(20)31099-0}
+}
+
+% ---- Deep-search additions (OAC genomics, sWGS-CNV method, multimodal AI, prediction methodology) ----
+@article{frankell2019,
+  author  = {Frankell, Alexander M. and others},
+  title   = {The landscape of selection in 551 esophageal adenocarcinomas defines genomic biomarkers for the clinic},
+  journal = {Nature Genetics},
+  year    = {2019},
+  doi     = {10.1038/s41588-018-0331-5}
+}
+
+@article{stachler2015,
+  author  = {Stachler, Matthew D. and others},
+  title   = {Paired exome analysis of Barrett's esophagus and adenocarcinoma},
+  journal = {Nature Genetics},
+  year    = {2015},
+  doi     = {10.1038/ng.3343}
+}
+
+@article{weaver2014,
+  author  = {Weaver, Jamie M. J. and others},
+  title   = {Ordering of mutations in preinvasive disease stages of esophageal carcinogenesis},
+  journal = {Nature Genetics},
+  year    = {2014},
+  doi     = {10.1038/ng.3013}
+}
+
+@article{gregson2016,
+  author  = {Gregson, Eleanor M. and Bornschein, Jan and Fitzgerald, Rebecca C.},
+  title   = {Genetic progression of Barrett's oesophagus to oesophageal adenocarcinoma},
+  journal = {British Journal of Cancer},
+  year    = {2016},
+  doi     = {10.1038/bjc.2016.219}
+}
+
+@article{scheinin2014qdnaseq,
+  author  = {Scheinin, Ilari and others},
+  title   = {DNA copy number analysis of fresh and formalin-fixed specimens by shallow whole-genome sequencing with identification and exclusion of problematic regions in the genome assembly},
+  journal = {Genome Research},
+  year    = {2014},
+  doi     = {10.1101/gr.175141.114}
+}
+
+@article{acosta2022,
+  author  = {Acosta, Julian N. and others},
+  title   = {Multimodal biomedical AI},
+  journal = {Nature Medicine},
+  year    = {2022},
+  doi     = {10.1038/s41591-022-01981-2}
+}
+
+@article{steyaert2023,
+  author  = {Steyaert, Sandra and others},
+  title   = {Multimodal data fusion for cancer biomarker discovery with deep learning},
+  journal = {Nature Machine Intelligence},
+  year    = {2023},
+  doi     = {10.1038/s42256-023-00633-5}
+}
+
+@article{collins2015tripod,
+  author  = {Collins, Gary S. and Reitsma, Johannes B. and Altman, Douglas G. and Moons, Karel G. M.},
+  title   = {Transparent reporting of a multivariable prediction model for individual prognosis or diagnosis (TRIPOD): the TRIPOD statement},
+  journal = {BMJ},
+  year    = {2015},
+  doi     = {10.1136/bmj.g7594}
+}
+
+@article{vickers2016netbenefit,
+  author  = {Vickers, Andrew J. and Van Calster, Ben and Steyerberg, Ewout W.},
+  title   = {Net benefit approaches to the evaluation of prediction models, molecular markers, and diagnostic tests},
+  journal = {BMJ},
+  year    = {2016},
+  doi     = {10.1136/bmj.i6}
 }
 
