@@ -58,6 +58,83 @@ robustness, calibration, error, and sensitivity analyses.
     one foundation model.
 \end{enumerate}
 
+\section{Background and related work}
+\label{sec:background}
+
+\subsection{Oesophageal adenocarcinoma and Barrett's surveillance}
+Oesophageal adenocarcinoma (OAC) is an aggressive malignancy that is usually
+diagnosed late and carries poor survival \cite{lagergren2017oac}. Its principal
+precursor, Barrett's oesophagus, is subject to endoscopic surveillance with the
+goal of detecting dysplastic progression early enough to intervene; current
+gastroenterology guidelines codify biopsy protocols and surveillance intervals
+\cite{shaheen2022acg,weusten2023esge}. Two limitations motivate computational
+risk prediction. First, histopathological grading of dysplasia --- the current
+basis for risk stratification --- suffers from substantial inter-observer
+variability, and most surveillance biopsies are non-dysplastic even in patients
+who later progress. Second, non-endoscopic triage tools such as the
+Cytosponge-TFF3 test have broadened case-finding \cite{fitzgerald2020cytosponge}
+but do not themselves stratify progression risk. Molecular and tissue-based
+predictors have been developed to fill this gap: abnormal TP53 status predicts
+progression independently of a dysplasia diagnosis \cite{redston2022tp53};
+tissue-systems-pathology tests risk-stratify low-grade-dysplasia patients and
+can outperform pathology review \cite{frei2020tissuecypher,khoshiwal2023tissuecypher};
+and, most directly relevant to this chapter, genome-wide copy-number variation
+from shallow whole-genome sequencing predicts progression years before
+transformation \cite{killcoyne2020}. The present work builds on this
+copy-number signal and asks whether histopathology, read computationally, adds
+to it.
+
+\subsection{Deep learning on histopathology}
+Computational pathology has moved from task-specific convolutional networks
+towards weakly supervised and foundation-model approaches. Early clinical-grade
+systems demonstrated that whole-slide diagnosis could be learned from slide-level
+labels alone \cite{campanella2019}, and that morphology-based models could
+predict outcomes and molecular status directly from H\&E --- survival in
+colorectal cancer \cite{kather2019survival}, microsatellite instability in
+gastrointestinal cancer \cite{kather2019msi}, driver mutations in lung cancer
+\cite{coudray2018lung}, and Gleason grade in prostate cancer
+\cite{bulten2020gleason}. Because whole-slide images are gigapixel-scale and
+annotations are sparse, the dominant paradigm is multiple-instance learning
+(MIL): a slide is a bag of tile embeddings and a permutation-invariant
+aggregator produces the slide-level prediction. Attention-based MIL
+\cite{ilse2018abmil} and its clustering-constrained extension CLAM
+\cite{lu2021clam} are the standard aggregators, and the attention weights offer
+a route to interpretability. This chapter uses attention-based MIL as its
+histology head.
+
+\subsection{Foundation models as tile encoders}
+The tile-embedding step is increasingly delegated to pathology foundation
+models --- self-supervised encoders pretrained on very large slide corpora.
+Transformer-based contrastive pretraining (CTransPath) \cite{wang2022ctranspath}
+was an early demonstration; more recent general-purpose encoders such as UNI
+\cite{chen2024uni}, the whole-slide model Prov-GigaPath \cite{xu2024gigapath},
+and Virchow \cite{vorontsov2024virchow} are trained on hundreds of thousands of
+slides and transfer broadly across tasks. This chapter uses UNI2 as its default
+encoder and reports GigaPath and Virchow2 as pre-specified sensitivity analyses
+(Section~\ref{sec:encoder}); a recurring question in the field, examined
+directly here, is whether a larger or newer encoder reliably improves downstream
+performance at small clinical sample sizes.
+
+\subsection{Multimodal integration of histology and genomics}
+Combining histopathology with molecular data is an active area, on the
+hypothesis that morphology and genomics carry complementary prognostic
+information. Pathomic Fusion introduced a framework for fusing histology and
+genomic features for cancer prognosis \cite{chen2020pathomic}, and PORPOISE
+extended integrative histology--genomic modelling across many cancer types
+\cite{chen2022porpoise}; recent reviews survey the design space of multimodal
+data integration in oncology \cite{lipkova2022multimodal}. Two themes from this
+literature frame the present chapter. First, fusion strategy matters: late
+(decision-level) fusion, early (feature-level) fusion, and intermediate
+(learned joint) fusion trade off flexibility against the risk of over-fitting,
+which is acute at the sample sizes typical of a single-cohort clinical study.
+Second, much of this work is developed on large multi-cohort resources such as
+TCGA; the added value of multimodality on a smaller, single-institution
+surveillance cohort --- and whether it survives honest, leakage-controlled
+evaluation --- is far less established. That is the gap this chapter addresses
+for Barrett's oesophagus, where, to our knowledge, CNV and computational
+histopathology have not previously been combined for progression prediction.
+
+
 \section{Data and cohort}
 \label{sec:cohort}
 
